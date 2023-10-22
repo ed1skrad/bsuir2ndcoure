@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "lib/libpqxx-7.8.1/test",
+		"source" : "lib/libpqxx-7.8.1/test"
+	}
+}
