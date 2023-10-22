@@ -1,0 +1,54 @@
+-- Таблица для автобусов
+CREATE TABLE bus (
+    id serial PRIMARY KEY,
+    brand VARCHAR(255),
+    model VARCHAR(255),
+    color VARCHAR(255),
+    engineType VARCHAR(255),
+    capacity INTEGER,
+    from_location VARCHAR(255),
+    to_location VARCHAR(255),
+    frequency VARCHAR(255),
+    has_contactless_payment BOOLEAN
+);
+
+-- Таблица для троллейбусов
+CREATE TABLE trolleybus (
+    id serial PRIMARY KEY,
+    brand VARCHAR(255),
+    model VARCHAR(255),
+    color VARCHAR(255),
+    engineType VARCHAR(255),
+    capacity INTEGER,
+    from_location VARCHAR(255),
+    to_location VARCHAR(255),
+    frequency VARCHAR(255),
+    has_sockets BOOLEAN
+);
+
+-- Таблица для такси
+CREATE TABLE taxi (
+    id serial PRIMARY KEY,
+    brand VARCHAR(255),
+    model VARCHAR(255),
+    color VARCHAR(255),
+    engineType VARCHAR(255),
+    price_per_kil DOUBLE PRECISION,
+    rating DOUBLE PRECISION,
+    has_driver BOOLEAN,
+    has_wifi BOOLEAN,
+    has_child_seat BOOLEAN,
+    rent_car_type VARCHAR(255)
+);
+
+-- Таблица для каршеринга
+CREATE TABLE car_sharing (
+    id serial PRIMARY KEY,
+    brand VARCHAR(255),
+    model VARCHAR(255),
+    color VARCHAR(255),
+    engineType VARCHAR(255),
+    price_per_minute DOUBLE PRECISION,
+    has_insurance BOOLEAN,
+    has_ads BOOLEAN
+);
