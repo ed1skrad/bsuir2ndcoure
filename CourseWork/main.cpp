@@ -2,6 +2,7 @@
 #include <iostream>
 #include "pqxx/pqxx"
 
+
 enum EngineType
 {
     PETROL,
@@ -32,6 +33,28 @@ public:
 
     EngineType getEngineType() { return engineType; }
     void setEngineType(EngineType engineType) { this->engineType = engineType; }
+
+    std::string getEngineTypeString() {
+        switch (engineType) {
+            case EngineType::PETROL:
+                return "PETROL";
+            case EngineType::DIESEL:
+                return "DIESEL";
+            case EngineType::HYBRID:
+                return "HYBRID";
+            case EngineType::ELECTRIC:
+                return "ELECTRIC";
+            default:
+                return "Unknown";
+        }
+    }
+
+    void displayInfo() {
+        std::cout << "Brand: " << brand << std::endl;
+        std::cout << "Model: " << model << std::endl;
+        std::cout << "Color: " << color << std::endl;
+        std::cout << "Engine Type: " << getEngineTypeString() << std::endl;
+    }
 };
 
 class PublicTransport : public Transport{
@@ -57,6 +80,14 @@ public:
 
     std::string getFrequency() { return frequency; }
     void setFrequency(std::string frequency) { this->frequency = frequency; }
+
+    void displayInfo() {
+        Transport::displayInfo(); // Вывод информации о базовом классе
+        std::cout << "Capacity: " << capacity << std::endl;
+        std::cout << "From: " << from << std::endl;
+        std::cout << "To: " << to << std::endl;
+        std::cout << "Frequency: " << frequency << std::endl;
+    }
 };
 
 class Bus : public PublicTransport{
@@ -69,6 +100,12 @@ public:
 
     bool getHasContactlessPayment() { return hasContactlessPayment; }
     void setHasContactlessPayment(bool hasContactlessPayment) { this->hasContactlessPayment = hasContactlessPayment; }
+
+    void displayInfo() {
+        PublicTransport::displayInfo(); // Вывод информации о базовом классе
+        std::cout << "Transport Type: Bus" << std::endl;
+        std::cout << "Has Contactless Payment: " << (hasContactlessPayment ? "Yes" : "No") << std::endl;
+    }
 };
 
 class TrolleyBus : public PublicTransport{
@@ -81,6 +118,11 @@ public:
 
     bool getHasSockets() { return hasSockets; }
     void setHasSockets(bool hasSockets) { this->hasSockets = hasSockets; }
+    void displayInfo() {
+        PublicTransport::displayInfo(); // Вывод информации о базовом классе
+        std::cout << "Transport Type: Trolleybus" << std::endl;
+        std::cout << "Has Sockets: " << (hasSockets ? "Yes" : "No") << std::endl;
+    }
 };
 
 enum RentCarTypes{
@@ -119,6 +161,17 @@ public:
 
     RentCarTypes getRentCarTypes() { return rentCarTypes; }
     void setRentCarTypes(RentCarTypes rentCarTypes) { this->rentCarTypes = rentCarTypes; }
+
+    void displayInfo() {
+        Transport::displayInfo(); // Вывод информации о базовом классе
+        std::cout << "Transport Type: Taxi" << std::endl;
+        std::cout << "Price per Kilometer: " << pricePerKil << std::endl;
+        std::cout << "Rating: " << rating << std::endl;
+        std::cout << "Has Driver: " << (hasDriver ? "Yes" : "No") << std::endl;
+        std::cout << "Has WiFi: " << (hasWiFi ? "Yes" : "No") << std::endl;
+        std::cout << "Has Child Seat: " << (hasChildSeat ? "Yes" : "No") << std::endl;
+        std::cout << "Rent Car Type: " << getRentCarTypes() << std::endl;
+    }
 };
 
 class CarSharing : public Transport{
@@ -139,22 +192,30 @@ public:
 
     bool getHasADS() { return hasADS; }
     void setHasADS(bool hasADS) { this->hasADS = hasADS; }
+
+    void displayInfo() {
+        Transport::displayInfo(); // Вывод информации о базовом классе
+        std::cout << "Transport Type: Car Sharing" << std::endl;
+        std::cout << "Price per Minute: " << pricePerMinute << std::endl;
+        std::cout << "Has Insurance: " << (hasInsurance ? "Yes" : "No") << std::endl;
+        std::cout << "Has ADS: " << (hasADS ? "Yes" : "No") << std::endl;
+    }
 };
 
 
 int main() {
     try {
-        pqxx::connection conn("your_connection_string_here");
+        pqxx::connection conn("dbname=CourseWorkDb user=postgres password=aboba host=localhost port=5432");
 
         int choice;
         while (true) {
-            std::cout << "Выберите тип транспорта:" << std::endl;
+            std::cout << "Select transport type:" << std::endl;
             std::cout << "1 - Bus" << std::endl;
             std::cout << "2 - Trolleybus" << std::endl;
             std::cout << "3 - Taxi" << std::endl;
             std::cout << "4 - Car Sharing" << std::endl;
-            std::cout << "0 - Выход" << std::endl;
-            std::cout << "Ваш выбор: ";
+            std::cout << "0 - Exit" << std::endl;
+            std::cout << "Your choice: ";
             std::cin >> choice;
 
             if (choice == 0) {
@@ -167,6 +228,7 @@ int main() {
             switch (choice) {
                 case 1:
                     result = txn.exec("SELECT * FROM bus");
+                    std::cout << "Checking was successfull" << std::endl;
                     break;
                 case 2:
                     result = txn.exec("SELECT * FROM trolleybus");
@@ -188,7 +250,21 @@ int main() {
                 std::string brand = result[i]["brand"].as<std::string>();
                 std::string model = result[i]["model"].as<std::string>();
                 std::string color = result[i]["color"].as<std::string>();
-                EngineType engineType = static_cast<EngineType>(result[i]["engineType"].as<int>());
+                std::string engineTypeStr = result[i]["engineType"].as<std::string>();
+
+                EngineType engineType;
+                if (engineTypeStr == "PETROL") {
+                    engineType = PETROL;
+                } else if (engineTypeStr == "DIESEL") {
+                    engineType = DIESEL;
+                } else if (engineTypeStr == "HYBRID") {
+                    engineType = HYBRID;
+                } else if (engineTypeStr == "ELECTRIC") {
+                    engineType = ELECTRIC;
+                } else {
+                    std::cerr << "Invalid engine type: " << engineTypeStr << std::endl;
+                    continue;
+                }
 
                 if (choice == 1) {
                     int capacity = result[i]["capacity"].as<int>();
@@ -198,7 +274,7 @@ int main() {
                     bool hasContactlessPayment = result[i]["has_contactless_payment"].as<bool>();
 
                     Bus bus(brand, model, color, engineType, capacity, from, to, frequency, hasContactlessPayment);
-
+                    bus.displayInfo();
                 }
                 else if (choice == 2) {
                     int capacity = result[i]["capacity"].as<int>();
@@ -208,6 +284,7 @@ int main() {
                     bool hasSockets = result[i]["has_sockets"].as<bool>();
 
                     TrolleyBus trolleybus(brand, model, color, engineType, capacity, from, to, frequency, hasSockets);
+                    trolleybus.displayInfo();
                 }
                 else if (choice == 3) {
                     double pricePerKil = result[i]["price_per_kil"].as<double>();
@@ -218,6 +295,7 @@ int main() {
                     RentCarTypes rentCarType = static_cast<RentCarTypes>(result[i]["rent_car_type"].as<int>());
 
                     Taxi taxi(brand, model, color, engineType, pricePerKil, rating, hasDriver, hasWiFi, hasChildSeat, rentCarType);
+                    taxi.displayInfo();
 
                 }
                 else if (choice == 4) {
@@ -226,6 +304,7 @@ int main() {
                     bool hasADS = result[i]["has_ads"].as<bool>();
 
                     CarSharing carSharing(brand, model, color, engineType, pricePerMinute, hasInsurance, hasADS);
+                    carSharing.displayInfo();
 
                 }
             }
