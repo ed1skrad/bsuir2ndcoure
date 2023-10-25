@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/atema/CLionProjects/CourseWork/lib/libpqxx-7.8.1/test
+# Install script for directory: F:/repo/CourseWork/lib/libpqxx-7.8.1/test
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,6 +34,6 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/atema/CLion 2022.3.3/bin/mingw/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Users/atema/CLion 2022.2.5/bin/mingw/bin/objdump.exe")
 endif()
 

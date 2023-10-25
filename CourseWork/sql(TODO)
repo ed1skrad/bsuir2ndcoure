@@ -1,54 +1,83 @@
--- Таблица для автобусов
-CREATE TABLE bus (
-    id serial PRIMARY KEY,
-    brand VARCHAR(255),
-    model VARCHAR(255),
-    color VARCHAR(255),
-    engineType VARCHAR(255),
-    capacity INTEGER,
-    from_location VARCHAR(255),
-    to_location VARCHAR(255),
-    frequency VARCHAR(255),
-    has_contactless_payment BOOLEAN
+CREATE TABLE Bus (
+                     bus_id SERIAL PRIMARY KEY,
+                     brand VARCHAR(255),
+                     model VARCHAR(255),
+                     color VARCHAR(255),
+                     engineType VARCHAR(255),
+                     capacity INT,
+                     from_location VARCHAR(255),
+                     to_location VARCHAR(255),
+                     frequency VARCHAR(255),
+                     has_contactless_payment BOOLEAN
 );
 
--- Таблица для троллейбусов
-CREATE TABLE trolleybus (
-    id serial PRIMARY KEY,
-    brand VARCHAR(255),
-    model VARCHAR(255),
-    color VARCHAR(255),
-    engineType VARCHAR(255),
-    capacity INTEGER,
-    from_location VARCHAR(255),
-    to_location VARCHAR(255),
-    frequency VARCHAR(255),
-    has_sockets BOOLEAN
+CREATE TABLE TrolleyBus (
+                            trolleybus_id SERIAL PRIMARY KEY,
+                            brand VARCHAR(255),
+                            model VARCHAR(255),
+                            color VARCHAR(255),
+                            engineType VARCHAR(255),
+                            capacity INT,
+                            from_location VARCHAR(255),
+                            to_location VARCHAR(255),
+                            frequency VARCHAR(255),
+                            has_sockets BOOLEAN
 );
 
--- Таблица для такси
-CREATE TABLE taxi (
-    id serial PRIMARY KEY,
-    brand VARCHAR(255),
-    model VARCHAR(255),
-    color VARCHAR(255),
-    engineType VARCHAR(255),
-    price_per_kil DOUBLE PRECISION,
-    rating DOUBLE PRECISION,
-    has_driver BOOLEAN,
-    has_wifi BOOLEAN,
-    has_child_seat BOOLEAN,
-    rent_car_type VARCHAR(255)
+CREATE TABLE Taxi (
+                      taxi_id SERIAL PRIMARY KEY,
+                      brand VARCHAR(255),
+                      model VARCHAR(255),
+                      color VARCHAR(255),
+                      engineType VARCHAR(255),
+                      price_per_kil DOUBLE PRECISION,
+                      rating DOUBLE PRECISION,
+                      has_driver BOOLEAN,
+                      has_wifi BOOLEAN,
+                      has_child_seat BOOLEAN,
+                      rent_car_type INT
 );
 
--- Таблица для каршеринга
-CREATE TABLE car_sharing (
-    id serial PRIMARY KEY,
-    brand VARCHAR(255),
-    model VARCHAR(255),
-    color VARCHAR(255),
-    engineType VARCHAR(255),
-    price_per_minute DOUBLE PRECISION,
-    has_insurance BOOLEAN,
-    has_ads BOOLEAN
+CREATE TABLE CarSharing (
+                            car_sharing_id SERIAL PRIMARY KEY,
+                            brand VARCHAR(255),
+                            model VARCHAR(255),
+                            color VARCHAR(255),
+                            engineType VARCHAR(255),
+                            price_per_minute DOUBLE PRECISION,
+                            has_insurance BOOLEAN,
+                            has_ads BOOLEAN
 );
+
+CREATE TABLE customer (
+                          customer_id SERIAL PRIMARY KEY,
+                          name VARCHAR(255),
+                          surname VARCHAR(255),
+                          contact_information VARCHAR(255),
+                          total_requests_value INT
+);
+
+CREATE TABLE "order" (
+                         order_id SERIAL PRIMARY KEY,
+                         customer_id INT,
+                         taxi_id INT,
+                         order_time TIMESTAMP,
+                         FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+                         FOREIGN KEY (taxi_id) REFERENCES Taxi(taxi_id)
+);
+
+CREATE TABLE workingtaxi (
+    taxi_id serial PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    enginetype VARCHAR(255) NOT NULL,
+    priceperkil DOUBLE PRECISION NOT NULL,
+    rating DOUBLE PRECISION NOT NULL,
+    hasdriver BOOLEAN NOT NULL,
+    haswifi BOOLEAN NOT NULL,
+    haschildseat BOOLEAN NOT NULL,
+    rentcartype INT NOT NULL,
+    isoccupied BOOLEAN NOT NULL
+);
+

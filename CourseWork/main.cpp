@@ -1,6 +1,64 @@
 #include <string>
 #include <iostream>
 #include "pqxx/pqxx"
+#include <ctime>
+
+class Customer {
+private:
+    int customer_id;
+    std::string name;
+    std::string surname;
+    std::string contact_information;
+    int total_requests_value;
+
+public:
+    Customer() {
+        customer_id = 0;
+        total_requests_value = 0;
+    }
+
+    int getCustomerId() const { return customer_id; }
+    void setCustomerId(int id) { customer_id = id; }
+
+    const std::string& getName() const { return name; }
+    void setName(const std::string& n) { name = n; }
+
+    const std::string& getSurname() const { return surname; }
+    void setSurname(const std::string& s) { surname = s; }
+
+    const std::string& getContactInformation() const { return contact_information; }
+    void setContactInformation(const std::string& info) { contact_information = info; }
+
+    int getTotalRequestsValue() const { return total_requests_value; }
+    void setTotalRequestsValue(int value) { total_requests_value = value; }
+};
+
+class Order {
+private:
+    int order_id;
+    int customer_id;
+    int car_id;
+    pqxx::result::const_iterator order_time;
+
+public:
+    Order() {
+        order_id = 0;
+        customer_id = 0;
+        car_id = 0;
+    }
+
+    int getOrderId() const { return order_id; }
+    void setOrderId(int id) { order_id = id; }
+
+    int getCustomerId() const { return customer_id; }
+    void setCustomerId(int id) { customer_id = id; }
+
+    int getCarId() const { return car_id; }
+    void setCarId(int id) { car_id = id; }
+
+    const pqxx::result::const_iterator& getOrderTime() const { return order_time; }
+    void setOrderTime(const pqxx::result::const_iterator& time) { order_time = time; }
+};
 
 
 enum EngineType
@@ -174,33 +232,60 @@ public:
     }
 };
 
-class CarSharing : public Transport{
+class WorkingTaxi : public Taxi {
+private:
+    bool isOccupied;
+
+public:
+    WorkingTaxi(std::string brand, std::string model, std::string color, EngineType engineType, double pricePerKil, double rating, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarType)
+            : Taxi(brand, model, color, engineType, pricePerKil, rating, hasDriver, hasWiFi, hasChildSeat, rentCarType), isOccupied(true) {}
+
+    bool getIsOccupied() const { return isOccupied; }
+    void setIsOccupied(bool occupied) { isOccupied = occupied; }
+
+    WorkingTaxi(const WorkingTaxi& other)
+            : Taxi(other), isOccupied(other.isOccupied) {}
+
+    ~WorkingTaxi() {}
+
+    WorkingTaxi()
+            : Taxi("", "", "", PETROL, 0.0, 0.0, false, false, false, ECONOMY), isOccupied(true) {}
+};
+
+
+class CarSharing : public Transport {
 private:
     double pricePerMinute;
     bool hasInsurance;
     bool hasADS;
+    RentCarTypes rentCarType;
 
 public:
-    CarSharing(std::string brand, std::string model, std::string color, EngineType engineType, double pricePerMinute, bool hasInsurance, bool hasADS)
-            : Transport(brand, model, color, engineType), pricePerMinute(pricePerMinute), hasInsurance(hasInsurance), hasADS(hasADS) {}
+    CarSharing(std::string brand, std::string model, std::string color, EngineType engineType, double pricePerMinute, bool hasInsurance, bool hasADS, RentCarTypes rentCarType)
+            : Transport(brand, model, color, engineType), pricePerMinute(pricePerMinute), hasInsurance(hasInsurance), hasADS(hasADS), rentCarType(rentCarType) {}
 
-    double getPricePerMinute() { return pricePerMinute; }
+    double getPricePerMinute() const { return pricePerMinute; }
     void setPricePerMinute(double pricePerMinute) { this->pricePerMinute = pricePerMinute; }
 
-    bool getHasInsurance() { return hasInsurance; }
+    bool getHasInsurance() const { return hasInsurance; }
     void setHasInsurance(bool hasInsurance) { this->hasInsurance = hasInsurance; }
 
-    bool getHasADS() { return hasADS; }
+    bool getHasADS() const { return hasADS; }
     void setHasADS(bool hasADS) { this->hasADS = hasADS; }
 
+    RentCarTypes getRentCarType() const { return rentCarType; }
+    void setRentCarType(RentCarTypes rentCarType) { this->rentCarType = rentCarType; }
+
     void displayInfo() {
-        Transport::displayInfo(); // Вывод информации о базовом классе
+        Transport::displayInfo();
         std::cout << "Transport Type: Car Sharing" << std::endl;
         std::cout << "Price per Minute: " << pricePerMinute << std::endl;
         std::cout << "Has Insurance: " << (hasInsurance ? "Yes" : "No") << std::endl;
         std::cout << "Has ADS: " << (hasADS ? "Yes" : "No") << std::endl;
+        std::cout << "Rent Car Type: " << getRentCarType() << std::endl;
     }
 };
+
 
 
 int main() {
@@ -292,18 +377,81 @@ int main() {
                     bool hasDriver = result[i]["has_driver"].as<bool>();
                     bool hasWiFi = result[i]["has_wifi"].as<bool>();
                     bool hasChildSeat = result[i]["has_child_seat"].as<bool>();
-                    RentCarTypes rentCarType = static_cast<RentCarTypes>(result[i]["rent_car_type"].as<int>());
+                    std::string rentCarTypeStr = result[i]["rent_car_type"].as<std::string>();
 
+                    RentCarTypes rentCarType;
+                    if (rentCarTypeStr == "ECONOMY") {
+                        rentCarType = ECONOMY;
+                    } else if (rentCarTypeStr == "COMFORT") {
+                        rentCarType = COMFORT;
+                    } else if (rentCarTypeStr == "BUSINESS") {
+                        rentCarType = BUSINESS;
+                    } else {
+                        std::cerr << "Invalid rent car type: " << rentCarTypeStr << std::endl;
+                        continue;
+                    }
                     Taxi taxi(brand, model, color, engineType, pricePerKil, rating, hasDriver, hasWiFi, hasChildSeat, rentCarType);
                     taxi.displayInfo();
 
+                    int requestTaxi;
+                    std::cout << "Do you want to request a taxi? (1 for Yes, 0 for No): ";
+                    std::cin >> requestTaxi;
+
+                    if (requestTaxi == 1) {
+                        Customer customer;
+                        std::cout << "Enter your name: ";
+                        std::string name;
+                        std::cin >> name;
+                        customer.setName(name);
+
+                        std::cout << "Enter your surname: ";
+                        std::string surname;
+                        std::cin >> surname;
+                        customer.setSurname(surname);
+
+                        std::cout << "Enter your contact information: ";
+                        std::string contactInfo;
+                        std::cin >> contactInfo;
+                        customer.setContactInformation(contactInfo);
+
+                        pqxx::work taxiTxn(conn);
+                        std::string selectRandomTaxiSQL = "SELECT taxi_id FROM taxi ORDER BY RANDOM() LIMIT 1";
+                        pqxx::result randomTaxiResult = taxiTxn.exec(selectRandomTaxiSQL);
+
+                        std::time_t current_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+                        std::string current_time_str = std::ctime(&current_time);
+
+                        if (!randomTaxiResult.empty()) {
+                            int carId = randomTaxiResult[0][0].as<int>();
+
+                            pqxx::work orderTxn(conn);
+                            std::string insertOrderSQL = "INSERT INTO \"order\" (customer_id, car_id, order_time) VALUES (" + std::to_string(customer.getCustomerId()) + ", " + std::to_string(carId) + ", current_timestamp) RETURNING order_id";
+                            pqxx::result insertOrderResult = orderTxn.exec(insertOrderSQL);
+                            orderTxn.commit();
+
+                            if (!insertOrderResult.empty()) {
+                                int orderId = insertOrderResult[0][0].as<int>();
+                                std::cout << "Order created successfully! Order ID: " << orderId << std::endl;
+
+                                // You can now display more information about the order, if needed.
+                            } else {
+                                std::cerr << "Failed to create an order." << std::endl;
+                            }
+                        } else {
+                            std::cerr << "No available cars found." << std::endl;
+                        }
+                    } else {
+                        std::cout << "Order canceled. Exiting..." << std::endl;
+                        break;
+                    }
                 }
                 else if (choice == 4) {
                     double pricePerMinute = result[i]["price_per_minute"].as<double>();
                     bool hasInsurance = result[i]["has_insurance"].as<bool>();
                     bool hasADS = result[i]["has_ads"].as<bool>();
+                    RentCarTypes rentCarType = static_cast<RentCarTypes>(result[i]["rent_car_type"].as<int>());
 
-                    CarSharing carSharing(brand, model, color, engineType, pricePerMinute, hasInsurance, hasADS);
+                    CarSharing carSharing(brand, model, color, engineType, pricePerMinute, hasInsurance, hasADS, rentCarType);
                     carSharing.displayInfo();
 
                 }
