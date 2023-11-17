@@ -1,4 +1,4 @@
-# Install script for directory: F:/repo/CourseWork/lib/libpqxx-7.8.1/src
+# Install script for directory: C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,14 +34,14 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/atema/CLion 2022.2.5/bin/mingw/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/objdump.exe")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "F:/repo/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/libpqxx.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/libpqxx.a")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "F:/repo/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/libpqxx.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/libpqxx.pc")
 endif()
 

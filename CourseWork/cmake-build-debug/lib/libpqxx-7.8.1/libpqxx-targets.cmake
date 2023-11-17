@@ -45,7 +45,7 @@ unset(_expectedTargets)
 add_library(libpqxx::pqxx STATIC IMPORTED)
 
 set_target_properties(libpqxx::pqxx PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "F:/repo/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include;F:/repo/CourseWork/lib/libpqxx-7.8.1/include"
+  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include;C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include"
   INTERFACE_LINK_LIBRARIES "C:/Program Files/PostgreSQL/13/lib/libpq.lib;wsock32;ws2_32"
 )
 
@@ -53,7 +53,7 @@ set_target_properties(libpqxx::pqxx PROPERTIES
 set_property(TARGET libpqxx::pqxx APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(libpqxx::pqxx PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/repo/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/libpqxx.a"
+  IMPORTED_LOCATION_DEBUG "C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/libpqxx.a"
   )
 
 # This file does not depend on other imported targets which have

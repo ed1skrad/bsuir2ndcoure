@@ -1,83 +1,73 @@
-CREATE TABLE Bus (
-                     bus_id SERIAL PRIMARY KEY,
-                     brand VARCHAR(255),
-                     model VARCHAR(255),
-                     color VARCHAR(255),
-                     engineType VARCHAR(255),
-                     capacity INT,
-                     from_location VARCHAR(255),
-                     to_location VARCHAR(255),
-                     frequency VARCHAR(255),
-                     has_contactless_payment BOOLEAN
-);
-
-CREATE TABLE TrolleyBus (
-                            trolleybus_id SERIAL PRIMARY KEY,
-                            brand VARCHAR(255),
-                            model VARCHAR(255),
-                            color VARCHAR(255),
-                            engineType VARCHAR(255),
-                            capacity INT,
-                            from_location VARCHAR(255),
-                            to_location VARCHAR(255),
-                            frequency VARCHAR(255),
-                            has_sockets BOOLEAN
-);
-
-CREATE TABLE Taxi (
-                      taxi_id SERIAL PRIMARY KEY,
-                      brand VARCHAR(255),
-                      model VARCHAR(255),
-                      color VARCHAR(255),
-                      engineType VARCHAR(255),
-                      price_per_kil DOUBLE PRECISION,
-                      rating DOUBLE PRECISION,
-                      has_driver BOOLEAN,
-                      has_wifi BOOLEAN,
-                      has_child_seat BOOLEAN,
-                      rent_car_type INT
-);
-
-CREATE TABLE CarSharing (
-                            car_sharing_id SERIAL PRIMARY KEY,
-                            brand VARCHAR(255),
-                            model VARCHAR(255),
-                            color VARCHAR(255),
-                            engineType VARCHAR(255),
-                            price_per_minute DOUBLE PRECISION,
-                            has_insurance BOOLEAN,
-                            has_ads BOOLEAN
-);
-
+-- Customer table
 CREATE TABLE customer (
-                          customer_id SERIAL PRIMARY KEY,
-                          name VARCHAR(255),
-                          surname VARCHAR(255),
-                          contact_information VARCHAR(255),
-                          total_requests_value INT
+    customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
+    contact_information VARCHAR(255) NOT NULL,
+    total_requests_value INT DEFAULT 0
 );
 
-CREATE TABLE "order" (
-                         order_id SERIAL PRIMARY KEY,
-                         customer_id INT,
-                         taxi_id INT,
-                         order_time TIMESTAMP,
-                         FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-                         FOREIGN KEY (taxi_id) REFERENCES Taxi(taxi_id)
+-- Order table
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customer(customer_id),
+    car_id INT NOT NULL,
+    order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE workingtaxi (
-    taxi_id serial PRIMARY KEY,
+-- Taxi table
+CREATE TABLE taxi (
+    taxi_id SERIAL PRIMARY KEY,
     brand VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
     color VARCHAR(255) NOT NULL,
-    enginetype VARCHAR(255) NOT NULL,
-    priceperkil DOUBLE PRECISION NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    price_per_kil DOUBLE PRECISION NOT NULL,
     rating DOUBLE PRECISION NOT NULL,
-    hasdriver BOOLEAN NOT NULL,
-    haswifi BOOLEAN NOT NULL,
-    haschildseat BOOLEAN NOT NULL,
-    rentcartype INT NOT NULL,
-    isoccupied BOOLEAN NOT NULL
+    has_driver BOOLEAN NOT NULL,
+    has_wifi BOOLEAN NOT NULL,
+    has_child_seat BOOLEAN NOT NULL,
+    rent_car_type VARCHAR(20) NOT NULL
 );
 
+-- Bus table
+CREATE TABLE bus (
+    bus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    from_location VARCHAR(255) NOT NULL,
+    to_location VARCHAR(255) NOT NULL,
+    frequency VARCHAR(255) NOT NULL,
+    has_contactless_payment BOOLEAN NOT NULL
+);
+
+-- Trolleybus table
+CREATE TABLE trolleybus (
+    trolleybus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    from_location VARCHAR(255) NOT NULL,
+    to_location VARCHAR(255) NOT NULL,
+    frequency VARCHAR(255) NOT NULL,
+    has_sockets BOOLEAN NOT NULL
+);
+
+
+-- Car Sharing table
+CREATE TABLE car_sharing (
+    car_sharing_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    price_per_minute DOUBLE PRECISION NOT NULL,
+    has_insurance BOOLEAN NOT NULL,
+    has_ads BOOLEAN NOT NULL,
+    rent_car_type VARCHAR(20) NOT NULL
+);
