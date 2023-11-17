@@ -58,16 +58,14 @@ CREATE TABLE trolleybus (
     has_sockets BOOLEAN NOT NULL
 );
 
-
--- Car Sharing table
-CREATE TABLE car_sharing (
-    car_sharing_id SERIAL PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    engineType VARCHAR(20) NOT NULL,
-    price_per_minute DOUBLE PRECISION NOT NULL,
-    has_insurance BOOLEAN NOT NULL,
-    has_ads BOOLEAN NOT NULL,
-    rent_car_type VARCHAR(20) NOT NULL
+-- Ticket table
+CREATE TABLE ticket (
+    ticket_id SERIAL PRIMARY KEY,
+    transport_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    price DOUBLE PRECISION NOT NULL,
+    purchase_time TIMESTAMP NOT NULL,
+    transport_type VARCHAR(20) NOT NULL
 );
+
+
