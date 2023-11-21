@@ -10,12 +10,10 @@ private:
     std::string name;
     std::string surname;
     std::string contact_information;
-    int total_requests_value;
 
 public:
     Customer() {
         customer_id = 0;
-        total_requests_value = 0;
     }
 
     int getCustomerId() const { return customer_id; }
@@ -29,9 +27,6 @@ public:
 
     const std::string& getContactInformation() const { return contact_information; }
     void setContactInformation(const std::string& info) { contact_information = info; }
-
-    int getTotalRequestsValue() const { return total_requests_value; }
-    void setTotalRequestsValue(int value) { total_requests_value = value; }
 };
 
 class Orders {
@@ -436,6 +431,8 @@ public:
         }
     }
 
+    TransportTicket() : ticketId(0), transportId(0), customerId(0), price(0.0), purchaseTime(""), transportType(TransportType::BUS) {}
+
 
     int getTicketId() const {
         return ticketId;
@@ -461,6 +458,14 @@ public:
         return transportType;
     }
 
+    void setCustomerId(int customerId) {
+        TransportTicket::customerId = customerId;
+    }
+
+    void setTransportId(int transportId) {
+        TransportTicket::transportId = transportId;
+    }
+
     void displayTicketInfo() const {
         std::cout << "Ticket ID: " << getTicketId() << std::endl;
         std::cout << "Transport ID: " << getTransportId() << std::endl;
@@ -471,6 +476,27 @@ public:
         std::cout << std::endl;
     }
 };
+
+std::string getCurrentTimestampAsString() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::ctime(&currentTime);
+    return ss.str();
+}
+
+class TicketPrice {
+private:
+    int id;
+    double price;
+
+public:
+    TicketPrice(int id, double price) : id(id), price(price) {}
+
+    int getId() const { return id; }
+    double getPrice() const { return price; }
+};
+
 
 class TicketManager {
 private:
@@ -495,22 +521,35 @@ public:
         return N.exec(query);
     }
 
-    void insertTicket(const TransportTicket& ticket) {
+    int insertTicket(const TransportTicket& ticket) {
         try {
             pqxx::work W(C);
+
+            // Get the current timestamp as a string
+            std::string currentTimestamp = getCurrentTimestampAsString();
+
+            // Construct the insert query with the current timestamp
             std::string insertQuery = "INSERT INTO ticket (transport_id, customer_id, price, purchase_time, transport_type) VALUES ("
                                       + std::to_string(ticket.getTransportId()) + ", "
                                       + std::to_string(ticket.getCustomerId()) + ", "
                                       + std::to_string(ticket.getPrice()) + ", '"
-                                      + ticket.getPurchaseTime() + "', '"
-                                      + (ticket.getTransportType() == TransportType::BUS ? "BUS" : "TROLLEYBUS") + "')";
-            W.exec(insertQuery);
+                                      + currentTimestamp + "', '"
+                                      + (ticket.getTransportType() == TransportType::BUS ? "BUS" : "TROLLEYBUS") + "') RETURNING ticket_id";
+
+            // Execute the query
+            pqxx::result ticketIdResult = W.exec(insertQuery);
+            int ticketId = ticketIdResult[0]["ticket_id"].as<int>();
+
+            // Commit the transaction
             W.commit();
+
+            return ticketId;
         } catch (const std::exception& e) {
             std::cerr << e.what() << std::endl;
             throw std::runtime_error("Failed to insert ticket into the database");
         }
     }
+
 
     void displayAllTickets() {
         try {
@@ -547,6 +586,28 @@ private:
         ticket.displayTicketInfo();
     }
 };
+
+void isIdValid(int& id, const std::string& transportName, TaxiDatabase* taxiDb) {
+    while (true) {
+        try {
+            std::cout << "Enter the " << transportName << " ID: ";
+            std::cin >> id;
+
+            std::string checkQuery = "SELECT * FROM " + transportName + " WHERE " + transportName + "_id = " + std::to_string(id);
+            pqxx::result result = taxiDb->executeQuery(checkQuery);
+
+            if (!result.empty()) {
+                return;  // Valid ID, exit the loop
+            } else {
+                std::cerr << transportName << " with entered value does not exist. Try again." << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            // Handle the error, maybe ask the user to try again or exit the program
+        }
+    }
+}
+
 
 int main() {
     try {
@@ -601,9 +662,11 @@ int main() {
                     int carId;
                     Orders order;
 
-                    // Get order details
-                    cout << "Enter the car ID you want to order: ";
-                    cin >> carId;
+                    try {
+                        isIdValid(carId, "taxi", &taxiDb);
+                    } catch (const std::runtime_error& e) {
+                        std::cerr << "Error: " << e.what() << std::endl;
+                    }
 
                     order.setCustomerId(customerId);
                     order.setCarId(carId);
@@ -627,51 +690,54 @@ int main() {
                 cin >> bookChoice;
 
                 if (bookChoice == "yes" || bookChoice == "Yes") {
-                    // ... (code for booking a bus)
-                    cout << "Bus booked successfully!" << endl;
+                    try {
+                        // ... (code for booking a bus)
+                        cout << "Bus booked successfully!" << endl;
 
-                    // Declare variables for customer details
-                    string name, surname, contactInformation;
+                        // Declare variables for customer details
+                        string name, surname, contactInformation;
 
-                    // Get customer details
-                    cout << "Enter your name: ";
-                    cin >> name;
+                        // Get customer details
+                        cout << "Enter your name: ";
+                        cin >> name;
 
-                    cout << "Enter your surname: ";
-                    cin >> surname;
+                        cout << "Enter your surname: ";
+                        cin >> surname;
 
-                    cout << "Enter your contact information: ";
-                    cin >> contactInformation;
+                        cout << "Enter your contact information: ";
+                        cin >> contactInformation;
 
-                    // Add the customer to the database
-                    string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
-                                              name + "','" +
-                                              surname + "','" +
-                                              contactInformation + "') RETURNING customer_id";
-                    pqxx::result customerIdResult = taxiDb.executeQuery(addCustomerQuery);
-                    int customerId = customerIdResult[0][0].as<int>();
+                        // Add the customer to the database
+                        string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
+                                                  name + "','" +
+                                                  surname + "','" +
+                                                  contactInformation + "') RETURNING customer_id";
+                        pqxx::result customerIdResult = taxiDb.executeQuery(addCustomerQuery);
+                        int customerId = customerIdResult[0][0].as<int>();
 
-                    // Declare variables for ticket details
-                    int busId;
-                    TransportTicket ticket;
+                        // Declare variables for ticket details
+                        int busId;
+                        TransportTicket ticket;
 
-                    // Get ticket details
-                    cout << "Enter the bus ID you want to book: ";
-                    cin >> busId;
+                        try {
+                            isIdValid(busId, "bus", &taxiDb);
+                        } catch (const std::runtime_error& e) {
+                            std::cerr << "Error: " << e.what() << std::endl;
+                        }
 
-                    ticket.setTransportId(busId);
-                    ticket.setCustomerId(customerId);
 
-                    // Add the ticket to the database
-                    string addTicketQuery = "INSERT INTO ticket (transport_id, customer_id, price, purchase_time, transport_type) VALUES (" +
-                                            to_string(ticket.getTransportId()) + "," +
-                                            to_string(ticket.getCustomerId()) + "," +
-                                            to_string(ticket.getPrice()) + ",'" +
-                                            ticket.getPurchaseTime() + "','" +
-                                            "BUS" + "')";
-                    taxiDb.executeQuery(addTicketQuery);
+                        ticket.setTransportId(busId);
+                        ticket.setCustomerId(customerId);
 
-                    cout << "Bus booked successfully!" << endl;
+                        // Use TicketManager to insert the ticket into the database
+                        TicketManager ticketManager;
+                        int ticketId = ticketManager.insertTicket(ticket);
+
+                        cout << "Bus booked successfully! Ticket ID: " << ticketId << endl;
+                    } catch (const std::exception& e) {
+                        cerr << e.what() << std::endl;
+                        // Handle the exception, possibly rollback any changes made
+                    }
                 }
                 break;
             }
@@ -683,51 +749,53 @@ int main() {
                 cin >> bookChoice;
 
                 if (bookChoice == "yes" || bookChoice == "Yes") {
-                    // ... (code for booking a trolleybus)
-                    cout << "Trolleybus booked successfully!" << endl;
+                    try {
+                        // ... (code for booking a trolleybus)
+                        cout << "Trolleybus booked successfully!" << endl;
 
-                    // Declare variables for customer details
-                    string name, surname, contactInformation;
+                        // Declare variables for customer details
+                        string name, surname, contactInformation;
 
-                    // Get customer details
-                    cout << "Enter your name: ";
-                    cin >> name;
+                        // Get customer details
+                        cout << "Enter your name: ";
+                        cin >> name;
 
-                    cout << "Enter your surname: ";
-                    cin >> surname;
+                        cout << "Enter your surname: ";
+                        cin >> surname;
 
-                    cout << "Enter your contact information: ";
-                    cin >> contactInformation;
+                        cout << "Enter your contact information: ";
+                        cin >> contactInformation;
 
-                    // Add the customer to the database
-                    string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
-                                              name + "','" +
-                                              surname + "','" +
-                                              contactInformation + "') RETURNING customer_id";
-                    pqxx::result customerIdResult = taxiDb.executeQuery(addCustomerQuery);
-                    int customerId = customerIdResult[0][0].as<int>();
+                        // Add the customer to the database
+                        string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
+                                                  name + "','" +
+                                                  surname + "','" +
+                                                  contactInformation + "') RETURNING customer_id";
+                        pqxx::result customerIdResult = taxiDb.executeQuery(addCustomerQuery);
+                        int customerId = customerIdResult[0][0].as<int>();
 
-                    // Declare variables for ticket details
-                    int trolleybusId;
-                    TransportTicket ticket;
+                        // Declare variables for ticket details
+                        int trolleybusId;
+                        TransportTicket ticket;
 
-                    // Get ticket details
-                    cout << "Enter the trolleybus ID you want to book: ";
-                    cin >> trolleybusId;
+                        try {
+                            isIdValid(trolleybusId, "trolleybus", &taxiDb);
+                        } catch (const std::runtime_error& e) {
+                            std::cerr << "Error: " << e.what() << std::endl;
+                        }
 
-                    ticket.setTransportId(trolleybusId);
-                    ticket.setCustomerId(customerId);
+                        ticket.setTransportId(trolleybusId);
+                        ticket.setCustomerId(customerId);
 
-                    // Add the ticket to the database
-                    string addTicketQuery = "INSERT INTO ticket (transport_id, customer_id, price, purchase_time, transport_type) VALUES (" +
-                                            to_string(ticket.getTransportId()) + "," +
-                                            to_string(ticket.getCustomerId()) + "," +
-                                            to_string(ticket.getPrice()) + ",'" +
-                                            ticket.getPurchaseTime() + "','" +
-                                            "TROLLEYBUS" + "')";
-                    taxiDb.executeQuery(addTicketQuery);
+                        // Use TicketManager to insert the ticket into the database
+                        TicketManager ticketManager;
+                        int ticketId = ticketManager.insertTicket(ticket);
 
-                    cout << "Trolleybus booked successfully!" << endl;
+                        cout << "Trolleybus booked successfully! Ticket ID: " << ticketId << endl;
+                    } catch (const std::exception& e) {
+                        cerr << e.what() << std::endl;
+                        // Handle the exception, possibly rollback any changes made
+                    }
                 }
                 break;
             }
