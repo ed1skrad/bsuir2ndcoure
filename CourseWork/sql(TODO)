@@ -68,4 +68,48 @@ CREATE TABLE ticket (
     transport_type VARCHAR(20) NOT NULL
 );
 
+CREATE TABLE Stop (
+    stop_id SERIAL PRIMARY KEY,
+    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
+    bus_id INT REFERENCES Bus(bus_id),
+    stop_name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Route (
+    route_id SERIAL PRIMARY KEY,
+    route_name VARCHAR(255) NOT NULL,
+    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
+    bus_id INT REFERENCES Bus(bus_id)
+);
+
+CREATE TABLE RouteStop (
+    route_id INT REFERENCES Route(route_id),
+    stop_id INT REFERENCES Stop(stop_id),
+    PRIMARY KEY (route_id, stop_id)
+);
+
+CREATE TABLE BusStop (
+    stop_id INT REFERENCES Stop(stop_id),
+    bus_id INT REFERENCES Bus(bus_id),
+    PRIMARY KEY (stop_id, bus_id)
+);
+
+CREATE TABLE TrolleybusStop (
+    stop_id INT REFERENCES Stop(stop_id),
+    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
+    PRIMARY KEY (stop_id, trolleybus_id)
+);
+
+CREATE TABLE BusRoute (
+    route_id INT REFERENCES Route(route_id),
+    bus_id INT REFERENCES Bus(bus_id),
+    PRIMARY KEY (route_id, bus_id)
+);
+
+CREATE TABLE TrolleybusRoute (
+    route_id INT REFERENCES Route(route_id),
+    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
+    PRIMARY KEY (route_id, trolleybus_id)
+);
 

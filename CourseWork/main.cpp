@@ -113,18 +113,18 @@ public:
 
 class PublicTransport : public Transport {
 private:
-    int transportId;  // Moved from Bus and TrolleyBus
+    int transport_id;  
     int capacity;
     std::string from;
     std::string to;
     std::string frequency;
 
 public:
-    PublicTransport(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency)
-            : Transport(brand, model, color, engineType), transportId(transportId), capacity(capacity), from(from), to(to), frequency(frequency) {}
+    PublicTransport(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency)
+            : Transport(brand, model, color, engineType), transport_id(transport_id), capacity(capacity), from(from), to(to), frequency(frequency) {}
 
-    int getTransportId() const { return transportId; }
-    void setTransportId(int id) { transportId = id; }
+    int gettransport_id() const { return transport_id; }
+    void settransport_id(int id) { transport_id = id; }
     ~PublicTransport() {}
 
     int getCapacity() { return capacity; }
@@ -144,31 +144,30 @@ public:
 class Bus : public PublicTransport {
 private:
 
-    bool hasContactlessPayment;
+    bool has_contactless_payment;
 
 public:
-    Bus(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency, bool hasContactlessPayment)
-            : PublicTransport(transportId, brand, model, color, engineType, capacity, from, to, frequency), hasContactlessPayment(hasContactlessPayment) {}
+    Bus(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency, bool has_contactless_payment)
+            : PublicTransport(transport_id, brand, model, color, engineType, capacity, from, to, frequency), has_contactless_payment(has_contactless_payment) {}
 
 
-    bool getHasContactlessPayment() const { return hasContactlessPayment; }
-    void setHasContactlessPayment(bool hasContactlessPayment) { this->hasContactlessPayment = hasContactlessPayment; }
+    bool gethas_contactless_payment() const { return has_contactless_payment; }
+    void sethas_contactless_payment(bool has_contactless_payment) { this->has_contactless_payment = has_contactless_payment; }
 
 
 };
 
 class TrolleyBus : public PublicTransport {
 private:
-    // int trolleybus_id;  // Removed field
-    bool hasSockets;
+    bool has_sockets;
 
 public:
-    TrolleyBus(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency, bool hasSockets)
-            : PublicTransport(transportId, brand, model, color, engineType, capacity, from, to, frequency), hasSockets(hasSockets) {}
+    TrolleyBus(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency, bool has_sockets)
+            : PublicTransport(transport_id, brand, model, color, engineType, capacity, from, to, frequency), has_sockets(has_sockets) {}
 
 
-    bool getHasSockets() const { return hasSockets; }
-    void setHasSockets(bool hasSockets) { this->hasSockets = hasSockets; }
+    bool gethas_sockets() const { return has_sockets; }
+    void sethas_sockets(bool has_sockets) { this->has_sockets = has_sockets; }
 };
 
 
@@ -218,12 +217,12 @@ public:
 };
 
 
-class TaxiDatabase {
+class Database {
 private:
     pqxx::connection C;
 
 public:
-    TaxiDatabase() : C("dbname=CourseWorkDb user=postgres password=aboba hostaddr=127.0.0.1 port=5432") {
+    Database() : C("dbname=CourseWorkDb user=postgres password=aboba hostaddr=127.0.0.1 port=5432") {
         if (C.is_open()) {
             cout << "Opened database successfully: " << C.dbname() << endl;
         } else {
@@ -232,7 +231,7 @@ public:
         }
     }
 
-    ~TaxiDatabase() {
+    ~Database() {
     }
 
     pqxx::result executeQuery(const string& query) {
@@ -303,9 +302,9 @@ void displayTaxiDetails(const pqxx::result::const_iterator& row) {
     cout << endl;
 }
 
-void displayAllTaxis(TaxiDatabase& taxiDb) {
+void displayAllTaxis(Database& Db) {
     try {
-        pqxx::result R = taxiDb.executeQuery("SELECT * FROM taxi");
+        pqxx::result R = Db.executeQuery("SELECT * FROM taxi");
         for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
             displayTaxiDetails(c);
         }
@@ -316,7 +315,7 @@ void displayAllTaxis(TaxiDatabase& taxiDb) {
 
 void displayBusDetails(const pqxx::result::const_iterator& row) {
     // Parse the row and create a Bus object
-    int transportId = row["bus_id"].as<int>();
+    int transport_id = row["bus_id"].as<int>();
     int capacity = row["capacity"].as<int>();
     string brand = row["brand"].as<string>();
     string model = row["model"].as<string>();
@@ -325,17 +324,17 @@ void displayBusDetails(const pqxx::result::const_iterator& row) {
     string from = row["from_location"].as<string>();
     string to = row["to_location"].as<string>();
     string frequency = row["frequency"].as<string>();
-    bool hasContactlessPayment = row["has_contactless_payment"].as<bool>();
+    bool has_contactless_payment = row["has_contactless_payment"].as<bool>();
 
     unique_ptr<Bus> bus = make_unique<Bus>(
-            transportId, brand, model, color,
+            transport_id, brand, model, color,
             static_cast<EngineType>(engineType),
             capacity, from, to, frequency,
-            hasContactlessPayment
+            has_contactless_payment
     );
 
     cout << "Bus Details:" << endl;
-    cout << "Transport ID: " << bus->getTransportId() << endl;
+    cout << "Transport ID: " << bus->gettransport_id() << endl;
     cout << "Brand: " << bus->getBrand() << endl;
     cout << "Model: " << bus->getModel() << endl;
     cout << "Color: " << bus->getColor() << endl;
@@ -344,12 +343,12 @@ void displayBusDetails(const pqxx::result::const_iterator& row) {
     cout << "From: " << bus->getFrom() << endl;
     cout << "To: " << bus->getTo() << endl;
     cout << "Frequency: " << bus->getFrequency() << endl;
-    cout << "Has Contactless Payment: " << (bus->getHasContactlessPayment() ? "Yes" : "No") << endl;
+    cout << "Has Contactless Payment: " << (bus->gethas_contactless_payment() ? "Yes" : "No") << endl;
     cout << endl;
 }
 
 void displayTrolleyBusDetails(const pqxx::result::const_iterator& row) {
-    int transportId = row["trolleybus_id"].as<int>();
+    int transport_id = row["trolleybus_id"].as<int>();
     int capacity = row["capacity"].as<int>();
     string brand = row["brand"].as<string>();
     string model = row["model"].as<string>();
@@ -358,17 +357,17 @@ void displayTrolleyBusDetails(const pqxx::result::const_iterator& row) {
     string from = row["from_location"].as<string>();
     string to = row["to_location"].as<string>();
     string frequency = row["frequency"].as<string>();
-    bool hasSockets = row["has_sockets"].as<bool>();
+    bool has_sockets = row["has_sockets"].as<bool>();
 
     unique_ptr<TrolleyBus> trolleyBus = make_unique<TrolleyBus>(
-            transportId, brand, model, color,
+            transport_id, brand, model, color,
             static_cast<EngineType>(engineType),
             capacity, from, to, frequency,
-            hasSockets
+            has_sockets
     );
 
     cout << "TrolleyBus Details:" << endl;
-    cout << "Transport ID: " << trolleyBus->getTransportId() << endl;
+    cout << "Transport ID: " << trolleyBus->gettransport_id() << endl;
     cout << "Brand: " << trolleyBus->getBrand() << endl;
     cout << "Model: " << trolleyBus->getModel() << endl;
     cout << "Color: " << trolleyBus->getColor() << endl;
@@ -377,13 +376,12 @@ void displayTrolleyBusDetails(const pqxx::result::const_iterator& row) {
     cout << "From: " << trolleyBus->getFrom() << endl;
     cout << "To: " << trolleyBus->getTo() << endl;
     cout << "Frequency: " << trolleyBus->getFrequency() << endl;
-    cout << "Has Sockets: " << (trolleyBus->getHasSockets() ? "Yes" : "No") << endl;
+    cout << "Has Sockets: " << (trolleyBus->gethas_sockets() ? "Yes" : "No") << endl;
     cout << endl;
 }
-void displayAllBuses(TaxiDatabase& taxiDb) {
+void displayAllBuses(Database& Db) {
     try {
-        // Query for buses
-        pqxx::result busResult = taxiDb.executeQuery("SELECT * FROM bus");
+        pqxx::result busResult = Db.executeQuery("SELECT * FROM bus");
         cout << "Displaying Bus Details:" << endl;
         for (const auto& row : busResult) {
             displayBusDetails(row);
@@ -393,9 +391,9 @@ void displayAllBuses(TaxiDatabase& taxiDb) {
     }
 }
 
-void displayAllTrolleyBuses(TaxiDatabase& taxiDb) {
+void displayAllTrolleyBuses(Database& Db) {
     try {
-        pqxx::result trolleyBusResult = taxiDb.executeQuery("SELECT * FROM trolleybus");
+        pqxx::result trolleyBusResult = Db.executeQuery("SELECT * FROM trolleybus");
         cout << "Displaying TrolleyBus Details:" << endl;
         for (const auto& row : trolleyBusResult) {
             displayTrolleyBusDetails(row);
@@ -412,34 +410,34 @@ enum TransportType {
 
 class TransportTicket {
 private:
-    int ticketId;
-    int transportId;
+    int ticket_id;
+    int transport_id;
     int customerId;
     double price;
     std::string purchaseTime;
     TransportType transportType;
 
 public:
-    TransportTicket(int ticketId, int transportId, int customerId, double price, std::string purchaseTime, TransportType transportType)
-            : ticketId(ticketId), customerId(customerId), price(price), purchaseTime(purchaseTime), transportType(transportType) {
+    TransportTicket(int ticket_id, int transport_id, int customerId, double price, std::string purchaseTime, TransportType transportType)
+            : ticket_id(ticket_id), customerId(customerId), price(price), purchaseTime(purchaseTime), transportType(transportType) {
         if (transportType == TransportType::BUS) {
-            this->transportId = transportId * 10 + static_cast<int>(TransportType::BUS);
+            this->transport_id = transport_id * 10 + static_cast<int>(TransportType::BUS);
         } else if (transportType == TransportType::TROLLEYBUS) {
-            this->transportId = transportId * 10 + static_cast<int>(TransportType::TROLLEYBUS);
+            this->transport_id = transport_id * 10 + static_cast<int>(TransportType::TROLLEYBUS);
         } else {
             throw std::invalid_argument("Invalid transport type");
         }
     }
 
-    TransportTicket() : ticketId(0), transportId(0), customerId(0), price(0.0), purchaseTime(""), transportType(TransportType::BUS) {}
+    TransportTicket() : ticket_id(0), transport_id(0), customerId(0), price(0.0), purchaseTime(""), transportType(TransportType::BUS) {}
 
 
-    int getTicketId() const {
-        return ticketId;
+    int getticket_id() const {
+        return ticket_id;
     }
 
-    int getTransportId() const {
-        return transportId;
+    int gettransport_id() const {
+        return transport_id;
     }
 
     int getCustomerId() const {
@@ -462,13 +460,13 @@ public:
         TransportTicket::customerId = customerId;
     }
 
-    void setTransportId(int transportId) {
-        TransportTicket::transportId = transportId;
+    void settransport_id(int transport_id) {
+        TransportTicket::transport_id = transport_id;
     }
 
     void displayTicketInfo() const {
-        std::cout << "Ticket ID: " << getTicketId() << std::endl;
-        std::cout << "Transport ID: " << getTransportId() << std::endl;
+        std::cout << "Ticket ID: " << getticket_id() << std::endl;
+        std::cout << "Transport ID: " << gettransport_id() << std::endl;
         std::cout << "Customer ID: " << getCustomerId() << std::endl;
         std::cout << "Price: " << getPrice() << std::endl;
         std::cout << "Purchase Time: " << getPurchaseTime() << std::endl;
@@ -513,7 +511,6 @@ public:
     }
 
     ~TicketManager() {
-        // Здесь происходит отключение от базы данных
     }
 
     pqxx::result executeQuery(const std::string& query) {
@@ -525,25 +522,21 @@ public:
         try {
             pqxx::work W(C);
 
-            // Get the current timestamp as a string
             std::string currentTimestamp = getCurrentTimestampAsString();
 
-            // Construct the insert query with the current timestamp
             std::string insertQuery = "INSERT INTO ticket (transport_id, customer_id, price, purchase_time, transport_type) VALUES ("
-                                      + std::to_string(ticket.getTransportId()) + ", "
+                                      + std::to_string(ticket.gettransport_id()) + ", "
                                       + std::to_string(ticket.getCustomerId()) + ", "
                                       + std::to_string(ticket.getPrice()) + ", '"
                                       + currentTimestamp + "', '"
                                       + (ticket.getTransportType() == TransportType::BUS ? "BUS" : "TROLLEYBUS") + "') RETURNING ticket_id";
 
-            // Execute the query
-            pqxx::result ticketIdResult = W.exec(insertQuery);
-            int ticketId = ticketIdResult[0]["ticket_id"].as<int>();
+            pqxx::result ticket_idResult = W.exec(insertQuery);
+            int ticket_id = ticket_idResult[0]["ticket_id"].as<int>();
 
-            // Commit the transaction
             W.commit();
 
-            return ticketId;
+            return ticket_id;
         } catch (const std::exception& e) {
             std::cerr << e.what() << std::endl;
             throw std::runtime_error("Failed to insert ticket into the database");
@@ -566,8 +559,8 @@ public:
 
 private:
     void displayTicketDetails(const pqxx::result::const_iterator& row) {
-        int ticketId = row["ticket_id"].as<int>();
-        int transportId = row["transport_id"].as<int>();
+        int ticket_id = row["ticket_id"].as<int>();
+        int transport_id = row["transport_id"].as<int>();
         int customerId = row["customer_id"].as<int>();
         double price = row["price"].as<double>();
         std::string purchaseTime = row["purchase_time"].as<std::string>();
@@ -582,38 +575,188 @@ private:
             throw std::runtime_error("Invalid transport type in the database");
         }
 
-        TransportTicket ticket(ticketId, transportId, customerId, price, purchaseTime, transportType);
+        TransportTicket ticket(ticket_id, transport_id, customerId, price, purchaseTime, transportType);
         ticket.displayTicketInfo();
     }
 };
 
-void isIdValid(int& id, const std::string& transportName, TaxiDatabase* taxiDb) {
+void isIdValid(int& id, const std::string& transportName, Database* Db) {
     while (true) {
         try {
             std::cout << "Enter the " << transportName << " ID: ";
             std::cin >> id;
 
             std::string checkQuery = "SELECT * FROM " + transportName + " WHERE " + transportName + "_id = " + std::to_string(id);
-            pqxx::result result = taxiDb->executeQuery(checkQuery);
+            pqxx::result result = Db->executeQuery(checkQuery);
 
             if (!result.empty()) {
-                return;  // Valid ID, exit the loop
+                return;
             } else {
                 std::cerr << transportName << " with entered value does not exist. Try again." << std::endl;
             }
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
-            // Handle the error, maybe ask the user to try again or exit the program
         }
     }
 }
 
+class Stop {
+private:
+    int stop_id;
+    int trolleybus_id;
+    int bus_id;
+    std::string stop_name;
+    std::string address;
+
+public:
+    Stop(int stopId, int trolleybusId, int busId, const std::string& stopName, const std::string& stopAddress)
+            : stop_id(stopId), trolleybus_id(trolleybusId), bus_id(busId), stop_name(stopName), address(stopAddress) {}
+
+    int getStopId() const { return stop_id; }
+    int getTrolleybusId() const { return trolleybus_id; }
+    int getBusId() const { return bus_id; }
+    const std::string& getStopName() const { return stop_name; }
+    const std::string& getAddress() const { return address; }
+
+    void setStopId(int stopId) { stop_id = stopId; }
+    void setTrolleybusId(int trolleybusId) { trolleybus_id = trolleybusId; }
+    void setBusId(int busId) { bus_id = busId; }
+    void setStopName(const std::string& stopName) { stop_name = stopName; }
+    void setAddress(const std::string& stopAddress) { address = stopAddress; }
+};
+
+class Route {
+private:
+    int route_id;
+    std::string route_name;
+    int trolleybus_id;
+    int bus_id;
+    std::vector<Stop> stops;
+
+public:
+    Route(int routeId, const std::string& routeName, int trolleybusId, int busId, const std::vector<Stop>& routeStops)
+            : route_id(routeId), route_name(routeName), trolleybus_id(trolleybusId), bus_id(busId), stops(routeStops) {}
+
+    int getRouteId() const { return route_id; }
+    const std::string& getRouteName() const { return route_name; }
+    int getTrolleybusId() const { return trolleybus_id; }
+    int getBusId() const { return bus_id; }
+    const std::vector<Stop>& getStops() const { return stops; }
+
+    void setRouteId(int routeId) { route_id = routeId; }
+    void setRouteName(const std::string& routeName) { route_name = routeName; }
+    void setTrolleybusId(int trolleybusId) { trolleybus_id = trolleybusId; }
+    void setBusId(int busId) { bus_id = busId; }
+    void setStops(const std::vector<Stop>& routeStops) { stops = routeStops; }
+
+};
+
+class RouteStop {
+private:
+    int route_id;
+    int stop_id;
+
+public:
+    RouteStop(int routeId, int stopId) : route_id(routeId), stop_id(stopId) {}
+
+    int getRouteId() const { return route_id; }
+    int getStopId() const { return stop_id; }
+
+    void setRouteId(int routeId) { route_id = routeId; }
+    void setStopId(int stopId) { stop_id = stopId; }
+};
+
+std::vector<Route> getAllRoutesForBus(int busId, Database &Db) {
+    std::vector<Route> routes;
+    std::string query = "SELECT r.* FROM Route r JOIN RouteStop rs ON r.route_id = rs.route_id JOIN Stop s ON rs.stop_id = s.stop_id WHERE s.bus_id = " + std::to_string(busId);
+
+
+    pqxx::result result = Db.executeQuery(query);
+
+    for (auto row : result) {
+        int routeId = row["route_id"].as<int>();
+        std::string routeName = row["route_name"].as<std::string>();
+        int trolleybusId = row["trolleybus_id"].as<int>();
+        int busId = row["bus_id"].as<int>();
+        std::vector<Stop> stops; // Здесь вы можете добавить логику для получения списка остановок для каждого маршрута
+        routes.push_back(Route(routeId, routeName, trolleybusId, busId, stops));
+    }
+
+    return routes;
+}
+
+std::vector<Stop> getStopsForRoute(int routeId, Database &Db) {
+    std::vector<Stop> stops;
+    std::string query = "SELECT s.* FROM Stop s JOIN RouteStop rs ON s.stop_id = rs.stop_id WHERE rs.route_id = " + std::to_string(routeId);
+    pqxx::result result = Db.executeQuery(query);
+
+    for (auto row : result) {
+        int stopId = row["stop_id"].as<int>();
+        std::string stopName = row["stop_name"].as<std::string>();
+        int trolleybusId = row["trolleybus_id"].as<int>();
+        int busId = row["bus_id"].as<int>();
+        std::string address = row["address"].as<std::string>();
+        stops.push_back(Stop(stopId, trolleybusId, busId, stopName, address));
+    }
+
+    return stops;
+}
+
+std::vector<Stop> getAllStopsForTrolleybus(int trolleybusId, Database &Db) {
+    std::vector<Stop> stops;
+    std::string query = "SELECT s.* FROM Stop s JOIN RouteStop rs ON s.stop_id = rs.stop_id JOIN Trolleybus t ON rs.trolleybus_id = t.trolleybus_id WHERE t.trolleybus_id = " + std::to_string(trolleybusId);
+    pqxx::result result = Db.executeQuery(query);
+
+    for (auto row : result) {
+        int stopId = row["stop_id"].as<int>();
+        std::string stopName = row["stop_name"].as<std::string>();
+        int trolleybusId = row["trolleybus_id"].as<int>();
+        int busId = row["bus_id"].as<int>();
+        std::string address = row["address"].as<std::string>();
+        stops.push_back(Stop(stopId, trolleybusId, busId, stopName, address));
+    }
+
+    return stops;
+}
+
+std::vector<Stop> getAllStopsForBus(int busId, Database &Db) {
+    std::vector<Stop> stops;
+    std::string query = "SELECT s.* FROM Stop s JOIN RouteStop rs ON s.stop_id = rs.stop_id JOIN Bus b ON rs.bus_id = b.bus_id WHERE b.bus_id = " + std::to_string(busId);
+    pqxx::result result = Db.executeQuery(query);
+
+    for (auto row : result) {
+        int stopId = row["stop_id"].as<int>();
+        std::string stopName = row["stop_name"].as<std::string>();
+        int trolleybusId = row["trolleybus_id"].as<int>();
+        int busId = row["bus_id"].as<int>();
+        std::string address = row["address"].as<std::string>();
+        stops.push_back(Stop(stopId, trolleybusId, busId, stopName, address));
+    }
+
+    return stops;
+}
+
+std::vector<Route> getAllRoutesForTrolleybus(int trolleybusId, Database &Db) {
+    std::vector<Route> routes;
+    std::string query = "SELECT r.* FROM Route r JOIN RouteStop rs ON r.route_id = rs.route_id JOIN Trolleybus t ON rs.trolleybus_id = t.trolleybus_id WHERE t.trolleybus_id = " + std::to_string(trolleybusId);
+    pqxx::result result = Db.executeQuery(query);
+
+    for (auto row : result) {
+        int routeId = row["route_id"].as<int>();
+        std::string routeName = row["route_name"].as<std::string>();
+        int trolleybusId = row["trolleybus_id"].as<int>();
+        int busId = row["bus_id"].as<int>();
+        std::vector<Stop> stops = getStopsForRoute(routeId, Db);
+        routes.push_back(Route(routeId, routeName, trolleybusId, busId, stops));
+    }
+
+    return routes;
+}
 
 int main() {
     try {
-        TaxiDatabase taxiDb;
+        Database Db;
 
-        // Display information about taxis
         cout << "Choose the type of transport:" << endl;
         cout << "1. Taxi" << endl;
         cout << "2. Bus" << endl;
@@ -625,19 +768,17 @@ int main() {
 
         switch (choice) {
             case 1: {
-                displayAllTaxis(taxiDb);
+                displayAllTaxis(Db);
                 cout << "Do you want to order a taxi? (yes/no): ";
                 string orderChoice;
                 cin >> orderChoice;
 
                 if (orderChoice == "yes" || orderChoice == "Yes") {
-                    // ... (code for ordering a taxi)
+
                     cout << "Taxi order placed successfully!" << endl;
 
-                    // Declare variables for customer details
                     string name, surname, contactInformation;
 
-                    // Get customer details
                     cout << "Enter your name: ";
                     cin >> name;
 
@@ -647,23 +788,20 @@ int main() {
                     cout << "Enter your contact information: ";
                     cin >> contactInformation;
 
-                    // Add the customer to the database
                     string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
                                               name + "','" +
                                               surname + "','" +
                                               contactInformation + "')";
-                    taxiDb.executeQuery(addCustomerQuery);
+                    Db.executeQuery(addCustomerQuery);
 
-                    // Get the customer ID
-                    pqxx::result customerIdResult = taxiDb.executeQuery("SELECT MAX(customer_id) FROM customer");
+                    pqxx::result customerIdResult = Db.executeQuery("SELECT MAX(customer_id) FROM customer");
                     int customerId = customerIdResult[0][0].as<int>();
 
-                    // Declare variables for order details
                     int carId;
                     Orders order;
 
                     try {
-                        isIdValid(carId, "taxi", &taxiDb);
+                        isIdValid(carId, "taxi", &Db);
                     } catch (const std::runtime_error& e) {
                         std::cerr << "Error: " << e.what() << std::endl;
                     }
@@ -671,12 +809,11 @@ int main() {
                     order.setCustomerId(customerId);
                     order.setCarId(carId);
 
-                    // Add the order to the database
                     string addOrderQuery = "INSERT INTO orders (customer_id, car_id, order_time) VALUES (" +
                                            to_string(order.getCustomerId()) + "," +
                                            to_string(order.getCarId()) + ",'" +
                                            order.getOrderTime() + "')";
-                    taxiDb.executeQuery(addOrderQuery);
+                    Db.executeQuery(addOrderQuery);
 
                     cout << "Order placed successfully!" << endl;
                 }
@@ -684,20 +821,19 @@ int main() {
             }
             case 2: {
                 // Block for displaying bus details
-                displayAllBuses(taxiDb);
+                displayAllBuses(Db);
+                cout << "func";
+                getAllRoutesForBus(1, Db);
                 cout << "Do you want to book a bus? (yes/no): ";
                 string bookChoice;
                 cin >> bookChoice;
 
                 if (bookChoice == "yes" || bookChoice == "Yes") {
                     try {
-                        // ... (code for booking a bus)
                         cout << "Bus booked successfully!" << endl;
 
-                        // Declare variables for customer details
                         string name, surname, contactInformation;
 
-                        // Get customer details
                         cout << "Enter your name: ";
                         cin >> name;
 
@@ -707,56 +843,48 @@ int main() {
                         cout << "Enter your contact information: ";
                         cin >> contactInformation;
 
-                        // Add the customer to the database
                         string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
                                                   name + "','" +
                                                   surname + "','" +
                                                   contactInformation + "') RETURNING customer_id";
-                        pqxx::result customerIdResult = taxiDb.executeQuery(addCustomerQuery);
+                        pqxx::result customerIdResult = Db.executeQuery(addCustomerQuery);
                         int customerId = customerIdResult[0][0].as<int>();
 
-                        // Declare variables for ticket details
                         int busId;
                         TransportTicket ticket;
 
                         try {
-                            isIdValid(busId, "bus", &taxiDb);
+                            isIdValid(busId, "bus", &Db);
                         } catch (const std::runtime_error& e) {
                             std::cerr << "Error: " << e.what() << std::endl;
                         }
 
 
-                        ticket.setTransportId(busId);
+                        ticket.settransport_id(busId);
                         ticket.setCustomerId(customerId);
 
-                        // Use TicketManager to insert the ticket into the database
                         TicketManager ticketManager;
-                        int ticketId = ticketManager.insertTicket(ticket);
+                        int ticket_id = ticketManager.insertTicket(ticket);
 
-                        cout << "Bus booked successfully! Ticket ID: " << ticketId << endl;
+                        cout << "Bus booked successfully! Ticket ID: " << ticket_id << endl;
                     } catch (const std::exception& e) {
                         cerr << e.what() << std::endl;
-                        // Handle the exception, possibly rollback any changes made
                     }
                 }
                 break;
             }
             case 3: {
-                // Block for displaying trolleybus details
-                displayAllTrolleyBuses(taxiDb);
+                displayAllTrolleyBuses(Db);
                 cout << "Do you want to book a trolleybus? (yes/no): ";
                 string bookChoice;
                 cin >> bookChoice;
 
                 if (bookChoice == "yes" || bookChoice == "Yes") {
                     try {
-                        // ... (code for booking a trolleybus)
                         cout << "Trolleybus booked successfully!" << endl;
 
-                        // Declare variables for customer details
                         string name, surname, contactInformation;
 
-                        // Get customer details
                         cout << "Enter your name: ";
                         cin >> name;
 
@@ -766,35 +894,31 @@ int main() {
                         cout << "Enter your contact information: ";
                         cin >> contactInformation;
 
-                        // Add the customer to the database
                         string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
                                                   name + "','" +
                                                   surname + "','" +
                                                   contactInformation + "') RETURNING customer_id";
-                        pqxx::result customerIdResult = taxiDb.executeQuery(addCustomerQuery);
+                        pqxx::result customerIdResult = Db.executeQuery(addCustomerQuery);
                         int customerId = customerIdResult[0][0].as<int>();
 
-                        // Declare variables for ticket details
                         int trolleybusId;
                         TransportTicket ticket;
 
                         try {
-                            isIdValid(trolleybusId, "trolleybus", &taxiDb);
+                            isIdValid(trolleybusId, "trolleybus", &Db);
                         } catch (const std::runtime_error& e) {
                             std::cerr << "Error: " << e.what() << std::endl;
                         }
 
-                        ticket.setTransportId(trolleybusId);
+                        ticket.settransport_id(trolleybusId);
                         ticket.setCustomerId(customerId);
 
-                        // Use TicketManager to insert the ticket into the database
                         TicketManager ticketManager;
-                        int ticketId = ticketManager.insertTicket(ticket);
+                        int ticket_id = ticketManager.insertTicket(ticket);
 
-                        cout << "Trolleybus booked successfully! Ticket ID: " << ticketId << endl;
+                        cout << "Trolleybus booked successfully! Ticket ID: " << ticket_id << endl;
                     } catch (const std::exception& e) {
                         cerr << e.what() << std::endl;
-                        // Handle the exception, possibly rollback any changes made
                     }
                 }
                 break;
