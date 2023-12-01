@@ -30,33 +30,6 @@ CREATE TABLE taxi (
     rent_car_type VARCHAR(20) NOT NULL
 );
 
--- Bus table
-CREATE TABLE bus (
-    bus_id SERIAL PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    engineType VARCHAR(20) NOT NULL,
-    capacity INT NOT NULL,
-    from_location VARCHAR(255) NOT NULL,
-    to_location VARCHAR(255) NOT NULL,
-    frequency VARCHAR(255) NOT NULL,
-    has_contactless_payment BOOLEAN NOT NULL
-);
-
--- Trolleybus table
-CREATE TABLE trolleybus (
-    trolleybus_id SERIAL PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    engineType VARCHAR(20) NOT NULL,
-    capacity INT NOT NULL,
-    from_location VARCHAR(255) NOT NULL,
-    to_location VARCHAR(255) NOT NULL,
-    frequency VARCHAR(255) NOT NULL,
-    has_sockets BOOLEAN NOT NULL
-);
 
 -- Ticket table
 CREATE TABLE ticket (
@@ -113,3 +86,141 @@ CREATE TABLE TrolleybusRoute (
     PRIMARY KEY (route_id, trolleybus_id)
 );
 
+-- Bus table
+CREATE TABLE bus (
+    bus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    from_location VARCHAR(255) NOT NULL,
+    to_location VARCHAR(255) NOT NULL,
+    frequency VARCHAR(255) NOT NULL,
+    has_contactless_payment BOOLEAN NOT NULL
+);
+
+-- Trolleybus table
+CREATE TABLE trolleybus (
+    trolleybus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    from_location VARCHAR(255) NOT NULL,
+    to_location VARCHAR(255) NOT NULL,
+    frequency VARCHAR(255) NOT NULL,
+    has_sockets BOOLEAN NOT NULL
+);
+
+/////actual
+
+-- Bus table
+CREATE TABLE bus (
+    bus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    from_location VARCHAR(255) NOT NULL,
+    to_location VARCHAR(255) NOT NULL,
+    frequency VARCHAR(255) NOT NULL,
+    has_contactless_payment BOOLEAN NOT NULL
+);
+
+-- Trolleybus table
+CREATE TABLE trolleybus (
+    trolleybus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    from_location VARCHAR(255) NOT NULL,
+    to_location VARCHAR(255) NOT NULL,
+    frequency VARCHAR(255) NOT NULL,
+    has_sockets BOOLEAN NOT NULL
+);
+
+
+CREATE TABLE Stop (
+    stop_id SERIAL PRIMARY KEY,
+    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
+    bus_id INT REFERENCES Bus(bus_id),
+    stop_name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Route (
+    route_id SERIAL PRIMARY KEY,
+    route_name VARCHAR(255) NOT NULL,
+    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
+    bus_id INT REFERENCES Bus(bus_id)
+);
+
+CREATE TABLE StopRoute (
+    stop_id INT REFERENCES Stop(stop_id),
+    route_id INT REFERENCES Route(route_id),
+    transport_type VARCHAR(255) NOT NULL,
+    transport_id INT NOT NULL,
+    PRIMARY KEY (stop_id, route_id, transport_type)
+);
+
+CREATE TABLE TransportRoute (
+    route_id INT REFERENCES Route(route_id),
+    transport_type VARCHAR(255) NOT NULL,
+    transport_id INT NOT NULL,
+    PRIMARY KEY (route_id, transport_type)
+);
+
+CREATE TABLE RouteStop (
+    route_id INT REFERENCES Route(route_id),
+    stop_id INT REFERENCES Stop(stop_id),
+    PRIMARY KEY (route_id, stop_id)
+);
+
+
+-- Добавляем данные в таблицу bus
+INSERT INTO bus (brand, model, color, engineType, capacity, from_location, to_location, frequency, has_contactless_payment)
+VALUES
+    ('Mercedes', 'Sprinter', 'Blue', 'DIESEL', 20, 'City A', 'City B', 'Everyday', true),
+    ('Volvo', 'B7R', 'Red', 'PETROL', 25, 'City B', 'City C', 'Weekends', false),
+    ('MAN', 'Lion''s City', 'Green', 'ELECTRIC', 30, 'City C', 'City D', 'Daily', true);
+
+-- Добавляем данные в таблицу trolleybus
+INSERT INTO trolleybus (brand, model, color, engineType, capacity, from_location, to_location, frequency, has_sockets)
+VALUES
+    ('Solaris', 'Trollino', 'Yellow', 'ELECTRIC', 40, 'City D', 'City E', 'Everyday', true),
+    ('Škoda', '14Tr', 'White', 'ELECTRIC', 35, 'City E', 'City F', 'Weekends', false);
+
+-- Добавляем данные в таблицу Stop
+INSERT INTO Stop (stop_name, address)
+VALUES
+    ('Stop 1', 'Address 1'),
+    ('Stop 2', 'Address 2'),
+    ('Stop 3', 'Address 3');
+
+-- Добавляем данные в таблицу Route
+INSERT INTO Route (route_name)
+VALUES
+    ('Route 1'),
+    ('Route 2'),
+    ('Route 3');
+
+-- Добавляем данные в таблицу StopRoute
+INSERT INTO StopRoute (stop_id, route_id, transport_type, transport_id)
+VALUES
+    (1, 1, 'BUS', 1),
+    (2, 1, 'BUS', 1),
+    (3, 2, 'BUS', 2),
+    (1, 3, 'TROLLEYBUS', 1),
+    (2, 3, 'TROLLEYBUS', 1);
+
+-- Добавляем данные в таблицу TransportRoute
+INSERT INTO TransportRoute (route_id, transport_type, transport_id)
+VALUES
+    (1, 'BUS', 1),
+    (2, 'BUS', 2),
+    (3, 'TROLLEYBUS', 1);

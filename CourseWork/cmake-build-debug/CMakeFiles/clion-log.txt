@@ -1,8 +1,9 @@
 "C:\Program Files\JetBrains\CLion 2022.2.5\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.2.5/bin/ninja/win/ninja.exe" -G Ninja -S C:\Users\atema\Desktop\CourseWork -B C:\Users\atema\Desktop\CourseWork\cmake-build-debug
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
+CMake Error: Generator: execution of make failed. Make command was: C:/Program Files/JetBrains/CLion 2022.2.5/bin/ninja/win/ninja.exe cmTC_9101d && 
 -- Generating config.h
 -- Generating config.h - done
--- Configuring done
--- Generating done
--- Build files have been written to: C:/Users/atema/Desktop/CourseWork/cmake-build-debug
+-- Configuring incomplete, errors occurred!
+See also "C:/Users/atema/Desktop/CourseWork/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "C:/Users/atema/Desktop/CourseWork/cmake-build-debug/CMakeFiles/CMakeError.log".

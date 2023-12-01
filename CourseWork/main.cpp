@@ -113,7 +113,7 @@ public:
 
 class PublicTransport : public Transport {
 private:
-    int transport_id;  
+    int transport_id;
     int capacity;
     std::string from;
     std::string to;
@@ -405,7 +405,9 @@ void displayAllTrolleyBuses(Database& Db) {
 
 enum TransportType {
     BUS,
-    TROLLEYBUS
+    TROLLEYBUS,
+    bus,
+    Bus
 };
 
 class TransportTicket {
@@ -666,92 +668,47 @@ public:
     void setStopId(int stopId) { stop_id = stopId; }
 };
 
-std::vector<Route> getAllRoutesForBus(int busId, Database &Db) {
-    std::vector<Route> routes;
-    std::string query = "SELECT r.* FROM Route r JOIN RouteStop rs ON r.route_id = rs.route_id JOIN Stop s ON rs.stop_id = s.stop_id WHERE s.bus_id = " + std::to_string(busId);
+void getRoutesForTransport(Database& Db, int transportId, TransportType transportType) {
+    std::string transportTypeName = (transportType == TransportType::BUS) ? "BUS" : "TROLLEYBUS";
+    std::cout << "Attempting to get routes for Transport: " << transportTypeName << " with ID: " << transportId << std::endl;
 
+    try {
+        pqxx::result result = Db.executeQuery("SELECT r.route_id, r.route_name "
+                                              "FROM Route r "
+                                              "JOIN (SELECT route_id FROM TransportRoute WHERE transport_id = " +
+                                              std::to_string(transportId) +
+                                              " AND transport_type = '" + transportTypeName + "') tr ON r.route_id = tr.route_id");
 
-    pqxx::result result = Db.executeQuery(query);
-
-    for (auto row : result) {
-        int routeId = row["route_id"].as<int>();
-        std::string routeName = row["route_name"].as<std::string>();
-        int trolleybusId = row["trolleybus_id"].as<int>();
-        int busId = row["bus_id"].as<int>();
-        std::vector<Stop> stops; // Здесь вы можете добавить логику для получения списка остановок для каждого маршрута
-        routes.push_back(Route(routeId, routeName, trolleybusId, busId, stops));
+        if (!result.empty()) {
+            for (const auto& row : result) {
+                std::cout << "Route ID: " << row[0].as<int>() << ", Route Name: " << row[1].as<std::string>() << std::endl;
+            }
+        } else {
+            std::cout << "No routes found for the specified transport." << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
     }
-
-    return routes;
 }
 
-std::vector<Stop> getStopsForRoute(int routeId, Database &Db) {
-    std::vector<Stop> stops;
-    std::string query = "SELECT s.* FROM Stop s JOIN RouteStop rs ON s.stop_id = rs.stop_id WHERE rs.route_id = " + std::to_string(routeId);
-    pqxx::result result = Db.executeQuery(query);
+void getStopsForRoute(pqxx::connection& conn, int routeId) {
+    try {
+        pqxx::work txn(conn);
+        std::string query = "SELECT s.stop_id, s.stop_name, s.address "
+                            "FROM Stop s "
+                            "JOIN RouteStop rs ON s.stop_id = rs.stop_id "
+                            "WHERE rs.route_id = " + std::to_string(routeId);
+        pqxx::result result = txn.exec(query);
+        txn.commit();
 
-    for (auto row : result) {
-        int stopId = row["stop_id"].as<int>();
-        std::string stopName = row["stop_name"].as<std::string>();
-        int trolleybusId = row["trolleybus_id"].as<int>();
-        int busId = row["bus_id"].as<int>();
-        std::string address = row["address"].as<std::string>();
-        stops.push_back(Stop(stopId, trolleybusId, busId, stopName, address));
+        for (const auto& row : result) {
+            std::cout << "Stop ID: " << row[0].as<int>() << ", Stop Name: " << row[1].as<std::string>() << ", Address: " << row[2].as<std::string>() << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
-
-    return stops;
 }
 
-std::vector<Stop> getAllStopsForTrolleybus(int trolleybusId, Database &Db) {
-    std::vector<Stop> stops;
-    std::string query = "SELECT s.* FROM Stop s JOIN RouteStop rs ON s.stop_id = rs.stop_id JOIN Trolleybus t ON rs.trolleybus_id = t.trolleybus_id WHERE t.trolleybus_id = " + std::to_string(trolleybusId);
-    pqxx::result result = Db.executeQuery(query);
-
-    for (auto row : result) {
-        int stopId = row["stop_id"].as<int>();
-        std::string stopName = row["stop_name"].as<std::string>();
-        int trolleybusId = row["trolleybus_id"].as<int>();
-        int busId = row["bus_id"].as<int>();
-        std::string address = row["address"].as<std::string>();
-        stops.push_back(Stop(stopId, trolleybusId, busId, stopName, address));
-    }
-
-    return stops;
-}
-
-std::vector<Stop> getAllStopsForBus(int busId, Database &Db) {
-    std::vector<Stop> stops;
-    std::string query = "SELECT s.* FROM Stop s JOIN RouteStop rs ON s.stop_id = rs.stop_id JOIN Bus b ON rs.bus_id = b.bus_id WHERE b.bus_id = " + std::to_string(busId);
-    pqxx::result result = Db.executeQuery(query);
-
-    for (auto row : result) {
-        int stopId = row["stop_id"].as<int>();
-        std::string stopName = row["stop_name"].as<std::string>();
-        int trolleybusId = row["trolleybus_id"].as<int>();
-        int busId = row["bus_id"].as<int>();
-        std::string address = row["address"].as<std::string>();
-        stops.push_back(Stop(stopId, trolleybusId, busId, stopName, address));
-    }
-
-    return stops;
-}
-
-std::vector<Route> getAllRoutesForTrolleybus(int trolleybusId, Database &Db) {
-    std::vector<Route> routes;
-    std::string query = "SELECT r.* FROM Route r JOIN RouteStop rs ON r.route_id = rs.route_id JOIN Trolleybus t ON rs.trolleybus_id = t.trolleybus_id WHERE t.trolleybus_id = " + std::to_string(trolleybusId);
-    pqxx::result result = Db.executeQuery(query);
-
-    for (auto row : result) {
-        int routeId = row["route_id"].as<int>();
-        std::string routeName = row["route_name"].as<std::string>();
-        int trolleybusId = row["trolleybus_id"].as<int>();
-        int busId = row["bus_id"].as<int>();
-        std::vector<Stop> stops = getStopsForRoute(routeId, Db);
-        routes.push_back(Route(routeId, routeName, trolleybusId, busId, stops));
-    }
-
-    return routes;
-}
 
 int main() {
     try {
@@ -823,7 +780,7 @@ int main() {
                 // Block for displaying bus details
                 displayAllBuses(Db);
                 cout << "func";
-                getAllRoutesForBus(1, Db);
+                getRoutesForTransport(Db, 2, BUS);
                 cout << "Do you want to book a bus? (yes/no): ";
                 string bookChoice;
                 cin >> bookChoice;
