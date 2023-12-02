@@ -691,21 +691,75 @@ void getRoutesForTransport(Database& Db, int transportId, TransportType transpor
     }
 }
 
-void getStopsForRoute(pqxx::connection& conn, int routeId) {
-    try {
-        pqxx::work txn(conn);
-        std::string query = "SELECT s.stop_id, s.stop_name, s.address "
-                            "FROM Stop s "
-                            "JOIN RouteStop rs ON s.stop_id = rs.stop_id "
-                            "WHERE rs.route_id = " + std::to_string(routeId);
-        pqxx::result result = txn.exec(query);
-        txn.commit();
+void getStopsForRoute(Database& db, int route_id) {
+    std::cout << "Attempting to get stops for Route ID: " << route_id << std::endl;
 
-        for (const auto& row : result) {
-            std::cout << "Stop ID: " << row[0].as<int>() << ", Stop Name: " << row[1].as<std::string>() << ", Address: " << row[2].as<std::string>() << std::endl;
+    // Проверка наличия маршрута в таблице Route
+    pqxx::result routeCheck = db.executeQuery("SELECT route_id FROM Route WHERE route_id = " + std::to_string(route_id));
+    if (routeCheck.empty()) {
+        std::cout << "Route ID: " << route_id << " does not exist in the Route table." << std::endl;
+        return;
+    }
+
+    // Проверка наличия связей маршрута с остановками в таблице RouteStop
+    pqxx::result routeStopCheck = db.executeQuery("SELECT stop_id FROM RouteStop WHERE route_id = " + std::to_string(route_id));
+    if (routeStopCheck.empty()) {
+        std::cout << "No stops are linked to Route ID: " << route_id << " in the RouteStop table." << std::endl;
+        return;
+    }
+
+    try {
+        pqxx::result result = db.executeQuery("SELECT s.stop_name, s.address "
+                                              "FROM Stop s "
+                                              "JOIN RouteStop rs ON s.stop_id = rs.stop_id "
+                                              "WHERE rs.route_id = " + std::to_string(route_id));
+
+        if (!result.empty()) {
+            for (const auto& row : result) {
+                std::cout << "Stop Name: " << row[0].as<std::string>() << ", Address: " << row[1].as<std::string>() << std::endl;
+            }
+        } else {
+            std::cout << "No stops found for the specified route." << std::endl;
         }
     } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+}
+
+class RoutePrice {
+private:
+    int route_id;
+    double price;
+
+public:
+    RoutePrice(int id, double price) : route_id(id), price(price) {}
+
+    int getRouteId() const { return route_id; }
+    double getPrice() const { return price; }
+
+    static RoutePrice fromSQLResult(const pqxx::row& row) {
+        int id = row["route_id"].as<int>();
+        double price = row["price"].as<double>();
+        return RoutePrice(id, price);
+    }
+};
+
+RoutePrice getTicketPrice(Database& db, int route_id) {
+    pqxx::result result = db.executeQuery("SELECT route_id, price FROM RoutePrice WHERE route_id = " + std::to_string(route_id));
+    if (!result.empty()) {
+        return RoutePrice::fromSQLResult(result[0]);
+    } else {
+        throw std::runtime_error("No price found for the specified route.");
+    }
+}
+
+void displayTicketPrice(Database& db, int route_id) {
+    try {
+        RoutePrice routePrice = getTicketPrice(db, route_id);
+        std::cout << "The price for the ticket on Route ID: " << routePrice.getRouteId()
+                  << " is $" << routePrice.getPrice() << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
     }
 }
 
@@ -781,6 +835,9 @@ int main() {
                 displayAllBuses(Db);
                 cout << "func";
                 getRoutesForTransport(Db, 2, BUS);
+                cout<<"WEEEEEEWEEEEEEE";
+                getStopsForRoute(Db, 2);
+                displayTicketPrice(Db, 1);
                 cout << "Do you want to book a bus? (yes/no): ";
                 string bookChoice;
                 cin >> bookChoice;

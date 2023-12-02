@@ -181,6 +181,15 @@ CREATE TABLE RouteStop (
     PRIMARY KEY (route_id, stop_id)
 );
 
+CREATE TABLE RoutePrice (
+    route_id INT REFERENCES Route(route_id),
+    price DECIMAL(10, 2) NOT NULL
+);
+
+INSERT INTO RoutePrice (route_id, price) VALUES
+(1, 2.50),
+(2, 3.00),
+(3, 3.50);
 
 -- Добавляем данные в таблицу bus
 INSERT INTO bus (brand, model, color, engineType, capacity, from_location, to_location, frequency, has_contactless_payment)
@@ -224,3 +233,4 @@ VALUES
     (1, 'BUS', 1),
     (2, 'BUS', 2),
     (3, 'TROLLEYBUS', 1);
+

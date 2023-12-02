@@ -56,6 +56,13 @@ build CMakeFiles/CourseWork.dir/main.cpp.obj: CXX_COMPILER__CourseWork_Debug C$:
   OBJECT_DIR = CMakeFiles\CourseWork.dir
   OBJECT_FILE_DIR = CMakeFiles\CourseWork.dir
 
+build CMakeFiles/CourseWork.dir/models/Customer.cpp.obj: CXX_COMPILER__CourseWork_Debug C$:/Users/atema/Desktop/CourseWork/models/Customer.cpp || cmake_object_order_depends_target_CourseWork
+  DEP_FILE = CMakeFiles\CourseWork.dir\models\Customer.cpp.obj.d
+  FLAGS = -g -std=gnu++23
+  INCLUDES = -IC:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include -IC:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include
+  OBJECT_DIR = CMakeFiles\CourseWork.dir
+  OBJECT_FILE_DIR = CMakeFiles\CourseWork.dir\models
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CourseWork
@@ -64,7 +71,7 @@ build CMakeFiles/CourseWork.dir/main.cpp.obj: CXX_COMPILER__CourseWork_Debug C$:
 #############################################
 # Link the executable CourseWork.exe
 
-build CourseWork.exe: CXX_EXECUTABLE_LINKER__CourseWork_Debug CMakeFiles/CourseWork.dir/main.cpp.obj | lib/libpqxx-7.8.1/src/libpqxx.a C$:/Program$ Files/PostgreSQL/13/lib/libpq.lib || lib/libpqxx-7.8.1/src/libpqxx.a
+build CourseWork.exe: CXX_EXECUTABLE_LINKER__CourseWork_Debug CMakeFiles/CourseWork.dir/main.cpp.obj CMakeFiles/CourseWork.dir/models/Customer.cpp.obj | lib/libpqxx-7.8.1/src/libpqxx.a C$:/Program$ Files/PostgreSQL/13/lib/libpq.lib || lib/libpqxx-7.8.1/src/libpqxx.a
   FLAGS = -g
   LINK_LIBRARIES = lib/libpqxx-7.8.1/src/libpqxx.a  "C:/Program Files/PostgreSQL/13/lib/libpq.lib"  -lwsock32  -lws2_32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\CourseWork.dir
