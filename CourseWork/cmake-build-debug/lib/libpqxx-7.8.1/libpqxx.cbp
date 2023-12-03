@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="libpqxx"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\lib\;CMake Files\lib\libpqxx-7.8.1\;CMake Files\lib\libpqxx-7.8.1\cmake\;CMake Files\lib\libpqxx-7.8.1\config-tests\;CMake Files\lib\libpqxx-7.8.1\src\;CMake Files\lib\libpqxx-7.8.1\include\;CMake Files\lib\libpqxx-7.8.1\test\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\lib\;CMake Files\cmake-build-debug\lib\libpqxx-7.8.1\;CMake Files\cmake-build-debug\lib\libpqxx-7.8.1\include\;CMake Files\cmake-build-debug\lib\libpqxx-7.8.1\include\pqxx\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pqxx">
+				<Option output="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/libpqxx.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Program Files/PostgreSQL/13/include"/>
+					<Add directory="C:/Program Files/PostgreSQL/13/include/server"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 pqxx"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pqxx/fast">
+				<Option output="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/libpqxx.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Program Files/PostgreSQL/13/include"/>
+					<Add directory="C:/Program Files/PostgreSQL/13/include/server"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 pqxx/fast"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="runner">
+				<Option output="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/runner.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Program Files/PostgreSQL/13/include"/>
+					<Add directory="C:/Program Files/PostgreSQL/13/include/server"/>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 runner"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="runner/fast">
+				<Option output="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/runner.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Program Files/PostgreSQL/13/include"/>
+					<Add directory="C:/Program Files/PostgreSQL/13/include/server"/>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 runner/fast"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/array.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/binarystring.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/blob.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/connection.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/cursor.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/encodings.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/errorhandler.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/except.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/field.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/largeobject.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/notification.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/params.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/pipeline.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/result.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/robusttransaction.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/row.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/sql_cursor.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/strconv.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/stream_from.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/stream_to.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/subtransaction.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/time.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/transaction.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/transaction_base.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/util.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/version.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/wait.cxx">
+			<Option target="pqxx"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/runner.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test00.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test01.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test02.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test04.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test07.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test10.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test11.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test13.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test14.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test16.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test17.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test18.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test20.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test21.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test26.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test29.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test30.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test32.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test37.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test39.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test46.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test56.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test60.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test61.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test62.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test69.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test70.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test71.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test72.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test74.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test75.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test76.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test77.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test78.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test79.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test82.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test84.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test87.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test88.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test89.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/test90.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_array.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_binarystring.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_blob.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_cancel_query.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_column.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_composite.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_connection.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_cursor.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_encodings.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_error_verbosity.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_errorhandler.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_escape.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_exceptions.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_field.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_float.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_largeobject.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_nonblocking_connect.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_notification.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_pipeline.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_prepared_statement.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_range.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_read_transaction.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_result_iteration.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_result_slicing.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_row.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_separated_list.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_simultaneous_transactions.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_sql_cursor.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_stateless_cursor.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_strconv.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_stream_from.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_stream_query.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_stream_to.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_string_conversion.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_subtransaction.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_test_helpers.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_thread_safety_model.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_time.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_transaction.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_transaction_base.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_transaction_focus.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_transactor.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_type_name.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/unit/test_zview.cxx">
+			<Option target="runner"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/libpqxx.pc.in">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/cmake/config.cmake">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\cmake\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/cmake/libpqxx-config.cmake">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\cmake\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/charconv_float.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/charconv_int.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/cmp.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/concepts.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/cxa_demangle.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/fs.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/gcc_pure.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/gcc_visibility.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/likely.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/need_fslib.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/sleep_for.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/span.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/strerror_r.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/strerror_s.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/thread_local.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/config-tests/year_month_day.cxx">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\config-tests\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\src\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\include\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/test/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\lib\libpqxx-7.8.1\test\"/>
+		</Unit>
+		<Unit filename="C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include/pqxx/config_cmake.h.in">
+			<Option virtualFolder="CMake Files\cmake-build-debug\lib\libpqxx-7.8.1\include\pqxx\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

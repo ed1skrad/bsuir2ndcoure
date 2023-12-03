@@ -54,7 +54,7 @@
 /* Define if likely & unlikely work. */
 #define PQXX_HAVE_LIKELY
 /* Define if compiler has usable std::filesystem::path. */
-#define PQXX_HAVE_PATH
+/* #undef PQXX_HAVE_PATH */
 /* Define if poll() is available. */
 /* #undef PQXX_HAVE_POLL */
 /* Define if std::this_thread::sleep_for works. */
