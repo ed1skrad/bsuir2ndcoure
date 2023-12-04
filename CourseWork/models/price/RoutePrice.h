@@ -13,6 +13,8 @@ private:
     double price;
 
 public:
+    RoutePrice() : route_id(0), price(0.0) {}
+
     RoutePrice(int id, double price) : route_id(id), price(price) {}
 
     int getRouteId() const { return route_id; }
