@@ -9,32 +9,21 @@
 #include <sstream>
 #include "../PublicTransport.h"
 
-class TransportTicket : public PublicTransport {
+class TransportTicket{
 private:
     int ticket_id;
     int transport_id;
     int customerId;
     double price;
     std::string purchaseTime;
-    TransportType transportType;
+    PublicTransport::TransportType transportType;
 
 public:
-    // Измененный конструктор с 6 параметрами в указанном порядке
-    TransportTicket(int ticket_id, int transport_id, int customerId, double price,
-                    std::string purchaseTime, TransportType transportType)
-            : PublicTransport(transport_id), // Предполагаем, что transport_id используется для идентификации в базовом классе
-              ticket_id(ticket_id), transport_id(transport_id), customerId(customerId),
-              price(price), purchaseTime(purchaseTime), transportType(transportType) {
-        // Тело конструктора
-    }
+    TransportTicket()
+            : ticket_id(0), transport_id(0), customerId(0), price(0.0), purchaseTime(""), transportType(PublicTransport::TransportType::BUS) {}
 
-    TransportTicket(int transportId, std::string brand, std::string model, std::string color, EngineType engineType,
-                    int capacity, std::string from, std::string to, std::string frequency) : PublicTransport(
-            transportId, brand, model, color, engineType, capacity, from, to, frequency), ticket_id(0), transport_id(0),
-                                                                                             customerId(0), price(0.0),
-                                                                                             purchaseTime(""),
-                                                                                             transportType(
-                                                                                                     TransportType::BUS) {}
+    TransportTicket(int t_id, int tr_id, int c_id, double p, const std::string& pTime, PublicTransport::TransportType tType)
+            : ticket_id(t_id), transport_id(tr_id), customerId(c_id), price(p), purchaseTime(pTime), transportType(tType) {}
 
 
     int getticket_id() const {
@@ -57,7 +46,7 @@ public:
         return purchaseTime;
     }
 
-    TransportType getTransportType() const {
+    PublicTransport::TransportType getTransportType() const {
         return transportType;
     }
 
@@ -75,7 +64,7 @@ public:
         std::cout << "Customer ID: " << getCustomerId() << std::endl;
         std::cout << "Price: " << getPrice() << std::endl;
         std::cout << "Purchase Time: " << getPurchaseTime() << std::endl;
-        std::cout << "Transport Type: " << (getTransportType() == TransportType::BUS ? "Bus" : "Trolleybus") << std::endl;
+        std::cout << "Transport Type: " << (getTransportType() == PublicTransport::TransportType::BUS ? "Bus" : "Trolleybus") << std::endl;
         std::cout << std::endl;
     }
 };

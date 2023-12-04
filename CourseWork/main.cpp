@@ -1,13 +1,18 @@
 #include <string>
 #include <iostream>
 #include "pqxx/pqxx"
-#include "models/Customer.h"
 #include "database/Database.h"
+#include "models/Transport.h"
 #include "models/Taxi.h"
 #include "models/Order.h"
+#include "models/Bus.h"
+#include "models/Route.h"
+#include "models/schedule/TransportSchedule.h"
+#include "models/ticket/TransportTicket.h"
+#include "models/ticket/TicketManager.h"
+#include "models/Trolleybus.h"
 
 using namespace std;
-
 
 int main() {
     try {
@@ -58,7 +63,7 @@ int main() {
                     Orders order;
 
                     try {
-                        isIdValid(carId, "taxi", &Db);
+                        taxi.isIdValid(carId, "taxi", &Db);
                     } catch (const std::runtime_error& e) {
                         std::cerr << "Error: " << e.what() << std::endl;
                     }
@@ -77,13 +82,14 @@ int main() {
                 break;
             }
             case 2: {
-                // Block for displaying bus details
-                displayAllBuses(Db);
+                Bus bus;
+                bus.displayAllBuses(Db);
                 cout << "func";
-                getRoutesForTransport(Db, 2, BUS);
-                cout<<"WEEEEEEWEEEEEEE";
-                getStopsForRoute(Db, 2);
-                displayTicketPrice(Db, 1);
+                Route route;
+                route.getRoutesForTransport(Db, 2, PublicTransport::BUS);
+                cout << "schedule";
+                TransportSchedule transportSchedule;
+                transportSchedule.getScheduleForTransport(Db, 1, PublicTransport::TransportType::BUS);
                 cout << "Do you want to book a bus? (yes/no): ";
                 string bookChoice;
                 cin >> bookChoice;
@@ -112,9 +118,9 @@ int main() {
 
                         int busId;
                         TransportTicket ticket;
-
+                        Transport transport;
                         try {
-                            isIdValid(busId, "bus", &Db);
+                            transport.isIdValid(busId, "bus", &Db);
                         } catch (const std::runtime_error& e) {
                             std::cerr << "Error: " << e.what() << std::endl;
                         }
@@ -134,7 +140,8 @@ int main() {
                 break;
             }
             case 3: {
-                displayAllTrolleyBuses(Db);
+                TrolleyBus trolleyBus;
+                trolleyBus.displayAllTrolleyBuses(Db);
                 cout << "Do you want to book a trolleybus? (yes/no): ";
                 string bookChoice;
                 cin >> bookChoice;
@@ -163,9 +170,9 @@ int main() {
 
                         int trolleybusId;
                         TransportTicket ticket;
-
+                        Transport transport;
                         try {
-                            isIdValid(trolleybusId, "trolleybus", &Db);
+                            transport.isIdValid(trolleybusId, "trolleybus", &Db);
                         } catch (const std::runtime_error& e) {
                             std::cerr << "Error: " << e.what() << std::endl;
                         }
@@ -194,3 +201,23 @@ int main() {
     return 0;
 }
 
+void displayMenu() {
+    cout << "Choose the type of transport:" << endl;
+    cout << "1. Taxi" << endl;
+    cout << "2. Bus" << endl;
+    cout << "3. Trolleybus" << endl;
+    cout << "0. Exit" << endl;
+    cout << "Enter your choice (1/2/3/0): ";
+}
+
+void handleTaxi(Database& Db) {
+    // Ваш код для обработки заказа такси
+}
+
+void handleBus(Database& Db) {
+    // Ваш код для обработки заказа автобуса
+}
+
+void handleTrolleyBus(Database& Db) {
+    // Ваш код для обработки заказа троллейбуса
+}

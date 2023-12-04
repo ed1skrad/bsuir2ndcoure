@@ -9,6 +9,7 @@
 #include "Stop.h"
 #include "pqxx/pqxx"
 #include "../database/Database.h"
+#include "PublicTransport.h"
 
 class Route {
 private:
@@ -19,6 +20,8 @@ private:
     std::vector<Stop> stops;
 
 public:
+    Route() : route_id(0), trolleybus_id(0), bus_id(0) {}
+
     Route(int routeId, const std::string& routeName, int trolleybusId, int busId, const std::vector<Stop>& routeStops)
             : route_id(routeId), route_name(routeName), trolleybus_id(trolleybusId), bus_id(busId), stops(routeStops) {}
 
@@ -69,7 +72,28 @@ public:
         }
     }
 
+    void getRoutesForTransport(Database& Db, int transportId, PublicTransport::TransportType transportType) {
+        std::string transportTypeName = (transportType == PublicTransport::TransportType::BUS) ? "BUS" : "TROLLEYBUS";
+        std::cout << "Attempting to get routes for Transport: " << transportTypeName << " with ID: " << transportId << std::endl;
 
+        try {
+            pqxx::result result = Db.executeQuery("SELECT r.route_id, r.route_name "
+                                                  "FROM Route r "
+                                                  "JOIN (SELECT route_id FROM TransportRoute WHERE transport_id = " +
+                                                  std::to_string(transportId) +
+                                                  " AND transport_type = '" + transportTypeName + "') tr ON r.route_id = tr.route_id");
+
+            if (!result.empty()) {
+                for (const auto& row : result) {
+                    std::cout << "Route ID: " << row[0].as<int>() << ", Route Name: " << row[1].as<std::string>() << std::endl;
+                }
+            } else {
+                std::cout << "No routes found for the specified transport." << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
+    }
 };
 
 

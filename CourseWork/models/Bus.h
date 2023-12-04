@@ -15,8 +15,10 @@ private:
     bool has_contactless_payment;
 
 public:
-    Bus(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency, bool has_contactless_payment)
-            : PublicTransport(transport_id, brand, model, color, engineType, capacity, from, to, frequency), has_contactless_payment(has_contactless_payment) {}
+    Bus() : PublicTransport(0, "", "", "", EngineType::DIESEL, 0), has_contactless_payment(false) {}
+
+    Bus(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, bool has_contactless_payment)
+            : PublicTransport(transport_id, brand, model, color, engineType, capacity), has_contactless_payment(has_contactless_payment) {}
 
 
     bool gethas_contactless_payment() const { return has_contactless_payment; }
@@ -37,24 +39,33 @@ public:
         std::unique_ptr<Bus> bus = make_unique<Bus>(
                 transport_id, brand, model, color,
                 static_cast<EngineType>(engineType),
-                capacity, from, to, frequency,
+                capacity,
                 has_contactless_payment
         );
 
         std::cout << "Bus Details:" << std::endl;
-        std::cout << "Transport ID: " << bus->gettransport_id() << std::endl;
+        std::cout << "Transport ID: " << bus->getTransportId() << std::endl;
         std::cout << "Brand: " << bus->getBrand() << std::endl;
         std::cout << "Model: " << bus->getModel() << std::endl;
         std::cout << "Color: " << bus->getColor() << std::endl;
         std::cout << "Engine Type: " << bus->getEngineTypeString() << std::endl;
         std::cout << "Capacity: " << bus->getCapacity() << std::endl;
-        std::cout << "From: " << bus->getFrom() << std::endl;
-        std::cout << "To: " << bus->getTo() << std::endl;
-        std::cout << "Frequency: " << bus->getFrequency() << std::endl;
         std::cout << "Has Contactless Payment: " << (bus->gethas_contactless_payment() ? "Yes" : "No") << std::endl;
         std::cout << std::endl;
     }
 
+    void displayAllBuses(Database& Db) {
+        try {
+            // Query for buses
+            pqxx::result busResult = Db.executeQuery("SELECT * FROM bus");
+            std::cout << "Displaying Bus Details:" << std::endl;
+            for (const auto& row : busResult) {
+                displayBusDetails(row);
+            }
+        } catch (const std::exception &e) {
+            std::cerr << e.what() << std::endl;
+        }
+    }
 
 };
 

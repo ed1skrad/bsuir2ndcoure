@@ -14,8 +14,11 @@ private:
     bool has_sockets;
 
 public:
-    TrolleyBus(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, std::string from, std::string to, std::string frequency, bool has_sockets)
-            : PublicTransport(transport_id, brand, model, color, engineType, capacity, from, to, frequency), has_sockets(has_sockets) {}
+    TrolleyBus() : PublicTransport(), has_sockets(false) {}
+
+
+    TrolleyBus(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, bool has_sockets)
+            : PublicTransport(transport_id, brand, model, color, engineType, capacity), has_sockets(has_sockets) {}
 
 
     bool gethas_sockets() const { return has_sockets; }
@@ -35,20 +38,17 @@ public:
         std::unique_ptr<TrolleyBus> trolleyBus = make_unique<TrolleyBus>(
                 transport_id, brand, model, color,
                 static_cast<EngineType>(engineType),
-                capacity, from, to, frequency,
+                capacity,
                 has_sockets
         );
 
         std::cout << "TrolleyBus Details:" << std::endl;
-        std::cout << "Transport ID: " << trolleyBus->gettransport_id() << std::endl;
+        std::cout << "Transport ID: " << trolleyBus->getTransportId() << std::endl;
         std::cout << "Brand: " << trolleyBus->getBrand() << std::endl;
         std::cout << "Model: " << trolleyBus->getModel() << std::endl;
         std::cout << "Color: " << trolleyBus->getColor() << std::endl;
         std::cout << "Engine Type: " << trolleyBus->getEngineTypeString() << std::endl;
         std::cout << "Capacity: " << trolleyBus->getCapacity() << std::endl;
-        std::cout << "From: " << trolleyBus->getFrom() << std::endl;
-        std::cout << "To: " << trolleyBus->getTo() << std::endl;
-        std::cout << "Frequency: " << trolleyBus->getFrequency() << std::endl;
         std::cout << "Has Sockets: " << (trolleyBus->gethas_sockets() ? "Yes" : "No") << std::endl;
         std::cout << std::endl;
     }

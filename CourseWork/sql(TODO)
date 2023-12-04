@@ -234,3 +234,13 @@ VALUES
     (2, 'BUS', 2),
     (3, 'TROLLEYBUS', 1);
 
+
+CREATE TABLE TransportSchedule (
+    schedule_id SERIAL PRIMARY KEY,
+    transport_type VARCHAR(255) NOT NULL,
+    transport_id INT NOT NULL,
+    route_id INT REFERENCES Route(route_id),
+    stop_id INT REFERENCES Stop(stop_id),
+    arrival_time TIME NOT NULL
+);
+
