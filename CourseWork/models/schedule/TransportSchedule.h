@@ -1,7 +1,3 @@
-//
-// Created by atema on 04.12.2023.
-//
-
 #ifndef COURSEWORK_TRANSPORTSCHEDULE_H
 #define COURSEWORK_TRANSPORTSCHEDULE_H
 #include <iostream>
@@ -39,14 +35,19 @@ public:
                                 "WHERE ts.transport_id = " + std::to_string(transportId) + " AND ts.transport_type = '" + transportTypeName + "'";
             pqxx::result result = Db.executeQuery(query);
 
-            for (const auto& row : result) {
-                TransportSchedule schedule(row[0].as<int>(), transportType, row[1].as<int>(), row[2].as<int>(), row[3].as<int>(), row[4].as<std::string>());
-                schedule.print();
+            if (result.empty()) {
+                std::cout << "Bus with ID " << transportId << " not found." << std::endl;
+            } else {
+                for (const auto& row : result) {
+                    TransportSchedule schedule(row[0].as<int>(), transportType, row[1].as<int>(), row[2].as<int>(), row[3].as<int>(), row[4].as<std::string>());
+                    schedule.print();
+                }
             }
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }
     }
+
 };
 
 

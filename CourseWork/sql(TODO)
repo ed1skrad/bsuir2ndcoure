@@ -124,9 +124,6 @@ CREATE TABLE bus (
     color VARCHAR(255) NOT NULL,
     engineType VARCHAR(20) NOT NULL,
     capacity INT NOT NULL,
-    from_location VARCHAR(255) NOT NULL,
-    to_location VARCHAR(255) NOT NULL,
-    frequency VARCHAR(255) NOT NULL,
     has_contactless_payment BOOLEAN NOT NULL
 );
 
@@ -138,9 +135,6 @@ CREATE TABLE trolleybus (
     color VARCHAR(255) NOT NULL,
     engineType VARCHAR(20) NOT NULL,
     capacity INT NOT NULL,
-    from_location VARCHAR(255) NOT NULL,
-    to_location VARCHAR(255) NOT NULL,
-    frequency VARCHAR(255) NOT NULL,
     has_sockets BOOLEAN NOT NULL
 );
 
@@ -243,4 +237,11 @@ CREATE TABLE TransportSchedule (
     stop_id INT REFERENCES Stop(stop_id),
     arrival_time TIME NOT NULL
 );
+
+CREATE TABLE Admins (
+    admin_id SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
 

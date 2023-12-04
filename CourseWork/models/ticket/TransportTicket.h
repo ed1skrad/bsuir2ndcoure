@@ -58,6 +58,10 @@ public:
         TransportTicket::transport_id = transport_id;
     }
 
+    void setPrice(double price) {
+        TransportTicket::price = price;
+    }
+
     void displayTicketInfo() const {
         std::cout << "Ticket ID: " << getticket_id() << std::endl;
         std::cout << "Transport ID: " << gettransport_id() << std::endl;

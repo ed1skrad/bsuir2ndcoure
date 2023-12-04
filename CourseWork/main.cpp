@@ -2,7 +2,6 @@
 #include <iostream>
 #include "pqxx/pqxx"
 #include "database/Database.h"
-#include "models/Transport.h"
 #include "models/Taxi.h"
 #include "models/Order.h"
 #include "models/Bus.h"
@@ -12,6 +11,8 @@
 #include "models/ticket/TicketManager.h"
 #include "models/Trolleybus.h"
 #include "models/price/RoutePrice.h"
+#include "models/Customer.h"
+#include "admin/Admin.h"
 
 using namespace std;
 
@@ -24,7 +25,6 @@ void displayMenu() {
     cout << "Enter your choice (1/2/3/0): ";
 }
 
-
 void bookTransport(Database& Db, PublicTransport::TransportType transportType) {
     string transportTypeName = (transportType == PublicTransport::BUS) ? "bus" : "trolleybus";
     cout << "Do you want to book a " << transportTypeName << "? (yes/no): ";
@@ -33,43 +33,69 @@ void bookTransport(Database& Db, PublicTransport::TransportType transportType) {
 
     if (bookChoice == "yes" || bookChoice == "Yes") {
         try {
-            string name, surname, contactInformation;
+            Customer customer; // Создание объекта класса Customer
 
             cout << "Enter your name: ";
+            string name;
             cin >> name;
+            customer.setName(name); // Установка имени через setter
 
             cout << "Enter your surname: ";
+            string surname;
             cin >> surname;
+            customer.setSurname(surname); // Установка фамилии через setter
 
             cout << "Enter your contact information: ";
+            string contactInformation;
             cin >> contactInformation;
+            customer.setContactInformation(contactInformation); // Установка контактной информации через setter
 
+            // Добавление информации о клиенте в базу данных и получение customer_id
             string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
-                                      name + "','" +
-                                      surname + "','" +
-                                      contactInformation + "') RETURNING customer_id";
+                                      customer.getName() + "','" +
+                                      customer.getSurname() + "','" +
+                                      customer.getContactInformation() + "') RETURNING customer_id";
             pqxx::result customerIdResult = Db.executeQuery(addCustomerQuery);
-            int customerId = customerIdResult[0][0].as<int>();
+            customer.setCustomerId(customerIdResult[0][0].as<int>());
 
-            int transportId;
-            TransportTicket ticket;
-            Transport transport;
+            cout << "Enter the route ID: ";
+            int routeId;
+            cin >> routeId;
+
+            // Получение цены маршрута
+            RoutePrice routePrice;
             try {
-                transport.isIdValid(transportId, transportTypeName, &Db);
-            } catch (const std::runtime_error& e) {
-                std::cerr << "Error: " << e.what() << std::endl;
+                routePrice = RoutePrice().getTicketPrice(Db, routeId);
+                cout << "The price for the ticket on Route ID: " << routeId
+                     << " is $" << routePrice.getPrice() << std::endl;
+            } catch (const std::exception& e) {
+                cerr << "Error: " << e.what() << endl;
                 return;
             }
 
+            cout << "Enter the " << transportTypeName << " ID: ";
+            int transportId;
+            cin >> transportId;
+
+            string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTypeName + " WHERE " + transportTypeName + "_id = " + std::to_string(transportId) + ")";
+            pqxx::result transportExistsResult = Db.executeQuery(checkTransportQuery);
+            bool transportExists = transportExistsResult[0][0].as<bool>();
+            if (!transportExists) {
+                cout << "No " << transportTypeName << " with ID " << transportId << " found. Please enter a valid ID." << endl;
+                return;
+            }
+
+            TransportTicket ticket;
             ticket.settransport_id(transportId);
-            ticket.setCustomerId(customerId);
+            ticket.setCustomerId(customer.getCustomerId());
+            ticket.setPrice(routePrice.getPrice()); // Установка цены билета
 
             TicketManager ticketManager;
             int ticket_id = ticketManager.insertTicket(ticket);
 
             cout << transportTypeName << " booked successfully! Ticket ID: " << ticket_id << endl;
         } catch (const std::exception& e) {
-            cerr << e.what() << std::endl;
+            cerr << e.what() << endl;
         }
     }
 }
@@ -249,23 +275,73 @@ void handleTrolleyBusSelect(Database& Db) {
     }
 }
 
-
-
-int main() {
-    Database Db;
-    displayMenu();
-    int actionChoice;
-    cin >> actionChoice;
-    switch (actionChoice) {
-        case 1:
-            handleTaxiSelect(Db);
+void handleAdminActions(Database& Db) {
+    // Создаем объект Admin
+    Admin admin(Db, "admin_username", "admin_password");
+    std::cout << "1. Login\n2. Register\nChoose an option: ";
+    int choice;
+    std::cin >> choice;
+    std::string username, password;
+    switch (choice) {
+        case 1: // Логин
+            std::cout << "Enter username: ";
+            std::cin >> username;
+            std::cout << "Enter password: ";
+            std::cin >> password;
+            if (admin.adminLogin(Db, username, password)) {
+                std::cout << "Logged in successfully." << std::endl;
+                // Дальнейшие действия администратора
+            } else {
+                std::cout << "Login failed." << std::endl;
+            }
             break;
-
-        case 2:
-            handleBusSelect(Db);
+        case 2: // Регистрация
+            std::cout << "Enter username for registration: ";
+            std::cin >> username;
+            std::cout << "Enter password for registration: ";
+            std::cin >> password;
+            if (admin.registerAdmin(Db, username, password)) {
+                std::cout << "Registered successfully." << std::endl;
+            } else {
+                std::cout << "Registration failed." << std::endl;
+            }
             break;
-        case 3:
-            handleTrolleyBusSelect(Db);
+        default:
+            std::cout << "Invalid option selected." << std::endl;
             break;
     }
 }
+
+int main() {
+    Database Db;
+    bool isRunning = true;
+    while (isRunning) {
+        displayMenu();
+        int actionChoice;
+        std::cin >> actionChoice;
+        switch (actionChoice) {
+            case 1:
+                handleTaxiSelect(Db);
+                break;
+            case 2:
+                handleBusSelect(Db);
+                break;
+            case 3:
+                handleTrolleyBusSelect(Db);
+                break;
+            case 4:
+                handleAdminActions(Db);
+                break;
+            case 0:
+                isRunning = false;
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid option selected. Please try again." << std::endl;
+                break;
+        }
+    }
+    return 0;
+}
+
+

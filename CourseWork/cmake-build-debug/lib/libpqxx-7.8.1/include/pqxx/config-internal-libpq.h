@@ -40,7 +40,7 @@
 /* Define if <charconv> supports floating-point conversion. */
 /* #undef PQXX_HAVE_CHARCONV_FLOAT */
 /* Define if <charconv> supports integer conversion. */
-#define PQXX_HAVE_CHARCONV_INT
+/* #undef PQXX_HAVE_CHARCONV_INT */
 /* Define if compiler has C++20 std::cmp_greater etc. */
 #define PQXX_HAVE_CMP
 /* Define if compiler supports Concepts and <ranges> header. */
@@ -60,7 +60,7 @@
 /* Define if std::this_thread::sleep_for works. */
 #define PQXX_HAVE_SLEEP_FOR
 /* Define if compiler has std::span. */
-/* #undef PQXX_HAVE_SPAN */
+#define PQXX_HAVE_SPAN
 /* Define if strerror_r() is available. */
 /* #undef PQXX_HAVE_STRERROR_R */
 /* Define if strerror_s() is available. */
