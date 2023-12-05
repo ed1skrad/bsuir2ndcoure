@@ -33,24 +33,23 @@ void bookTransport(Database& Db, PublicTransport::TransportType transportType) {
 
     if (bookChoice == "yes" || bookChoice == "Yes") {
         try {
-            Customer customer; // Создание объекта класса Customer
+            Customer customer;
 
             cout << "Enter your name: ";
             string name;
             cin >> name;
-            customer.setName(name); // Установка имени через setter
+            customer.setName(name);
 
             cout << "Enter your surname: ";
             string surname;
             cin >> surname;
-            customer.setSurname(surname); // Установка фамилии через setter
+            customer.setSurname(surname);
 
             cout << "Enter your contact information: ";
             string contactInformation;
             cin >> contactInformation;
-            customer.setContactInformation(contactInformation); // Установка контактной информации через setter
+            customer.setContactInformation(contactInformation);
 
-            // Добавление информации о клиенте в базу данных и получение customer_id
             string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
                                       customer.getName() + "','" +
                                       customer.getSurname() + "','" +
@@ -240,6 +239,7 @@ void handleTrolleyBusSelect(Database& Db) {
     switch (actionChoice) {
         case 1: {
             TrolleyBus trolleyBus;
+
             trolleyBus.displayAllTrolleyBuses(Db);
             break;
         }
@@ -275,33 +275,138 @@ void handleTrolleyBusSelect(Database& Db) {
     }
 }
 
+void createAndAddBus(Database& Db, int isLogged) {
+    Admin admin(Db, "admin_username", "admin_password");
+    std::string brand, model, color;
+    EngineType engineType;
+    int capacity;
+    bool has_contactless_payment;
+
+    std::cout << "Enter bus brand: ";
+    std::cin >> brand;
+    std::cout << "Enter bus model: ";
+    std::cin >> model;
+    std::cout << "Enter bus color: ";
+    std::cin >> color;
+    std::cout << "Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ";
+    int engineTypeInput;
+    std::cin >> engineTypeInput;
+    engineType = static_cast<EngineType>(engineTypeInput);
+    std::cout << "Enter bus capacity: ";
+    std::cin >> capacity;
+    std::cout << "Does the bus have contactless payment? (1 for YES, 0 for NO): ";
+    int hasContactlessPaymentInput;
+    std::cin >> hasContactlessPaymentInput;
+    has_contactless_payment = hasContactlessPaymentInput != 0;
+
+    admin.addBus(brand, model, color, engineType, capacity, has_contactless_payment, isLogged);
+}
+
+void createAndAddTrolleyBus(Database& Db, int isLogged) {
+    Admin admin(Db, "admin_username", "admin_password");
+    std::string brand, model, color;
+    EngineType engineType;
+    int capacity;
+    bool has_sockets;
+
+    std::cout << "Enter trolleybus brand: ";
+    std::cin >> brand;
+    std::cout << "Enter trolleybus model: ";
+    std::cin >> model;
+    std::cout << "Enter trolleybus color: ";
+    std::cin >> color;
+    std::cout << "Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ";
+    int engineTypeInput;
+    std::cin >> engineTypeInput;
+    engineType = static_cast<EngineType>(engineTypeInput);
+    std::cout << "Enter trolleybus capacity: ";
+    std::cin >> capacity;
+    std::cout << "Does the trolleybus have electrical sockets? (1 for YES, 0 for NO): ";
+    int hasSocketsInput;
+    std::cin >> hasSocketsInput;
+    has_sockets = hasSocketsInput != 0;
+
+    admin.addTrolleyBus(brand, model, color, engineType, capacity, has_sockets, isLogged);
+}
+
+void createAndAddTaxi(Database& Db, int isLogged) {
+    Admin admin(Db, "admin_username", "admin_password");
+    std::string brand, model, color, engineType;
+    double pricePerKilometer;
+    bool hasDriver, hasWiFi, hasChildSeat;
+    RentCarTypes carType;
+
+    std::cout << "Enter taxi brand: ";
+    std::cin >> brand;
+    std::cout << "Enter taxi model: ";
+    std::cin >> model;
+    std::cout << "Enter taxi color: ";
+    std::cin >> color;
+    std::cout << "Enter engine type (e.g., DIESEL, PETROL): ";
+    std::cin >> engineType;
+    std::cout << "Enter price per kilometer: ";
+    std::cin >> pricePerKilometer;
+    std::cout << "Does the taxi have a driver? (1 for YES, 0 for NO): ";
+    int hasDriverInput;
+    std::cin >> hasDriverInput;
+    hasDriver = hasDriverInput != 0;
+    std::cout << "Does the taxi have WiFi? (1 for YES, 0 for NO): ";
+    int hasWiFiInput;
+    std::cin >> hasWiFiInput;
+    hasWiFi = hasWiFiInput != 0;
+    std::cout << "Does the taxi have a child seat? (1 for YES, 0 for NO): ";
+    int hasChildSeatInput;
+    std::cin >> hasChildSeatInput;
+    hasChildSeat = hasChildSeatInput != 0;
+    std::cout << "Enter car type (0 for ECONOMY, 1 for COMFORT, 2 for BUSINESS): ";
+    int carTypeInput;
+    std::cin >> carTypeInput;
+    carType = static_cast<RentCarTypes>(carTypeInput);
+
+    admin.addTaxi(brand, model, color, engineType, pricePerKilometer, hasDriver, hasWiFi, hasChildSeat, carType, isLogged);
+}
+
+void createAndAddStop(Database& Db, int isLogged) {
+    Admin admin(Db, "admin_username", "admin_password");
+    std::string stop_name, address;
+
+    std::cout << "Enter stop name: ";
+    std::getline(std::cin, stop_name);
+    std::cout << "Enter address: ";
+    std::getline(std::cin, address);
+
+    admin.addStop(stop_name, address, isLogged);
+}
+
+
 void handleAdminActions(Database& Db) {
-    // Создаем объект Admin
     Admin admin(Db, "admin_username", "admin_password");
     std::cout << "1. Login\n2. Register\nChoose an option: ";
     int choice;
     std::cin >> choice;
     std::string username, password;
+    int isLogged = 0;
     switch (choice) {
-        case 1: // Логин
+        case 1:
             std::cout << "Enter username: ";
             std::cin >> username;
             std::cout << "Enter password: ";
             std::cin >> password;
             if (admin.adminLogin(Db, username, password)) {
                 std::cout << "Logged in successfully." << std::endl;
-                // Дальнейшие действия администратора
+                isLogged = 1;
             } else {
                 std::cout << "Login failed." << std::endl;
             }
             break;
-        case 2: // Регистрация
+        case 2:
             std::cout << "Enter username for registration: ";
             std::cin >> username;
             std::cout << "Enter password for registration: ";
             std::cin >> password;
             if (admin.registerAdmin(Db, username, password)) {
                 std::cout << "Registered successfully." << std::endl;
+                isLogged = 1;
             } else {
                 std::cout << "Registration failed." << std::endl;
             }
@@ -309,6 +414,38 @@ void handleAdminActions(Database& Db) {
         default:
             std::cout << "Invalid option selected." << std::endl;
             break;
+    }
+    while (isLogged == 1) {
+        std::cout << "Select an action:\n"
+                  << "1. Add Stop\n"
+                  << "2. Add Route\n"
+                  << "3. Add Schedule\n"
+                  << "4. Set Route Price\n"
+                  << "0. Logout\n"
+                  << "Enter your choice: ";
+        int action;
+        std::cin >> action;
+        switch (action) {
+            case 1:
+                createAndAddBus(Db, isLogged);
+                break;
+            case 2:
+                createAndAddTrolleyBus(Db, isLogged);
+                break;
+            case 3:
+                createAndAddTaxi(Db, isLogged);
+                break;
+            case 4:
+                //admin.setRoutePrice();
+                break;
+            case 0:
+                isLogged = false;
+                std::cout << "Logged out successfully." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid action selected. Please try again." << std::endl;
+                break;
+        }
     }
 }
 

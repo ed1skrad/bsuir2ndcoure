@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include "../database/Database.h"
 #include "../models/Taxi.h"
+#include "../models/Bus.h"
+#include "../models/Trolleybus.h"
 
 class Admin {
 private:
@@ -14,7 +16,6 @@ private:
     std::string username;
     std::string hashed_password;
     Database& db;
-    bool isLoggedIn;
 
     std::string hashPassword(const std::string& password) {
         std::string hashed;
@@ -26,22 +27,35 @@ private:
 
 public:
     Admin(Database& db, const std::string& username, const std::string& password)
-            : db(db), username(username), hashed_password(hashPassword(password)), isLoggedIn(false) {}
-
+            : db(db), username(username), hashed_password(hashPassword(password)) {}
     bool login() {
         std::string query = "SELECT admin_id FROM Admins WHERE username = '" + username + "' AND password = '" + hashed_password + "'";
         pqxx::result result = db.executeQuery(query);
         if (!result.empty()) {
             admin_id = result[0]["admin_id"].as<int>();
             std::cout << "Login successful for admin ID: " << admin_id << std::endl;
-            isLoggedIn = true;
             return true;
         } else {
             std::cout << "Login failed for username: " << username << std::endl;
-            isLoggedIn = false;
             return false;
         }
     }
+
+    std::string engineTypeToString(EngineType engineType) {
+        switch (engineType) {
+            case EngineType::DIESEL:
+                return "DIESEL";
+            case EngineType::PETROL:
+                return "PETROL";
+            case EngineType::ELECTRIC:
+                return "ELECTRIC";
+            case EngineType::HYBRID:
+                return "HYBRID";
+            default:
+                return "UNKNOWN";
+        }
+    }
+
 
     bool registerAdmin(Database& db, const std::string& username, const std::string& password) {
 
@@ -63,14 +77,14 @@ public:
         }
     }
 
-    void addBus(const std::string& brand, const std::string& model, int capacity, bool has_contactless_payment) {
-        if (!isLoggedIn) {
+    void addBus(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType, int capacity, bool has_contactless_payment, int isLogged) {
+        if (!isLogged) {
             std::cerr << "Error: You must be logged in as an admin to add a bus." << std::endl;
             return;
         }
-        std::string query = "INSERT INTO Buses (brand, model, capacity, has_contactless_payment) VALUES ('"
-                            + brand + "', '" + model + "', " + std::to_string(capacity) + ", "
-                            + (has_contactless_payment ? "TRUE" : "FALSE") + ")";
+        std::string query = "INSERT INTO bus (brand, model, color, engineType, capacity, has_contactless_payment) VALUES ('"
+                            + brand + "', '" + model + "', '" + color + "', '" + engineTypeToString(engineType) + "', "
+                            + std::to_string(capacity) + ", " + (has_contactless_payment ? "TRUE" : "FALSE") + ")";
         try {
             db.executeQuery(query);
             std::cout << "Bus added successfully." << std::endl;
@@ -79,14 +93,14 @@ public:
         }
     }
 
-    void addTrolleyBus(const std::string& brand, const std::string& model, int capacity, bool has_sockets) {
-        if (!isLoggedIn) {
+    void addTrolleyBus(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType, int capacity, bool has_sockets, int isLogged) {
+        if (!isLogged) {
             std::cerr << "Error: You must be logged in as an admin to add a trolleybus." << std::endl;
             return;
         }
-        std::string query = "INSERT INTO TrolleyBuses (brand, model, capacity, has_sockets) VALUES ('"
-                            + brand + "', '" + model + "', " + std::to_string(capacity) + ", "
-                            + (has_sockets ? "TRUE" : "FALSE") + ")";
+        std::string query = "INSERT INTO trolleybus (brand, model, color, engineType, capacity, has_sockets) VALUES ('"
+                            + brand + "', '" + model + "', '" + color + "', '" + engineTypeToString(engineType) + "', "
+                            + std::to_string(capacity) + ", " + (has_sockets ? "TRUE" : "FALSE") + ")";
         try {
             db.executeQuery(query);
             std::cout << "TrolleyBus added successfully." << std::endl;
@@ -95,15 +109,25 @@ public:
         }
     }
 
-    void addTaxi(const std::string& brand, const std::string& model, double pricePerKilometer, bool hasWiFi, bool hasChildSeat, RentCarTypes carType) {
-        if (!isLoggedIn) {
+    void addTaxi(const std::string& brand, const std::string& model, const std::string& color, const std::string& engineType, double pricePerKilometer, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes, int isLogged) {
+        if (!isLogged) {
             std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
             return;
         }
-        std::string query = "INSERT INTO Taxis (brand, model, price_per_km, has_wifi, has_child_seat, car_type) VALUES ('"
-                            + brand + "', '" + model + "', " + std::to_string(pricePerKilometer) + ", "
-                            + (hasWiFi ? "TRUE" : "FALSE") + ", " + (hasChildSeat ? "TRUE" : "FALSE") + ", '"
-                            + std::to_string(carType) + "')";
+
+
+        std::string rentCarTypeStr;
+        switch (rentCarTypes) {
+            case ECONOMY: rentCarTypeStr = "ECONOMY"; break;
+            case COMFORT: rentCarTypeStr = "COMFORT"; break;
+            case BUSINESS: rentCarTypeStr = "BUSINESS"; break;
+            default: rentCarTypeStr = "UNKNOWN"; break;
+        }
+
+        std::string query = "INSERT INTO taxi (brand, model, color, engineType, price_per_kil, has_driver, has_wifi, has_child_seat, rent_car_type) VALUES ('"
+                            + brand + "', '" + model + "', '" + color + "', '" + engineType + "', " + std::to_string(pricePerKilometer) + ", "
+                            + (hasDriver ? "TRUE" : "FALSE") + ", " + (hasWiFi ? "TRUE" : "FALSE") + ", " + (hasChildSeat ? "TRUE" : "FALSE") + ", '"
+                            + rentCarTypeStr + "')";
         try {
             db.executeQuery(query);
             std::cout << "Taxi added successfully." << std::endl;
@@ -112,7 +136,12 @@ public:
         }
     }
 
-    void addStop(const std::string& stop_name, const std::string& address) {
+
+    void addStop(const std::string& stop_name, const std::string& address, int isLogged) {
+        if (!isLogged) {
+            std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
+            return;
+        }
         std::string query = "INSERT INTO Stop (stop_name, address) VALUES ('"
                             + stop_name + "', '" + address + "')";
         try {
@@ -156,7 +185,6 @@ public:
             std::cerr << "Error setting route price: " << e.what() << std::endl;
         }
     }
-
 
     bool adminLogin(Database& db, const std::string& username, const std::string& password) {
         Admin admin(db, username, password);

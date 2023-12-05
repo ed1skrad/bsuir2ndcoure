@@ -23,7 +23,6 @@ CREATE TABLE taxi (
     color VARCHAR(255) NOT NULL,
     engineType VARCHAR(20) NOT NULL,
     price_per_kil DOUBLE PRECISION NOT NULL,
-    rating DOUBLE PRECISION NOT NULL,
     has_driver BOOLEAN NOT NULL,
     has_wifi BOOLEAN NOT NULL,
     has_child_seat BOOLEAN NOT NULL,

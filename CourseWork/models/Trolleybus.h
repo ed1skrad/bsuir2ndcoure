@@ -21,8 +21,17 @@ public:
             : PublicTransport(transport_id, brand, model, color, engineType, capacity), has_sockets(has_sockets) {}
 
 
-    bool gethas_sockets() const { return has_sockets; }
-    void sethas_sockets(bool has_sockets) { this->has_sockets = has_sockets; }
+    TrolleyBus(const std::string& brand, const std::string& model, const std::string& color, EngineType engineType, int capacity, bool has_sockets)
+            : PublicTransport(brand, model, color, engineType, capacity), has_sockets(has_sockets) {}
+
+    bool isHasSockets() const {
+        return has_sockets;
+    }
+
+    void setHasSockets(bool hasSockets) {
+        has_sockets = hasSockets;
+    }
+
     void displayTrolleyBusDetails(const pqxx::result::const_iterator& row) {
         int transport_id = row["trolleybus_id"].as<int>();
         int capacity = row["capacity"].as<int>();
@@ -30,9 +39,6 @@ public:
         std::string model = row["model"].as<std::string>();
         std::string color = row["color"].as<std::string>();
         EngineType engineType = stringToEngineType(row["engineType"].as<std::string>());
-        std::string from = row["from_location"].as<std::string>();
-        std::string to = row["to_location"].as<std::string>();
-        std::string frequency = row["frequency"].as<std::string>();
         bool has_sockets = row["has_sockets"].as<bool>();
 
         std::unique_ptr<TrolleyBus> trolleyBus = make_unique<TrolleyBus>(
@@ -49,7 +55,7 @@ public:
         std::cout << "Color: " << trolleyBus->getColor() << std::endl;
         std::cout << "Engine Type: " << trolleyBus->getEngineTypeString() << std::endl;
         std::cout << "Capacity: " << trolleyBus->getCapacity() << std::endl;
-        std::cout << "Has Sockets: " << (trolleyBus->gethas_sockets() ? "Yes" : "No") << std::endl;
+        std::cout << "Has Sockets: " << (trolleyBus->isHasSockets() ? "Yes" : "No") << std::endl;
         std::cout << std::endl;
     }
 
