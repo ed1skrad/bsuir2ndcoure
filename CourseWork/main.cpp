@@ -84,7 +84,7 @@ void bookTransport(Database& Db, PublicTransport::TransportType transportType) {
             }
 
             TransportTicket ticket;
-            ticket.settransport_id(transportId);
+            ticket.setTransportId(transportId);
             ticket.setCustomerId(customer.getCustomerId());
             ticket.setPrice(routePrice.getPrice()); // Установка цены билета
 
@@ -462,23 +462,6 @@ void createAndLinkStopToRoute(Database& db, int isLogged) {
     admin.linkStopToRoute(db, route_id, stop_id, isLogged);
 }
 
-void createAndLinkTransportToStopRoute(Database& db, int isLogged) {
-    Admin admin(db, "admin_username", "admin_password");
-    int stop_id, route_id, transport_id;
-    std::string transport_type;
-
-    std::cout << "Enter stop ID: ";
-    std::cin >> stop_id;
-    std::cout << "Enter route ID: ";
-    std::cin >> route_id;
-    std::cout << "Enter transport type (BUS or TROLLEYBUS): ";
-    std::cin >> transport_type;
-    std::cout << "Enter transport ID: ";
-    std::cin >> transport_id;
-
-    admin.linkTransportToStopRoute(db, stop_id, route_id, transport_type, transport_id, isLogged);
-}
-
 void handleAdminActions(Database& Db) {
     Admin admin(Db, "admin_username", "admin_password");
     std::cout << "1. Login\n2. Register\nChoose an option: ";
@@ -525,8 +508,7 @@ void handleAdminActions(Database& Db) {
                   << "6. Set Schedule\n"
                   << "7. Set Price\n"
                   << "8. Set link transport to route\n"
-                  << "9. Link stop to route\n"
-                  << "10. Set link transport to stop route\n"
+                  << "9. createAndLinkStopToRoute\n"
                   << "0. Logout\n"
                   << "Enter your choice: ";
         int action;
@@ -558,9 +540,6 @@ void handleAdminActions(Database& Db) {
                 break;
             case 9:
                 createAndLinkStopToRoute(Db, isLogged);
-                break;
-            case 10:
-                createAndLinkTransportToStopRoute(Db, isLogged);
                 break;
             case 0:
                 isLogged = false;

@@ -1,16 +1,16 @@
 #include "PublicTransport.h"
 
-PublicTransport::PublicTransport() : transport_id(0), capacity(0) {}
+PublicTransport::PublicTransport() : transportId(0), capacity(0) {}
 
-PublicTransport::PublicTransport(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity)
-        : Transport(brand, model, color, engineType), transport_id(transport_id), capacity(capacity) {}
+PublicTransport::PublicTransport(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity)
+        : Transport(brand, model, color, engineType), transportId(transportId), capacity(capacity) {}
 
 int PublicTransport::getTransportId() {
-    return transport_id;
+    return transportId;
 }
 
 void PublicTransport::setTransportId(int id) {
-    transport_id = id;
+    transportId = id;
 }
 
 int PublicTransport::getCapacity() {

@@ -4,6 +4,7 @@
 
 #ifndef COURSEWORK_TICKETMANAGER_H
 #define COURSEWORK_TICKETMANAGER_H
+
 #include <iostream>
 #include <chrono>
 #include <sstream>
@@ -48,24 +49,23 @@ public:
             std::string currentTimestamp = getCurrentTimestampAsString();
 
             std::string insertQuery = "INSERT INTO ticket (transport_id, customer_id, price, purchase_time, transport_type) VALUES ("
-                                      + std::to_string(ticket.gettransport_id()) + ", "
+                                      + std::to_string(ticket.getTransportId()) + ", "
                                       + std::to_string(ticket.getCustomerId()) + ", "
                                       + std::to_string(ticket.getPrice()) + ", '"
                                       + currentTimestamp + "', '"
                                       + (ticket.getTransportType() == PublicTransport::TransportType::BUS ? "BUS" : "TROLLEYBUS") + "') RETURNING ticket_id";
 
-            pqxx::result ticket_idResult = W.exec(insertQuery);
-            int ticket_id = ticket_idResult[0]["ticket_id"].as<int>();
+            pqxx::result ticketIdResult = W.exec(insertQuery);
+            int ticketId = ticketIdResult[0]["ticket_id"].as<int>();
 
             W.commit();
 
-            return ticket_id;
+            return ticketId;
         } catch (const std::exception& e) {
             std::cerr << e.what() << std::endl;
             throw std::runtime_error("Failed to insert ticket into the database");
         }
     }
-
 
     void displayAllTickets() {
         try {
@@ -82,8 +82,8 @@ public:
 
 private:
     void displayTicketDetails(const pqxx::result::const_iterator& row) {
-        int ticket_id = row["ticket_id"].as<int>();
-        int transport_id = row["transport_id"].as<int>();
+        int ticketId = row["ticket_id"].as<int>();
+        int transportId = row["transport_id"].as<int>();
         int customerId = row["customer_id"].as<int>();
         double price = row["price"].as<double>();
         std::string purchaseTime = row["purchase_time"].as<std::string>();
@@ -98,11 +98,9 @@ private:
             throw std::runtime_error("Invalid transport type in the database");
         }
 
-        TransportTicket ticket(ticket_id, transport_id, customerId, price, purchaseTime, transportType);
+        TransportTicket ticket(ticketId, transportId, customerId, price, purchaseTime, transportType);
         ticket.displayTicketInfo();
     }
 };
-
-
 
 #endif //COURSEWORK_TICKETMANAGER_H

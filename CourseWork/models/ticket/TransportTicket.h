@@ -1,18 +1,15 @@
-//
-// Created by atema on 02.12.2023.
-//
-
 #ifndef COURSEWORK_TRANSPORTTICKET_H
 #define COURSEWORK_TRANSPORTTICKET_H
+
 #include <iostream>
 #include <chrono>
 #include <sstream>
 #include "../PublicTransport.h"
 
-class TransportTicket{
+class TransportTicket {
 private:
-    int ticket_id;
-    int transport_id;
+    int ticketId;
+    int transportId;
     int customerId;
     double price;
     std::string purchaseTime;
@@ -20,18 +17,17 @@ private:
 
 public:
     TransportTicket()
-            : ticket_id(0), transport_id(0), customerId(0), price(0.0), purchaseTime(""), transportType(PublicTransport::TransportType::BUS) {}
+            : ticketId(0), transportId(0), customerId(0), price(0.0), purchaseTime(""), transportType(PublicTransport::TransportType::BUS) {}
 
-    TransportTicket(int t_id, int tr_id, int c_id, double p, const std::string& pTime, PublicTransport::TransportType tType)
-            : ticket_id(t_id), transport_id(tr_id), customerId(c_id), price(p), purchaseTime(pTime), transportType(tType) {}
+    TransportTicket(int tId, int trId, int cId, double p, const std::string& pTime, PublicTransport::TransportType tType)
+            : ticketId(tId), transportId(trId), customerId(cId), price(p), purchaseTime(pTime), transportType(tType) {}
 
-
-    int getticket_id() const {
-        return ticket_id;
+    int getTicketId() const {
+        return ticketId;
     }
 
-    int gettransport_id() const {
-        return transport_id;
+    int getTransportId() const {
+        return transportId;
     }
 
     int getCustomerId() const {
@@ -51,20 +47,20 @@ public:
     }
 
     void setCustomerId(int customerId) {
-        TransportTicket::customerId = customerId;
+        this->customerId = customerId;
     }
 
-    void settransport_id(int transport_id) {
-        TransportTicket::transport_id = transport_id;
+    void setTransportId(int transportId) {
+        this->transportId = transportId;
     }
 
     void setPrice(double price) {
-        TransportTicket::price = price;
+        this->price = price;
     }
 
     void displayTicketInfo() const {
-        std::cout << "Ticket ID: " << getticket_id() << std::endl;
-        std::cout << "Transport ID: " << gettransport_id() << std::endl;
+        std::cout << "Ticket ID: " << getTicketId() << std::endl;
+        std::cout << "Transport ID: " << getTransportId() << std::endl;
         std::cout << "Customer ID: " << getCustomerId() << std::endl;
         std::cout << "Price: " << getPrice() << std::endl;
         std::cout << "Purchase Time: " << getPurchaseTime() << std::endl;
@@ -72,6 +68,5 @@ public:
         std::cout << std::endl;
     }
 };
-
 
 #endif //COURSEWORK_TRANSPORTTICKET_H

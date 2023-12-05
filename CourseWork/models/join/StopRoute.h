@@ -1,55 +1,49 @@
-//
-// Created by atema on 05.12.2023.
-//
-
 #ifndef COURSEWORK_STOPROUTE_H
 #define COURSEWORK_STOPROUTE_H
-#include <iostream>
 
+#include <iostream>
 
 class StopRoute {
 public:
-    int stop_id;
-    int route_id;
-    std::string transport_type;
-    int transport_id;
+    int stopId;
+    int routeId;
+    std::string transportType;
+    int transportId;
 
     StopRoute(int sid, int rid, std::string ttype, int tid)
-            : stop_id(sid), route_id(rid), transport_type(ttype), transport_id(tid) {}
+            : stopId(sid), routeId(rid), transportType(ttype), transportId(tid) {}
 
     int getStopId() const {
-        return stop_id;
+        return stopId;
     }
 
     void setStopId(int stopId) {
-        stop_id = stopId;
+        stopId = stopId;
     }
 
     int getRouteId() const {
-        return route_id;
+        return routeId;
     }
 
     void setRouteId(int routeId) {
-        route_id = routeId;
+        routeId = routeId;
     }
 
     const std::string &getTransportType() const {
-        return transport_type;
+        return transportType;
     }
 
     void setTransportType(const std::string &transportType) {
-        transport_type = transportType;
+        StopRoute::transportType = transportType;
     }
 
     int getTransportId() const {
-        return transport_id;
+        return transportId;
     }
 
     void setTransportId(int transportId) {
-        transport_id = transportId;
+        transportId = transportId;
     }
 };
-
-
 
 #endif //COURSEWORK_STOPROUTE_H

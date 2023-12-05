@@ -13,44 +13,44 @@
 
 class Route {
 private:
-    int route_id;
-    std::string route_name;
-    int trolleybus_id;
-    int bus_id;
+    int routeId;
+    std::string routeName;
+    int trolleybusId;
+    int busId;
     std::vector<Stop> stops;
 
 public:
-    Route() : route_id(0), trolleybus_id(0), bus_id(0) {}
+    Route() : routeId(0), trolleybusId(0), busId(0) {}
 
     Route(int routeId, const std::string& routeName, int trolleybusId, int busId, const std::vector<Stop>& routeStops)
-            : route_id(routeId), route_name(routeName), trolleybus_id(trolleybusId), bus_id(busId), stops(routeStops) {}
+            : routeId(routeId), routeName(routeName), trolleybusId(trolleybusId), busId(busId), stops(routeStops) {}
 
-    int getRouteId() const { return route_id; }
-    const std::string& getRouteName() const { return route_name; }
-    int getTrolleybusId() const { return trolleybus_id; }
-    int getBusId() const { return bus_id; }
+    int getRouteId() const { return routeId; }
+    const std::string& getRouteName() const { return routeName; }
+    int getTrolleybusId() const { return trolleybusId; }
+    int getBusId() const { return busId; }
     const std::vector<Stop>& getStops() const { return stops; }
 
-    void setRouteId(int routeId) { route_id = routeId; }
-    void setRouteName(const std::string& routeName) { route_name = routeName; }
-    void setTrolleybusId(int trolleybusId) { trolleybus_id = trolleybusId; }
-    void setBusId(int busId) { bus_id = busId; }
-    void setStops(const std::vector<Stop>& routeStops) { stops = routeStops; }
+    void setRouteId(int newRouteId) { routeId = newRouteId; }
+    void setRouteName(const std::string& newRouteName) { routeName = newRouteName; }
+    void setTrolleybusId(int newTrolleybusId) { trolleybusId = newTrolleybusId; }
+    void setBusId(int newBusId) { busId = newBusId; }
+    void setStops(const std::vector<Stop>& newRouteStops) { stops = newRouteStops; }
 
-    void getStopsForRoute(Database& db, int route_id) {
-        std::cout << "Attempting to get stops for Route ID: " << route_id << std::endl;
+    void getStopsForRoute(Database& db, int routeId) {
+        std::cout << "Attempting to get stops for Route ID: " << routeId << std::endl;
 
         // Проверка наличия маршрута в таблице Route
-        pqxx::result routeCheck = db.executeQuery("SELECT route_id FROM Route WHERE route_id = " + std::to_string(route_id));
+        pqxx::result routeCheck = db.executeQuery("SELECT route_id FROM Route WHERE route_id = " + std::to_string(routeId));
         if (routeCheck.empty()) {
-            std::cout << "Route ID: " << route_id << " does not exist in the Route table." << std::endl;
+            std::cout << "Route ID: " << routeId << " does not exist in the Route table." << std::endl;
             return;
         }
 
         // Проверка наличия связей маршрута с остановками в таблице RouteStop
-        pqxx::result routeStopCheck = db.executeQuery("SELECT stop_id FROM RouteStop WHERE route_id = " + std::to_string(route_id));
+        pqxx::result routeStopCheck = db.executeQuery("SELECT stop_id FROM RouteStop WHERE route_id = " + std::to_string(routeId));
         if (routeStopCheck.empty()) {
-            std::cout << "No stops are linked to Route ID: " << route_id << " in the RouteStop table." << std::endl;
+            std::cout << "No stops are linked to Route ID: " << routeId << " in the RouteStop table." << std::endl;
             return;
         }
 
@@ -58,7 +58,7 @@ public:
             pqxx::result result = db.executeQuery("SELECT s.stop_name, s.address "
                                                   "FROM Stop s "
                                                   "JOIN RouteStop rs ON s.stop_id = rs.stop_id "
-                                                  "WHERE rs.route_id = " + std::to_string(route_id));
+                                                  "WHERE rs.route_id = " + std::to_string(routeId));
 
             if (!result.empty()) {
                 for (const auto& row : result) {
@@ -72,12 +72,12 @@ public:
         }
     }
 
-    void getRoutesForTransport(Database& Db, int transportId, PublicTransport::TransportType transportType) {
+    void getRoutesForTransport(Database& db, int transportId, PublicTransport::TransportType transportType) {
         std::string transportTypeName = (transportType == PublicTransport::TransportType::BUS) ? "BUS" : "TROLLEYBUS";
         std::cout << "Attempting to get routes for Transport: " << transportTypeName << " with ID: " << transportId << std::endl;
 
         try {
-            pqxx::result result = Db.executeQuery("SELECT r.route_id, r.route_name "
+            pqxx::result result = db.executeQuery("SELECT r.route_id, r.route_name "
                                                   "FROM Route r "
                                                   "JOIN (SELECT route_id FROM TransportRoute WHERE transport_id = " +
                                                   std::to_string(transportId) +
@@ -95,6 +95,5 @@ public:
         }
     }
 };
-
 
 #endif //COURSEWORK_ROUTE_H

@@ -1,30 +1,31 @@
 #ifndef COURSEWORK_TRANSPORTSCHEDULE_H
 #define COURSEWORK_TRANSPORTSCHEDULE_H
+
 #include <iostream>
 #include "../PublicTransport.h"
 
 class TransportSchedule {
 public:
-    int schedule_id;
-    PublicTransport::TransportType transport_type;
-    int transport_id;
-    int route_id;
-    int stop_id;
-    std::string arrival_time;
-    TransportSchedule() : schedule_id(0), transport_type(PublicTransport::TransportType::BUS), transport_id(0), route_id(0), stop_id(0) {}
+    int scheduleId;
+    PublicTransport::TransportType transportType;
+    int transportId;
+    int routeId;
+    int stopId;
+    std::string arrivalTime;
 
+    TransportSchedule() : scheduleId(0), transportType(PublicTransport::TransportType::BUS), transportId(0), routeId(0), stopId(0) {}
 
-    TransportSchedule(int sched_id, PublicTransport::TransportType trans_type, int trans_id, int rt_id, int st_id, std::string arr_time)
-            : schedule_id(sched_id), transport_type(trans_type), transport_id(trans_id), route_id(rt_id), stop_id(st_id), arrival_time(arr_time) {}
+    TransportSchedule(int schedId, PublicTransport::TransportType transType, int transId, int rtId, int stId, std::string arrTime)
+            : scheduleId(schedId), transportType(transType), transportId(transId), routeId(rtId), stopId(stId), arrivalTime(arrTime) {}
 
     void print() {
-        std::string type = (transport_type == PublicTransport::TransportType::BUS) ? "BUS" : "TROLLEYBUS";
-        std::cout << "Schedule ID: " << schedule_id
+        std::string type = (transportType == PublicTransport::TransportType::BUS) ? "BUS" : "TROLLEYBUS";
+        std::cout << "Schedule ID: " << scheduleId
                   << ", Transport Type: " << type
-                  << ", Transport ID: " << transport_id
-                  << ", Route ID: " << route_id
-                  << ", Stop ID: " << stop_id
-                  << ", Arrival Time: " << arrival_time << std::endl;
+                  << ", Transport ID: " << transportId
+                  << ", Route ID: " << routeId
+                  << ", Stop ID: " << stopId
+                  << ", Arrival Time: " << arrivalTime << std::endl;
     }
 
     void getScheduleForTransport(Database& Db, int transportId, PublicTransport::TransportType transportType) {
@@ -47,9 +48,6 @@ public:
             std::cerr << "Error: " << e.what() << std::endl;
         }
     }
-
 };
-
-
 
 #endif //COURSEWORK_TRANSPORTSCHEDULE_H

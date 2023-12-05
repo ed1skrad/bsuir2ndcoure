@@ -1,35 +1,30 @@
-//
-// Created by atema on 05.12.2023.
-//
-
 #ifndef COURSEWORK_ROUTESTOP_H
 #define COURSEWORK_ROUTESTOP_H
 
 class RouteStop {
 public:
-    int route_id;
-    int stop_id;
+    int routeId;
+    int stopId;
 
     RouteStop(int rid, int sid)
-            : route_id(rid), stop_id(sid) {}
+            : routeId(rid), stopId(sid) {}
 
 
     int getRouteId() const {
-        return route_id;
+        return routeId;
     }
 
     void setRouteId(int routeId) {
-        route_id = routeId;
+        routeId = routeId;
     }
 
     int getStopId() const {
-        return stop_id;
+        return stopId;
     }
 
     void setStopId(int stopId) {
-        stop_id = stopId;
+        stopId = stopId;
     }
 };
-
 
 #endif //COURSEWORK_ROUTESTOP_H

@@ -67,52 +67,6 @@ CREATE TABLE BusStop (
     PRIMARY KEY (stop_id, bus_id)
 );
 
-CREATE TABLE TrolleybusStop (
-    stop_id INT REFERENCES Stop(stop_id),
-    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
-    PRIMARY KEY (stop_id, trolleybus_id)
-);
-
-CREATE TABLE BusRoute (
-    route_id INT REFERENCES Route(route_id),
-    bus_id INT REFERENCES Bus(bus_id),
-    PRIMARY KEY (route_id, bus_id)
-);
-
-CREATE TABLE TrolleybusRoute (
-    route_id INT REFERENCES Route(route_id),
-    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
-    PRIMARY KEY (route_id, trolleybus_id)
-);
-
--- Bus table
-CREATE TABLE bus (
-    bus_id SERIAL PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    engineType VARCHAR(20) NOT NULL,
-    capacity INT NOT NULL,
-    from_location VARCHAR(255) NOT NULL,
-    to_location VARCHAR(255) NOT NULL,
-    frequency VARCHAR(255) NOT NULL,
-    has_contactless_payment BOOLEAN NOT NULL
-);
-
--- Trolleybus table
-CREATE TABLE trolleybus (
-    trolleybus_id SERIAL PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    engineType VARCHAR(20) NOT NULL,
-    capacity INT NOT NULL,
-    from_location VARCHAR(255) NOT NULL,
-    to_location VARCHAR(255) NOT NULL,
-    frequency VARCHAR(255) NOT NULL,
-    has_sockets BOOLEAN NOT NULL
-);
-
 /////actual
 
 -- Bus table
@@ -241,5 +195,6 @@ CREATE TABLE Admins (
     username VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL
 );
+
 
 

@@ -4,6 +4,7 @@
 
 #ifndef COURSEWORK_TROLLEYBUS_H
 #define COURSEWORK_TROLLEYBUS_H
+
 #include "PublicTransport.h"
 #include "pqxx/pqxx"
 #include "../database/Database.h"
@@ -11,41 +12,41 @@
 
 class TrolleyBus : public PublicTransport {
 private:
-    bool has_sockets;
+    bool hasSockets;
 
 public:
-    TrolleyBus() : PublicTransport(), has_sockets(false) {}
+    TrolleyBus() : PublicTransport(), hasSockets(false) {}
 
 
-    TrolleyBus(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, bool has_sockets)
-            : PublicTransport(transport_id, brand, model, color, engineType, capacity), has_sockets(has_sockets) {}
+    TrolleyBus(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, bool hasSockets)
+            : PublicTransport(transportId, brand, model, color, engineType, capacity), hasSockets(hasSockets) {}
 
 
-    TrolleyBus(const std::string& brand, const std::string& model, const std::string& color, EngineType engineType, int capacity, bool has_sockets)
-            : PublicTransport(brand, model, color, engineType, capacity), has_sockets(has_sockets) {}
+    TrolleyBus(const std::string& brand, const std::string& model, const std::string& color, EngineType engineType, int capacity, bool hasSockets)
+            : PublicTransport(brand, model, color, engineType, capacity), hasSockets(hasSockets) {}
 
-    bool isHasSockets() const {
-        return has_sockets;
+    bool getHasSockets() const {
+        return hasSockets;
     }
 
     void setHasSockets(bool hasSockets) {
-        has_sockets = hasSockets;
+        hasSockets = hasSockets;
     }
 
     void displayTrolleyBusDetails(const pqxx::result::const_iterator& row) {
-        int transport_id = row["trolleybus_id"].as<int>();
+        int transportId = row["trolleybus_id"].as<int>();
         int capacity = row["capacity"].as<int>();
         std::string brand = row["brand"].as<std::string>();
         std::string model = row["model"].as<std::string>();
         std::string color = row["color"].as<std::string>();
         EngineType engineType = stringToEngineType(row["engineType"].as<std::string>());
-        bool has_sockets = row["has_sockets"].as<bool>();
+        bool hasSockets = row["has_sockets"].as<bool>();
 
-        std::unique_ptr<TrolleyBus> trolleyBus = make_unique<TrolleyBus>(
-                transport_id, brand, model, color,
+        std::unique_ptr<TrolleyBus> trolleyBus = std::make_unique<TrolleyBus>(
+                transportId, brand, model, color,
                 static_cast<EngineType>(engineType),
                 capacity,
-                has_sockets
+                hasSockets
         );
 
         std::cout << "TrolleyBus Details:" << std::endl;
@@ -55,13 +56,13 @@ public:
         std::cout << "Color: " << trolleyBus->getColor() << std::endl;
         std::cout << "Engine Type: " << trolleyBus->getEngineTypeString() << std::endl;
         std::cout << "Capacity: " << trolleyBus->getCapacity() << std::endl;
-        std::cout << "Has Sockets: " << (trolleyBus->isHasSockets() ? "Yes" : "No") << std::endl;
+        std::cout << "Has Sockets: " << (trolleyBus->getHasSockets() ? "Yes" : "No") << std::endl;
         std::cout << std::endl;
     }
 
-    void displayAllTrolleyBuses(Database& Db) {
+    void displayAllTrolleyBuses(Database& db) {
         try {
-            pqxx::result trolleyBusResult = Db.executeQuery("SELECT * FROM trolleybus");
+            pqxx::result trolleyBusResult = db.executeQuery("SELECT * FROM trolleybus");
             std::cout << "Displaying TrolleyBus Details:" << std::endl;
             for (const auto& row : trolleyBusResult) {
                 displayTrolleyBusDetails(row);
@@ -71,7 +72,5 @@ public:
         }
     }
 };
-
-
 
 #endif //COURSEWORK_TROLLEYBUS_H

@@ -8,17 +8,28 @@
 
 class RouteStop {
 private:
-    int route_id;
-    int stop_id;
+    int routeId;
+    int stopId;
 
 public:
-    RouteStop(int routeId, int stopId) : route_id(routeId), stop_id(stopId) {}
+    RouteStop(int route, int stop) : routeId(route), stopId(stop) {}
 
-    int getRouteId() const { return route_id; }
-    int getStopId() const { return stop_id; }
+    int getRouteId() const {
+        return routeId;
+    }
 
-    void setRouteId(int routeId) { route_id = routeId; }
-    void setStopId(int stopId) { stop_id = stopId; }
+    int getStopId() const {
+        return stopId;
+    }
+
+    void setRouteId(int route) {
+        routeId = route;
+    }
+
+    void setStopId(int stop) {
+        stopId = stop;
+    }
 };
+
 
 #endif //COURSEWORK_ROUTESTOP_H

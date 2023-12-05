@@ -4,10 +4,9 @@
 #include <iostream>
 #include "Transport.h"
 
-
-class PublicTransport : public Transport{
+class PublicTransport : public Transport {
 private:
-    int transport_id;
+    int transportId;
     int capacity;
 
 public:
@@ -17,7 +16,7 @@ public:
     };
 
     PublicTransport();
-    PublicTransport(int transport_id, std::string brand, std::string model, std::string color, EngineType engineType, int capacity);
+    PublicTransport(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity);
     PublicTransport(std::string brand, std::string model, std::string color, EngineType engineType, int capacity);
     int getTransportId();
     void setTransportId(int id);

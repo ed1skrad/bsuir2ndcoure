@@ -1,44 +1,40 @@
-//
-// Created by atema on 05.12.2023.
-//
-
 #ifndef COURSEWORK_TRANSPORTROUTE_H
 #define COURSEWORK_TRANSPORTROUTE_H
+
 #include <iostream>
 
 class TransportRoute {
 public:
-    int route_id;
-    std::string transport_type;
-    int transport_id;
+    int routeId;
+    std::string transportType;
+    int transportId;
 
     TransportRoute(int rid, std::string ttype, int tid)
-            : route_id(rid), transport_type(ttype), transport_id(tid) {}
+            : routeId(rid), transportType(ttype), transportId(tid) {}
 
     int getRouteId() const {
-        return route_id;
+        return routeId;
     }
 
     void setRouteId(int routeId) {
-        route_id = routeId;
+        routeId = routeId;
     }
 
     const std::string &getTransportType() const {
-        return transport_type;
+        return transportType;
     }
 
     void setTransportType(const std::string &transportType) {
-        transport_type = transportType;
+        TransportRoute::transportType = transportType;
     }
 
     int getTransportId() const {
-        return transport_id;
+        return transportId;
     }
 
     void setTransportId(int transportId) {
-        transport_id = transportId;
+        transportId = transportId;
     }
 };
-
 
 #endif //COURSEWORK_TRANSPORTROUTE_H

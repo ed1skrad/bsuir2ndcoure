@@ -4,32 +4,60 @@
 
 #ifndef COURSEWORK_STOP_H
 #define COURSEWORK_STOP_H
+
 #include <iostream>
 
 class Stop {
 private:
-    int stop_id;
-    int trolleybus_id;
-    int bus_id;
-    std::string stop_name;
+    int stopId;
+    int trolleybusId;
+    int busId;
+    std::string stopName;
     std::string address;
 
 public:
     Stop(int stopId, int trolleybusId, int busId, const std::string& stopName, const std::string& stopAddress)
-            : stop_id(stopId), trolleybus_id(trolleybusId), bus_id(busId), stop_name(stopName), address(stopAddress) {}
+            : stopId(stopId), trolleybusId(trolleybusId), busId(busId), stopName(stopName), address(stopAddress) {}
 
-    int getStopId() const { return stop_id; }
-    int getTrolleybusId() const { return trolleybus_id; }
-    int getBusId() const { return bus_id; }
-    const std::string& getStopName() const { return stop_name; }
-    const std::string& getAddress() const { return address; }
+    int getStopId() const {
+        return stopId;
+    }
 
-    void setStopId(int stopId) { stop_id = stopId; }
-    void setTrolleybusId(int trolleybusId) { trolleybus_id = trolleybusId; }
-    void setBusId(int busId) { bus_id = busId; }
-    void setStopName(const std::string& stopName) { stop_name = stopName; }
-    void setAddress(const std::string& stopAddress) { address = stopAddress; }
+    void setStopId(int stopId) {
+        Stop::stopId = stopId;
+    }
+
+    int getTrolleybusId() const {
+        return trolleybusId;
+    }
+
+    void setTrolleybusId(int trolleybusId) {
+        Stop::trolleybusId = trolleybusId;
+    }
+
+    int getBusId() const {
+        return busId;
+    }
+
+    void setBusId(int busId) {
+        Stop::busId = busId;
+    }
+
+    const std::string &getStopName() const {
+        return stopName;
+    }
+
+    void setStopName(const std::string &stopName) {
+        Stop::stopName = stopName;
+    }
+
+    const std::string &getAddress() const {
+        return address;
+    }
+
+    void setAddress(const std::string &address) {
+        Stop::address = address;
+    }
 };
-
 
 #endif //COURSEWORK_STOP_H

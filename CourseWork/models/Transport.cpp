@@ -63,26 +63,17 @@ std::string Transport::getEngineTypeString()
     }
 }
 
-EngineType Transport::stringToEngineType(const std::string &engineTypeStr)
-{
-    if (engineTypeStr == "PETROL")
-    {
+EngineType Transport::stringToEngineType(const std::string &engineTypeStr) {
+    if (engineTypeStr == "PETROL") {
         return EngineType::PETROL;
-    }
-    else if (engineTypeStr == "DIESEL")
-    {
+    } else if (engineTypeStr == "DIESEL") {
         return EngineType::DIESEL;
-    }
-    else if (engineTypeStr == "HYBRID")
-    {
+    } else if (engineTypeStr == "HYBRID") {
         return EngineType::HYBRID;
-    }
-    else if (engineTypeStr == "ELECTRIC")
-    {
+    } else if (engineTypeStr == "ELECTRIC") {
         return EngineType::ELECTRIC;
-    }
-    else
-    {
+    } else {
+        std::cerr << "Error: Invalid engine type - unknown value: " << engineTypeStr << std::endl;
         throw std::runtime_error("Invalid engine type: " + engineTypeStr);
     }
 }

@@ -4,6 +4,7 @@
 
 #ifndef COURSEWORK_ORDER_H
 #define COURSEWORK_ORDER_H
+
 #include <iostream>
 #include <string>
 #include <chrono>
@@ -11,28 +12,28 @@
 
 class Orders {
 private:
-    int order_id;
-    int customer_id;
-    int car_id;
-    std::string order_time;
+    int orderId;
+    int customerId;
+    int carId;
+    std::string orderTime;
 
 public:
-    Orders() : order_id(0), customer_id(0), car_id(0), order_time(getCurrentTime()) {}
+    Orders() : orderId(0), customerId(0), carId(0), orderTime(getCurrentTime()) {}
 
-    Orders(int order_id, int customer_id, int car_id, const std::string& order_time)
-            : order_id(order_id), customer_id(customer_id), car_id(car_id), order_time(order_time) {}
+    Orders(int orderId, int customerId, int carId, const std::string& orderTime)
+            : orderId(orderId), customerId(customerId), carId(carId), orderTime(orderTime) {}
 
-    int getOrderId() const { return order_id; }
-    void setOrderId(int id) { order_id = id; }
+    int getOrderId() const { return orderId; }
+    void setOrderId(int id) { orderId = id; }
 
-    int getCustomerId() const { return customer_id; }
-    void setCustomerId(int id) { customer_id = id; }
+    int getCustomerId() const { return customerId; }
+    void setCustomerId(int id) { customerId = id; }
 
-    int getCarId() const { return car_id; }
-    void setCarId(int id) { car_id = id; }
+    int getCarId() const { return carId; }
+    void setCarId(int id) { carId = id; }
 
-    const std::string& getOrderTime() const { return order_time; }
-    void setOrderTime(const std::string& time) { order_time = time; }
+    const std::string& getOrderTime() const { return orderTime; }
+    void setOrderTime(const std::string& time) { orderTime = time; }
 
     std::string getCurrentTime() const {
         auto now = std::chrono::system_clock::now();
@@ -42,6 +43,5 @@ public:
         return ss.str();
     }
 };
-
 
 #endif //COURSEWORK_ORDER_H
