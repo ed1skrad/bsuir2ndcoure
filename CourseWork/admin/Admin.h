@@ -28,6 +28,12 @@ private:
 public:
     Admin(Database& db, const std::string& username, const std::string& password)
             : db(db), username(username), hashed_password(hashPassword(password)) {}
+
+    enum TransportType {
+        BUS,
+        TROLLEYBUS,
+    };
+
     bool login() {
         std::string query = "SELECT admin_id FROM Admins WHERE username = '" + username + "' AND password = '" + hashed_password + "'";
         pqxx::result result = db.executeQuery(query);
@@ -39,6 +45,25 @@ public:
             std::cout << "Login failed for username: " << username << std::endl;
             return false;
         }
+    }
+
+    bool isValidTransportID(Database &db, int transport_id, const std::string &transport_type) {
+        std::string query = "SELECT EXISTS(SELECT 1 FROM TransportRoute WHERE transport_id = " +
+                            std::to_string(transport_id) + " AND transport_type = '" + transport_type + "');";
+        auto result = db.executeQuery(query);
+        return !result.empty() && result[0][0].as<bool>();
+    }
+
+    bool isValidRouteID(Database &db, int route_id) {
+        std::string query = "SELECT EXISTS(SELECT 1 FROM Route WHERE route_id = " + std::to_string(route_id) + ");";
+        auto result = db.executeQuery(query);
+        return !result.empty() && result[0][0].as<bool>();
+    }
+
+    bool isValidStopID(Database &db, int stop_id) {
+        std::string query = "SELECT EXISTS(SELECT 1 FROM Stop WHERE stop_id = " + std::to_string(stop_id) + ");";
+        auto result = db.executeQuery(query);
+        return !result.empty() && result[0][0].as<bool>();
     }
 
     std::string engineTypeToString(EngineType engineType) {
@@ -152,7 +177,12 @@ public:
         }
     }
 
-    void addRoute(const std::string& route_name) {
+    void addRoute(const std::string& route_name, int isLogged) {
+        if (!isLogged) {
+            std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
+            return;
+        }
+
         std::string query = "INSERT INTO Route (route_name) VALUES ('"
                             + route_name + "')";
         try {
@@ -163,9 +193,24 @@ public:
         }
     }
 
-    void addSchedule(int transport_id, const std::string& transport_type, int route_id, int stop_id, const std::string& arrival_time) {
+    void addSchedule(Database& Db, int transport_id, TransportType transport_type, int route_id, int stop_id, const std::string& arrival_time, int isLogged) {
+
+        if (!isLogged) {
+            std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
+            return;
+        }
+
+        std::string transport_type_str = (transport_type == BUS) ? "BUS" : "TROLLEYBUS";
+
+        if (!isValidTransportID(Db, transport_id, transport_type_str) ||
+            !isValidRouteID(Db, route_id) ||
+            !isValidStopID(Db, stop_id)) {
+            std::cerr << "Invalid IDs provided." << std::endl;
+            return;
+        }
+
         std::string query = "INSERT INTO TransportSchedule (transport_type, transport_id, route_id, stop_id, arrival_time) VALUES ('"
-                            + transport_type + "', " + std::to_string(transport_id) + ", " + std::to_string(route_id) + ", "
+                            + transport_type_str + "', " + std::to_string(transport_id) + ", " + std::to_string(route_id) + ", "
                             + std::to_string(stop_id) + ", '" + arrival_time + "')";
         try {
             db.executeQuery(query);
@@ -175,15 +220,163 @@ public:
         }
     }
 
-    void setRoutePrice(int route_id, double price) {
-        std::string query = "INSERT INTO RoutePrice (route_id, price) VALUES ("
-                            + std::to_string(route_id) + ", " + std::to_string(price) + ")";
-        try {
-            db.executeQuery(query);
-            std::cout << "Route price set successfully." << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "Error setting route price: " << e.what() << std::endl;
+    void setRoutePrice(Database& Db, int route_id, double price, int isLogged) {
+        if (!isLogged) {
+            std::cerr << "Error: You must be logged in as an admin to set the route price." << std::endl;
+            return;
         }
+
+        if (!isValidRouteID(Db, route_id)) {
+            std::cerr << "Invalid route ID provided." << std::endl;
+            return;
+        }
+
+        std::string checkQuery = "SELECT price FROM RoutePrice WHERE route_id = " + std::to_string(route_id);
+        auto checkResult = Db.executeQuery(checkQuery);
+        if (!checkResult.empty()) {
+            std::string updateQuery = "UPDATE RoutePrice SET price = " + std::to_string(price) + " WHERE route_id = " + std::to_string(route_id);
+            Db.executeQuery(updateQuery);
+            std::cout << "Route price updated successfully." << std::endl;
+        } else {
+            std::string insertQuery = "INSERT INTO RoutePrice (route_id, price) VALUES (" + std::to_string(route_id) + ", " + std::to_string(price) + ")";
+            Db.executeQuery(insertQuery);
+            std::cout << "Route price set successfully." << std::endl;
+        }
+    }
+
+    void linkTransportToRoute(Database& Db, int route_id, TransportType transport_type, int transport_id, int isLogged) {
+        if (!isLogged) {
+            std::cerr << "Error: You must be logged in as an admin to link transport to a route." << std::endl;
+            return;
+        }
+
+        if (!isValidRouteID(Db, route_id)) {
+            std::cerr << "Invalid route ID provided." << std::endl;
+            return;
+        }
+
+        std::string transport_type_str = (transport_type == BUS) ? "BUS" : "TROLLEYBUS";
+
+        std::string transportTable = (transport_type == BUS) ? "bus" : "trolleybus";
+        std::string transportIdColumn = (transport_type == BUS) ? "bus_id" : "trolleybus_id";
+        std::string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTable +
+                                          " WHERE " + transportIdColumn + " = " + std::to_string(transport_id) + ");";
+        auto transportExists = Db.executeQuery(checkTransportQuery);
+        if (transportExists.empty() || !transportExists[0][0].as<bool>()) {
+            std::cerr << "Transport ID does not exist in the database." << std::endl;
+            return;
+        }
+
+        std::string checkQuery = "SELECT 1 FROM TransportRoute WHERE route_id = " + std::to_string(route_id) +
+                                 " AND transport_type = '" + transport_type_str + "' AND transport_id = " + std::to_string(transport_id);
+        auto checkResult = Db.executeQuery(checkQuery);
+        if (!checkResult.empty()) {
+            std::cerr << "This transport is already linked to the route." << std::endl;
+            return;
+        }
+
+        std::string insertQuery = "INSERT INTO TransportRoute (route_id, transport_type, transport_id) VALUES (" +
+                                  std::to_string(route_id) + ", '" + transport_type_str + "', " + std::to_string(transport_id) + ")";
+        Db.executeQuery(insertQuery);
+        std::cout << "Transport linked to route successfully." << std::endl;
+    }
+
+    void linkStopToRoute(Database& Db, int route_id, int stop_id, int isLogged) {
+        if (!isLogged) {
+            std::cerr << "Error: You must be logged in as an admin to link a stop to a route." << std::endl;
+            return;
+        }
+
+        // Проверка существования маршрута
+        std::string checkRouteQuery = "SELECT EXISTS(SELECT 1 FROM Route WHERE route_id = " + std::to_string(route_id) + ");";
+        auto routeExists = Db.executeQuery(checkRouteQuery);
+        if (routeExists.empty() || !routeExists[0][0].as<bool>()) {
+            std::cerr << "Invalid route ID provided." << std::endl;
+            return;
+        }
+
+        // Проверка существования остановки
+        std::string checkStopQuery = "SELECT EXISTS(SELECT 1 FROM Stop WHERE stop_id = " + std::to_string(stop_id) + ");";
+        auto stopExists = Db.executeQuery(checkStopQuery);
+        if (stopExists.empty() || !stopExists[0][0].as<bool>()) {
+            std::cerr << "Invalid stop ID provided." << std::endl;
+            return;
+        }
+
+        // Проверка, не связаны ли уже остановка и маршрут
+        std::string checkLinkQuery = "SELECT 1 FROM RouteStop WHERE route_id = " + std::to_string(route_id) +
+                                     " AND stop_id = " + std::to_string(stop_id) + ";";
+        auto checkLinkResult = Db.executeQuery(checkLinkQuery);
+        if (!checkLinkResult.empty()) {
+            std::cerr << "This stop is already linked to the route." << std::endl;
+            return;
+        }
+
+        // Добавление связи остановки с маршрутом
+        std::string insertQuery = "INSERT INTO RouteStop (route_id, stop_id) VALUES (" +
+                                  std::to_string(route_id) + ", " + std::to_string(stop_id) + ");";
+        Db.executeQuery(insertQuery);
+        std::cout << "Stop linked to route successfully." << std::endl;
+    }
+
+    bool checkTransportExists(Database& Db, TransportType transport_type, int transport_id) {
+        std::string transportTable = (transport_type == BUS) ? "bus" : "trolleybus";
+        std::string transportIdColumn = (transport_type == BUS) ? "bus_id" : "trolleybus_id";
+        std::string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTable +
+                                          " WHERE " + transportIdColumn + " = " + std::to_string(transport_id) + ");";
+        auto transportExists = Db.executeQuery(checkTransportQuery);
+        if (transportExists.empty() || !transportExists[0][0].as<bool>()) {
+            std::cerr << "Transport ID does not exist in the database." << std::endl;
+            return false;
+        }
+        return true;
+    }
+
+
+    void linkTransportToStopRoute(Database& Db, int stop_id, int route_id, const std::string& transport_type, int transport_id, int isLogged) {
+        if (!isLogged) {
+            std::cerr << "Error: You must be logged in as an admin to link transport to a stop route." << std::endl;
+            return;
+        }
+
+        // Проверка существования остановки
+        std::string checkStopQuery = "SELECT EXISTS(SELECT 1 FROM Stop WHERE stop_id = " + std::to_string(stop_id) + ");";
+        auto stopExists = Db.executeQuery(checkStopQuery);
+        if (stopExists.empty() || !stopExists[0][0].as<bool>()) {
+            std::cerr << "Invalid stop ID provided." << std::endl;
+            return;
+        }
+
+        // Проверка существования маршрута
+        std::string checkRouteQuery = "SELECT EXISTS(SELECT 1 FROM Route WHERE route_id = " + std::to_string(route_id) + ");";
+        auto routeExists = Db.executeQuery(checkRouteQuery);
+        if (routeExists.empty() || !routeExists[0][0].as<bool>()) {
+            std::cerr << "Invalid route ID provided." << std::endl;
+            return;
+        }
+
+        // Проверка существования транспорта
+        bool transportExists = checkTransportExists(Db, transport_type == "BUS" ? BUS : TROLLEYBUS, transport_id);
+        if (!transportExists) {
+            return; // Сообщение об ошибке уже выведено в функции checkTransportExists
+        }
+
+        // Проверка, не связаны ли уже транспорт, остановка и маршрут
+        std::string checkLinkQuery = "SELECT 1 FROM StopRoute WHERE stop_id = " + std::to_string(stop_id) +
+                                     " AND route_id = " + std::to_string(route_id) +
+                                     " AND transport_type = '" + transport_type + "' AND transport_id = " + std::to_string(transport_id) + ";";
+        auto checkLinkResult = Db.executeQuery(checkLinkQuery);
+        if (!checkLinkResult.empty()) {
+            std::cerr << "This transport is already linked to the stop route." << std::endl;
+            return;
+        }
+
+        // Добавление связи транспорта с остановкой и маршрутом
+        std::string insertQuery = "INSERT INTO StopRoute (stop_id, route_id, transport_type, transport_id) VALUES (" +
+                                  std::to_string(stop_id) + ", " + std::to_string(route_id) + ", '" +
+                                  transport_type + "', " + std::to_string(transport_id) + ");";
+        Db.executeQuery(insertQuery);
+        std::cout << "Transport linked to stop route successfully." << std::endl;
     }
 
     bool adminLogin(Database& db, const std::string& username, const std::string& password) {

@@ -168,6 +168,27 @@ build CMakeFiles/CourseWork.dir/admin/Admin.cpp.obj: CXX_COMPILER__CourseWork_De
   OBJECT_DIR = CMakeFiles\CourseWork.dir
   OBJECT_FILE_DIR = CMakeFiles\CourseWork.dir\admin
 
+build CMakeFiles/CourseWork.dir/models/join/StopRoute.cpp.obj: CXX_COMPILER__CourseWork_Debug C$:/Users/atema/Desktop/CourseWork/models/join/StopRoute.cpp || cmake_object_order_depends_target_CourseWork
+  DEP_FILE = CMakeFiles\CourseWork.dir\models\join\StopRoute.cpp.obj.d
+  FLAGS = -g -std=gnu++23
+  INCLUDES = -IC:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include -IC:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include
+  OBJECT_DIR = CMakeFiles\CourseWork.dir
+  OBJECT_FILE_DIR = CMakeFiles\CourseWork.dir\models\join
+
+build CMakeFiles/CourseWork.dir/models/join/TransportRoute.cpp.obj: CXX_COMPILER__CourseWork_Debug C$:/Users/atema/Desktop/CourseWork/models/join/TransportRoute.cpp || cmake_object_order_depends_target_CourseWork
+  DEP_FILE = CMakeFiles\CourseWork.dir\models\join\TransportRoute.cpp.obj.d
+  FLAGS = -g -std=gnu++23
+  INCLUDES = -IC:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include -IC:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include
+  OBJECT_DIR = CMakeFiles\CourseWork.dir
+  OBJECT_FILE_DIR = CMakeFiles\CourseWork.dir\models\join
+
+build CMakeFiles/CourseWork.dir/models/join/RouteStop.cpp.obj: CXX_COMPILER__CourseWork_Debug C$:/Users/atema/Desktop/CourseWork/models/join/RouteStop.cpp || cmake_object_order_depends_target_CourseWork
+  DEP_FILE = CMakeFiles\CourseWork.dir\models\join\RouteStop.cpp.obj.d
+  FLAGS = -g -std=gnu++23
+  INCLUDES = -IC:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/include -IC:/Users/atema/Desktop/CourseWork/lib/libpqxx-7.8.1/include
+  OBJECT_DIR = CMakeFiles\CourseWork.dir
+  OBJECT_FILE_DIR = CMakeFiles\CourseWork.dir\models\join
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CourseWork
@@ -176,7 +197,7 @@ build CMakeFiles/CourseWork.dir/admin/Admin.cpp.obj: CXX_COMPILER__CourseWork_De
 #############################################
 # Link the executable CourseWork.exe
 
-build CourseWork.exe: CXX_EXECUTABLE_LINKER__CourseWork_Debug CMakeFiles/CourseWork.dir/main.cpp.obj CMakeFiles/CourseWork.dir/models/Customer.cpp.obj CMakeFiles/CourseWork.dir/models/Orders.cpp.obj CMakeFiles/CourseWork.dir/models/Transport.cpp.obj CMakeFiles/CourseWork.dir/models/PublicTransport.cpp.obj CMakeFiles/CourseWork.dir/models/Bus.cpp.obj CMakeFiles/CourseWork.dir/models/Trolleybus.cpp.obj CMakeFiles/CourseWork.dir/models/Taxi.cpp.obj CMakeFiles/CourseWork.dir/database/Database.cpp.obj CMakeFiles/CourseWork.dir/models/ticket/TransportTicket.cpp.obj CMakeFiles/CourseWork.dir/models/ticket/TicketManager.cpp.obj CMakeFiles/CourseWork.dir/models/Stop.cpp.obj CMakeFiles/CourseWork.dir/models/Route.cpp.obj CMakeFiles/CourseWork.dir/models/RouteStop.cpp.obj CMakeFiles/CourseWork.dir/models/price/RoutePrice.cpp.obj CMakeFiles/CourseWork.dir/models/schedule/TransportSchedule.cpp.obj CMakeFiles/CourseWork.dir/admin/Admin.cpp.obj | lib/libpqxx-7.8.1/src/libpqxx.a C$:/Program$ Files/PostgreSQL/13/lib/libpq.lib || lib/libpqxx-7.8.1/src/libpqxx.a
+build CourseWork.exe: CXX_EXECUTABLE_LINKER__CourseWork_Debug CMakeFiles/CourseWork.dir/main.cpp.obj CMakeFiles/CourseWork.dir/models/Customer.cpp.obj CMakeFiles/CourseWork.dir/models/Orders.cpp.obj CMakeFiles/CourseWork.dir/models/Transport.cpp.obj CMakeFiles/CourseWork.dir/models/PublicTransport.cpp.obj CMakeFiles/CourseWork.dir/models/Bus.cpp.obj CMakeFiles/CourseWork.dir/models/Trolleybus.cpp.obj CMakeFiles/CourseWork.dir/models/Taxi.cpp.obj CMakeFiles/CourseWork.dir/database/Database.cpp.obj CMakeFiles/CourseWork.dir/models/ticket/TransportTicket.cpp.obj CMakeFiles/CourseWork.dir/models/ticket/TicketManager.cpp.obj CMakeFiles/CourseWork.dir/models/Stop.cpp.obj CMakeFiles/CourseWork.dir/models/Route.cpp.obj CMakeFiles/CourseWork.dir/models/RouteStop.cpp.obj CMakeFiles/CourseWork.dir/models/price/RoutePrice.cpp.obj CMakeFiles/CourseWork.dir/models/schedule/TransportSchedule.cpp.obj CMakeFiles/CourseWork.dir/admin/Admin.cpp.obj CMakeFiles/CourseWork.dir/models/join/StopRoute.cpp.obj CMakeFiles/CourseWork.dir/models/join/TransportRoute.cpp.obj CMakeFiles/CourseWork.dir/models/join/RouteStop.cpp.obj | lib/libpqxx-7.8.1/src/libpqxx.a C$:/Program$ Files/PostgreSQL/13/lib/libpq.lib || lib/libpqxx-7.8.1/src/libpqxx.a
   FLAGS = -g
   LINK_LIBRARIES = lib/libpqxx-7.8.1/src/libpqxx.a  "C:/Program Files/PostgreSQL/13/lib/libpq.lib"  -lwsock32  -lws2_32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\CourseWork.dir

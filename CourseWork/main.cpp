@@ -61,7 +61,6 @@ void bookTransport(Database& Db, PublicTransport::TransportType transportType) {
             int routeId;
             cin >> routeId;
 
-            // Получение цены маршрута
             RoutePrice routePrice;
             try {
                 routePrice = RoutePrice().getTicketPrice(Db, routeId);
@@ -109,7 +108,6 @@ void orderTaxi(Database& Db) {
         int carId;
         cin >> carId;
 
-        // Проверка наличия такси с таким идентификатором в базе данных
         pqxx::result taxiExistsResult = Db.executeQuery("SELECT EXISTS(SELECT 1 FROM taxi WHERE taxi_id = " + to_string(carId) + ")");
         bool taxiExists = taxiExistsResult[0][0].as<bool>();
         if (!taxiExists) {
@@ -368,16 +366,118 @@ void createAndAddTaxi(Database& Db, int isLogged) {
 
 void createAndAddStop(Database& Db, int isLogged) {
     Admin admin(Db, "admin_username", "admin_password");
-    std::string stop_name, address;
 
     std::cout << "Enter stop name: ";
-    std::getline(std::cin, stop_name);
+    std::string stopName;
+    std::cin >> stopName;
     std::cout << "Enter address: ";
-    std::getline(std::cin, address);
-
-    admin.addStop(stop_name, address, isLogged);
+    std::string address;
+    std::cin >> address;
+    admin.addStop(stopName, address, isLogged);
 }
 
+void createAndAddRoute(Database& Db, int isLogged) {
+    Admin admin(Db, "admin_username", "admin_password");
+
+    std::string routeName;
+    std::cout << "Enter route name:";
+    std::cin >> routeName;
+    admin.addRoute(routeName,  isLogged);
+}
+
+void createAndAddSchedule(Database& db, int isLogged) {
+    Admin admin(db, "admin_username", "admin_password");
+    int transport_id;
+    Admin::TransportType transport_type;
+    int route_id;
+    int stop_id;
+    std::string arrival_time;
+
+    std::cout << "Enter transport ID: ";
+    std::cin >> transport_id;
+    std::cout << "Enter transport type (1 for BUS, 2 for TROLLEYBUS): ";
+    int transport_type_input;
+    std::cin >> transport_type_input;
+    transport_type = (transport_type_input == 1) ? Admin::BUS : Admin::TROLLEYBUS;
+    std::cout << "Enter route ID: ";
+    std::cin >> route_id;
+    std::cout << "Enter stop ID: ";
+    std::cin >> stop_id;
+    std::cout << "Enter arrival time (HH:MM:SS): ";
+    std::cin >> arrival_time;
+
+    admin.addSchedule(db, transport_id, transport_type, route_id, stop_id, arrival_time, isLogged);
+}
+
+void createAndSetRoutePrice(Database& db, int isLogged) {
+    Admin admin(db, "admin_username", "admin_password");
+    int route_id;
+    double price;
+
+    std::cout << "Enter route ID: ";
+    std::cin >> route_id;
+    std::cout << "Enter price: ";
+    std::cin >> price;
+
+    admin.setRoutePrice(db, route_id, price, isLogged);
+}
+
+void createAndLinkTransportToRoute(Database& db, int isLogged) {
+    Admin admin(db, "admin_username", "admin_password");
+    int route_id;
+    Admin::TransportType transport_type;
+    int transport_id;
+
+    std::cout << "Enter route ID: ";
+    std::cin >> route_id;
+    std::cout << "Enter transport type (1 for BUS, 2 for TROLLEYBUS): ";
+    int transport_type_input;
+    std::cin >> transport_type_input;
+    switch (transport_type_input) {
+        case 1:
+            transport_type = Admin::BUS;
+            break;
+        case 2:
+            transport_type = Admin::TROLLEYBUS;
+            break;
+        default:
+            std::cerr << "Invalid transport type selected." << std::endl;
+            return;
+    }
+    std::cout << "Enter transport ID: ";
+    std::cin >> transport_id;
+
+    admin.linkTransportToRoute(db, route_id, transport_type, transport_id, isLogged);
+}
+
+void createAndLinkStopToRoute(Database& db, int isLogged) {
+    Admin admin(db, "admin_username", "admin_password");
+    int route_id, stop_id;
+
+    std::cout << "Enter route ID: ";
+    std::cin >> route_id;
+    std::cout << "Enter stop ID: ";
+    std::cin >> stop_id;
+
+    admin.linkStopToRoute(db, route_id, stop_id, isLogged);
+}
+
+void createAndLinkTransportToStopRoute(Database& db, int isLogged) {
+    Admin admin(db, "admin_username", "admin_password");
+    int stop_id, route_id, transport_id;
+    std::string transport_type;
+
+    std::cout << "Enter stop ID: ";
+    std::cin >> stop_id;
+    std::cout << "Enter route ID: ";
+    std::cin >> route_id;
+    std::cout << "Enter transport type (BUS or TROLLEYBUS): ";
+    std::cin >> transport_type;
+    std::cout << "Enter transport ID: ";
+    std::cin >> transport_id;
+
+    admin.linkTransportToStopRoute(db, stop_id, route_id, transport_type, transport_id, isLogged);
+}
 
 void handleAdminActions(Database& Db) {
     Admin admin(Db, "admin_username", "admin_password");
@@ -417,10 +517,16 @@ void handleAdminActions(Database& Db) {
     }
     while (isLogged == 1) {
         std::cout << "Select an action:\n"
-                  << "1. Add Stop\n"
-                  << "2. Add Route\n"
-                  << "3. Add Schedule\n"
-                  << "4. Set Route Price\n"
+                  << "1. Add Bus\n"
+                  << "2. Add Trolleybus\n"
+                  << "3. Add Taxi\n"
+                  << "4. Set Stop\n"
+                  << "5. Set Route\n"
+                  << "6. Set Schedule\n"
+                  << "7. Set Price\n"
+                  << "8. Set link transport to route\n"
+                  << "9. Link stop to route\n"
+                  << "10. Set link transport to stop route\n"
                   << "0. Logout\n"
                   << "Enter your choice: ";
         int action;
@@ -436,7 +542,25 @@ void handleAdminActions(Database& Db) {
                 createAndAddTaxi(Db, isLogged);
                 break;
             case 4:
-                //admin.setRoutePrice();
+                createAndAddStop(Db, isLogged);
+                break;
+            case 5:
+                createAndAddRoute(Db, isLogged);
+                break;
+            case 6:
+                createAndAddSchedule(Db, isLogged);
+                break;
+            case 7:
+                createAndSetRoutePrice(Db, isLogged);
+                break;
+            case 8:
+                createAndLinkTransportToRoute(Db, isLogged);
+                break;
+            case 9:
+                createAndLinkStopToRoute(Db, isLogged);
+                break;
+            case 10:
+                createAndLinkTransportToStopRoute(Db, isLogged);
                 break;
             case 0:
                 isLogged = false;

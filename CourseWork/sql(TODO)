@@ -149,16 +149,6 @@ CREATE TABLE Stop (
 CREATE TABLE Route (
     route_id SERIAL PRIMARY KEY,
     route_name VARCHAR(255) NOT NULL,
-    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
-    bus_id INT REFERENCES Bus(bus_id)
-);
-
-CREATE TABLE StopRoute (
-    stop_id INT REFERENCES Stop(stop_id),
-    route_id INT REFERENCES Route(route_id),
-    transport_type VARCHAR(255) NOT NULL,
-    transport_id INT NOT NULL,
-    PRIMARY KEY (stop_id, route_id, transport_type)
 );
 
 CREATE TABLE TransportRoute (
@@ -173,6 +163,15 @@ CREATE TABLE RouteStop (
     stop_id INT REFERENCES Stop(stop_id),
     PRIMARY KEY (route_id, stop_id)
 );
+
+CREATE TABLE StopRoute (
+    stop_id INT REFERENCES Stop(stop_id),
+    route_id INT REFERENCES Route(route_id),
+    transport_type VARCHAR(255) NOT NULL,
+    transport_id INT NOT NULL,
+    PRIMARY KEY (stop_id, route_id, transport_type)
+);
+
 
 CREATE TABLE RoutePrice (
     route_id INT REFERENCES Route(route_id),
