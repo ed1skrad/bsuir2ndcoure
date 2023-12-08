@@ -1,6 +1,4 @@
-//
-// Created by atema on 03.12.2023.
-//
+// Stop.h
 
 #ifndef COURSEWORK_STOP_H
 #define COURSEWORK_STOP_H
@@ -16,48 +14,22 @@ private:
     std::string address;
 
 public:
-    Stop(int stopId, int trolleybusId, int busId, const std::string& stopName, const std::string& stopAddress)
-            : stopId(stopId), trolleybusId(trolleybusId), busId(busId), stopName(stopName), address(stopAddress) {}
+    Stop(int stopId, int trolleybusId, int busId, const std::string& stopName, const std::string& stopAddress);
 
-    int getStopId() const {
-        return stopId;
-    }
+    int getStopId() const;
+    void setStopId(int stopId);
 
-    void setStopId(int stopId) {
-        Stop::stopId = stopId;
-    }
+    int getTrolleybusId() const;
+    void setTrolleybusId(int trolleybusId);
 
-    int getTrolleybusId() const {
-        return trolleybusId;
-    }
+    int getBusId() const;
+    void setBusId(int busId);
 
-    void setTrolleybusId(int trolleybusId) {
-        Stop::trolleybusId = trolleybusId;
-    }
+    const std::string &getStopName() const;
+    void setStopName(const std::string &stopName);
 
-    int getBusId() const {
-        return busId;
-    }
-
-    void setBusId(int busId) {
-        Stop::busId = busId;
-    }
-
-    const std::string &getStopName() const {
-        return stopName;
-    }
-
-    void setStopName(const std::string &stopName) {
-        Stop::stopName = stopName;
-    }
-
-    const std::string &getAddress() const {
-        return address;
-    }
-
-    void setAddress(const std::string &address) {
-        Stop::address = address;
-    }
+    const std::string &getAddress() const;
+    void setAddress(const std::string &address);
 };
 
-#endif //COURSEWORK_STOP_H
+#endif // COURSEWORK_STOP_H

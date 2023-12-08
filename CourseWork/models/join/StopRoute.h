@@ -1,3 +1,5 @@
+// stoproute.h
+
 #ifndef COURSEWORK_STOPROUTE_H
 #define COURSEWORK_STOPROUTE_H
 
@@ -10,40 +12,23 @@ public:
     std::string transportType;
     int transportId;
 
-    StopRoute(int sid, int rid, std::string ttype, int tid)
-            : stopId(sid), routeId(rid), transportType(ttype), transportId(tid) {}
+    StopRoute(int sid, int rid, std::string ttype, int tid);
 
-    int getStopId() const {
-        return stopId;
-    }
+    int getStopId() const;
 
-    void setStopId(int stopId) {
-        stopId = stopId;
-    }
+    void setStopId(int stopId);
 
-    int getRouteId() const {
-        return routeId;
-    }
+    int getRouteId() const;
 
-    void setRouteId(int routeId) {
-        routeId = routeId;
-    }
+    void setRouteId(int routeId);
 
-    const std::string &getTransportType() const {
-        return transportType;
-    }
+    const std::string &getTransportType() const;
 
-    void setTransportType(const std::string &transportType) {
-        StopRoute::transportType = transportType;
-    }
+    void setTransportType(const std::string &transportType);
 
-    int getTransportId() const {
-        return transportId;
-    }
+    int getTransportId() const;
 
-    void setTransportId(int transportId) {
-        transportId = transportId;
-    }
+    void setTransportId(int transportId);
 };
 
-#endif //COURSEWORK_STOPROUTE_H
+#endif // COURSEWORK_STOPROUTE_H

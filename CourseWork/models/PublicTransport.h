@@ -18,6 +18,7 @@ public:
     PublicTransport();
     PublicTransport(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity);
     PublicTransport(std::string brand, std::string model, std::string color, EngineType engineType, int capacity);
+
     int getTransportId();
     void setTransportId(int id);
 

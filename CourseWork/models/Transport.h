@@ -39,7 +39,7 @@ public:
 
     std::string getEngineTypeString();
 
-    EngineType stringToEngineType(const std::string &engineTypeStr);
+    static EngineType stringToEngineType(const std::string &engineTypeStr);
 
     void isIdValid(int &id, const std::string &transportName, Database *Db);
 };

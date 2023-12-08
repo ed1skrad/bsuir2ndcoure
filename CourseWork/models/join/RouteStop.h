@@ -1,3 +1,5 @@
+// routestop.h
+
 #ifndef COURSEWORK_ROUTESTOP_H
 #define COURSEWORK_ROUTESTOP_H
 
@@ -6,25 +8,15 @@ public:
     int routeId;
     int stopId;
 
-    RouteStop(int rid, int sid)
-            : routeId(rid), stopId(sid) {}
+    RouteStop(int rid, int sid);
 
+    int getRouteId() const;
 
-    int getRouteId() const {
-        return routeId;
-    }
+    void setRouteId(int routeId);
 
-    void setRouteId(int routeId) {
-        routeId = routeId;
-    }
+    int getStopId() const;
 
-    int getStopId() const {
-        return stopId;
-    }
-
-    void setStopId(int stopId) {
-        stopId = stopId;
-    }
+    void setStopId(int stopId);
 };
 
-#endif //COURSEWORK_ROUTESTOP_H
+#endif // COURSEWORK_ROUTESTOP_H

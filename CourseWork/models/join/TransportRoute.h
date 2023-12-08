@@ -1,3 +1,5 @@
+// transportroute.h
+
 #ifndef COURSEWORK_TRANSPORTROUTE_H
 #define COURSEWORK_TRANSPORTROUTE_H
 
@@ -9,32 +11,19 @@ public:
     std::string transportType;
     int transportId;
 
-    TransportRoute(int rid, std::string ttype, int tid)
-            : routeId(rid), transportType(ttype), transportId(tid) {}
+    TransportRoute(int rid, std::string ttype, int tid);
 
-    int getRouteId() const {
-        return routeId;
-    }
+    int getRouteId() const;
 
-    void setRouteId(int routeId) {
-        routeId = routeId;
-    }
+    void setRouteId(int routeId);
 
-    const std::string &getTransportType() const {
-        return transportType;
-    }
+    const std::string &getTransportType() const;
 
-    void setTransportType(const std::string &transportType) {
-        TransportRoute::transportType = transportType;
-    }
+    void setTransportType(const std::string &transportType);
 
-    int getTransportId() const {
-        return transportId;
-    }
+    int getTransportId() const;
 
-    void setTransportId(int transportId) {
-        transportId = transportId;
-    }
+    void setTransportId(int transportId);
 };
 
-#endif //COURSEWORK_TRANSPORTROUTE_H
+#endif // COURSEWORK_TRANSPORTROUTE_H

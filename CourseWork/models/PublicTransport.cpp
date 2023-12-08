@@ -5,6 +5,9 @@ PublicTransport::PublicTransport() : transportId(0), capacity(0) {}
 PublicTransport::PublicTransport(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity)
         : Transport(brand, model, color, engineType), transportId(transportId), capacity(capacity) {}
 
+PublicTransport::PublicTransport(std::string brand, std::string model, std::string color, EngineType engineType, int capacity)
+        : Transport(brand, model, color, engineType), transportId(0), capacity(capacity) {}
+
 int PublicTransport::getTransportId() {
     return transportId;
 }

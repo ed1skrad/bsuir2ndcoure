@@ -1,21 +1,28 @@
--- Customer table
-CREATE TABLE customer (
-    customer_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    surname VARCHAR(255) NOT NULL,
-    contact_information VARCHAR(255) NOT NULL,
-    total_requests_value INT DEFAULT 0
+CREATE TABLE Admins (
+    admin_id SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+CREATE TABLE bus (
+    bus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    has_contactless_payment BOOLEAN NOT NULL
 );
 
--- Order table
-CREATE TABLE orders (
-    order_id SERIAL PRIMARY KEY,
-    customer_id INT REFERENCES customer(customer_id),
-    car_id INT NOT NULL,
-    order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE trolleybus (
+    trolleybus_id SERIAL PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    color VARCHAR(255) NOT NULL,
+    engineType VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    has_sockets BOOLEAN NOT NULL
 );
 
--- Taxi table
 CREATE TABLE taxi (
     taxi_id SERIAL PRIMARY KEY,
     brand VARCHAR(255) NOT NULL,
@@ -29,8 +36,6 @@ CREATE TABLE taxi (
     rent_car_type VARCHAR(20) NOT NULL
 );
 
-
--- Ticket table
 CREATE TABLE ticket (
     ticket_id SERIAL PRIMARY KEY,
     transport_id INT NOT NULL,
@@ -40,64 +45,19 @@ CREATE TABLE ticket (
     transport_type VARCHAR(20) NOT NULL
 );
 
-CREATE TABLE Stop (
-    stop_id SERIAL PRIMARY KEY,
-    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
-    bus_id INT REFERENCES Bus(bus_id),
-    stop_name VARCHAR(255) NOT NULL,
-    address VARCHAR(255) NOT NULL
+
+CREATE TABLE customer (
+    customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
+    contact_information VARCHAR(255) NOT NULL,
+    total_requests_value INT DEFAULT 0
 );
-
-CREATE TABLE Route (
-    route_id SERIAL PRIMARY KEY,
-    route_name VARCHAR(255) NOT NULL,
-    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
-    bus_id INT REFERENCES Bus(bus_id)
-);
-
-CREATE TABLE RouteStop (
-    route_id INT REFERENCES Route(route_id),
-    stop_id INT REFERENCES Stop(stop_id),
-    PRIMARY KEY (route_id, stop_id)
-);
-
-CREATE TABLE BusStop (
-    stop_id INT REFERENCES Stop(stop_id),
-    bus_id INT REFERENCES Bus(bus_id),
-    PRIMARY KEY (stop_id, bus_id)
-);
-
-/////actual
-
--- Bus table
-CREATE TABLE bus (
-    bus_id SERIAL PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    engineType VARCHAR(20) NOT NULL,
-    capacity INT NOT NULL,
-    has_contactless_payment BOOLEAN NOT NULL
-);
-
--- Trolleybus table
-CREATE TABLE trolleybus (
-    trolleybus_id SERIAL PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NOT NULL,
-    engineType VARCHAR(20) NOT NULL,
-    capacity INT NOT NULL,
-    has_sockets BOOLEAN NOT NULL
-);
-
-
-CREATE TABLE Stop (
-    stop_id SERIAL PRIMARY KEY,
-    trolleybus_id INT REFERENCES Trolleybus(trolleybus_id),
-    bus_id INT REFERENCES Bus(bus_id),
-    stop_name VARCHAR(255) NOT NULL,
-    address VARCHAR(255) NOT NULL
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customer(customer_id),
+    car_id INT NOT NULL,
+    order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Route (
@@ -105,14 +65,19 @@ CREATE TABLE Route (
     route_name VARCHAR(255) NOT NULL,
 );
 
-CREATE TABLE TransportRoute (
-    route_id INT REFERENCES Route(route_id),
-    transport_type VARCHAR(255) NOT NULL,
-    transport_id INT NOT NULL,
-    PRIMARY KEY (route_id, transport_type)
+CREATE TABLE Stop (
+    stop_id SERIAL PRIMARY KEY,
+    stop_name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE RouteStop (
+CREATE TABLE RoutePrice (
+    route_id INT REFERENCES Route(route_id),
+    price DECIMAL(10, 2) NOT NULL
+);
+
+
+CREATE TABLE RouteStop ( //// NOT USE
     route_id INT REFERENCES Route(route_id),
     stop_id INT REFERENCES Stop(stop_id),
     PRIMARY KEY (route_id, stop_id)
@@ -126,61 +91,6 @@ CREATE TABLE StopRoute (
     PRIMARY KEY (stop_id, route_id, transport_type)
 );
 
-
-CREATE TABLE RoutePrice (
-    route_id INT REFERENCES Route(route_id),
-    price DECIMAL(10, 2) NOT NULL
-);
-
-INSERT INTO RoutePrice (route_id, price) VALUES
-(1, 2.50),
-(2, 3.00),
-(3, 3.50);
-
--- Добавляем данные в таблицу bus
-INSERT INTO bus (brand, model, color, engineType, capacity, from_location, to_location, frequency, has_contactless_payment)
-VALUES
-    ('Mercedes', 'Sprinter', 'Blue', 'DIESEL', 20, 'City A', 'City B', 'Everyday', true),
-    ('Volvo', 'B7R', 'Red', 'PETROL', 25, 'City B', 'City C', 'Weekends', false),
-    ('MAN', 'Lion''s City', 'Green', 'ELECTRIC', 30, 'City C', 'City D', 'Daily', true);
-
--- Добавляем данные в таблицу trolleybus
-INSERT INTO trolleybus (brand, model, color, engineType, capacity, from_location, to_location, frequency, has_sockets)
-VALUES
-    ('Solaris', 'Trollino', 'Yellow', 'ELECTRIC', 40, 'City D', 'City E', 'Everyday', true),
-    ('Škoda', '14Tr', 'White', 'ELECTRIC', 35, 'City E', 'City F', 'Weekends', false);
-
--- Добавляем данные в таблицу Stop
-INSERT INTO Stop (stop_name, address)
-VALUES
-    ('Stop 1', 'Address 1'),
-    ('Stop 2', 'Address 2'),
-    ('Stop 3', 'Address 3');
-
--- Добавляем данные в таблицу Route
-INSERT INTO Route (route_name)
-VALUES
-    ('Route 1'),
-    ('Route 2'),
-    ('Route 3');
-
--- Добавляем данные в таблицу StopRoute
-INSERT INTO StopRoute (stop_id, route_id, transport_type, transport_id)
-VALUES
-    (1, 1, 'BUS', 1),
-    (2, 1, 'BUS', 1),
-    (3, 2, 'BUS', 2),
-    (1, 3, 'TROLLEYBUS', 1),
-    (2, 3, 'TROLLEYBUS', 1);
-
--- Добавляем данные в таблицу TransportRoute
-INSERT INTO TransportRoute (route_id, transport_type, transport_id)
-VALUES
-    (1, 'BUS', 1),
-    (2, 'BUS', 2),
-    (3, 'TROLLEYBUS', 1);
-
-
 CREATE TABLE TransportSchedule (
     schedule_id SERIAL PRIMARY KEY,
     transport_type VARCHAR(255) NOT NULL,
@@ -190,11 +100,121 @@ CREATE TABLE TransportSchedule (
     arrival_time TIME NOT NULL
 );
 
-CREATE TABLE Admins (
-    admin_id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
+CREATE TABLE TransportRoute (
+    route_id INT REFERENCES Route(route_id),
+    transport_type VARCHAR(255) NOT NULL,
+    transport_id INT NOT NULL,
+    PRIMARY KEY (route_id, transport_type)
 );
 
+INSERT INTO bus (brand, model, color, engineType, capacity, has_contactless_payment)
+VALUES
+    ('Mercedes', 'Sprinter', 'Wite', 'DIESEL', 15, true),
+    ('Volvo', '7900', 'Blue', 'ELECTRIC', 50, false),
+    ('MAN', 'Lion', 'Green', 'DIESEL', 30, true),
+    ('Sccania', 'Citywide', 'Red', 'HYBRID', 40, false),
+    ('Solaris', 'Urbino', 'Yellow', 'DIESEL', 35, true),
+    ('Ivseco', 'Urbanway', 'Orange', 'HYBRID', 25, false),
+    ('Van Hool', 'Astromega', 'Silver', 'DIESEL', 60, true),
+    ('Setra', 'S 416 GT-HD', 'Black', 'DIESEL', 50, false),
+    ('Neoplan', 'Skyliner', 'Brown', 'DIESEL', 45, true),
+    ('MAN', 'Regio', 'Gray', 'HYBRID', 20, false),
+    ('Irisbus', 'Magelys', 'Purple', 'DIESEL', 55, true),
+    ('Volavo', '9700', 'Cyan', 'ELECTRIC', 40, false),
+    ('Mercedes', 'Tourismo', 'Pink', 'DIESEL', 48, true),
+    ('VDL', 'Futura', 'Magenta', 'HYBRID', 33, false),
+    ('Scania', 'Irizar', 'Violet', 'DIESEL', 42, true),
+    ('Teemsa', 'Safarai HD', 'Lime', 'DIESEL', 20, false),
+    ('MAN', 'CapaCity', 'Teal', 'DIESEL', 70, true),
+    ('Iveco', 'Crossway', 'Olive', 'DIESEL', 28, false),
+    ('Van Hool', 'TX', 'Gold', 'DIESEL', 58, true),
+    ('Soldaris', 'InterUrbino', 'Silver', 'DIESEL', 38, false);
 
 
+INSERT INTO trolleybus (brand, model, color, engineType, capacity, has_sockets)
+VALUES
+    ('RussTraans', 'EcoTrolley X1', 'Reed', 'ELECTRIC', 40, true),
+    ('Volgabus', 'PowerTransit 3000', 'Blue', 'ELECTRIC', 35, true),
+    ('ElectroMash', 'ZapTracer 500', 'Green', 'ELECTRIC', 30, true),
+    ('EcoTrans', 'E-Trolley E100', 'Yelalow', 'ELECTRIC', 25, true),
+    ('TransTeech', 'VoltExplorer 200', 'Orange', 'ELECTRIC', 20, true),
+    ('RusEco', 'ElectroShuttle 450', 'Silver', 'ELECTRIC', 45, true),
+    ('CurrentBus', 'E-Trek Transit', 'Black', 'ELECTRIC', 50, true),
+    ('ZapWheels', 'ElectroBus Eliete', 'Gray', 'ELECTRIC', 60, true),
+    ('E-TrollleyCo', 'EcoRide R200', 'Purple', 'ELECTRIC', 28, true),
+    ('TroleleyTech', 'GreenFlash GT', 'Cyan', 'ELECTRIC', 38, true),
+    ('ZapTtransit', 'E-Trek X', 'Pink', 'ELECTRIC', 55, true),
+    ('EcoMotion', 'ElectroRunner Pro', 'Teal', 'ELECTRIC', 48, true),
+    ('VoltTransit', 'PowerGlider 300', 'Magenta', 'ELECTRIC', 33, true),
+    ('E-TrolleyCorp', 'EcoMover M3', 'Violet', 'ELECTRIC', 42, true),
+    ('ElectroLink', 'ZapsRover Z1', 'Lime', 'ELECTRIC', 22, true),
+    ('EcoDrive', 'ElectroGlider G2', 'Olive', 'ELECTRIC', 58, true),
+    ('TrolleyXpress', 'PowecrFlyer F1', 'Gold', 'ELECTRIC', 70, true),
+    ('VoltTrans', 'EcoFlyer X', 'Silver', 'ELECTRIC', 38, true),
+    ('GreenTech', 'ZapRunner 2000', 'Turquoise', 'ELECTRIC', 55, true),
+    ('E-TrdolleyLine', 'PowerExpress P4', 'Maroon', 'ELECTRIC', 40, true),
+    ('ZapMotion', 'EcoExpress E5', 'Indigo', 'ELECTRIC', 65, true);
+
+INSERT INTO taxi (brand, model, color, engineType, price_per_kil, has_driver, has_wifi, has_child_seat, rent_car_type) VALUES
+                                                                                                                           ('Nissan', 'Almera', 'White', 'PETROL', 1.80, TRUE, FALSE, TRUE, 'ECONOMY'),
+      INSERT INTO Route (route_name) VALUES
+      ('Sunrise Express'),
+      ('Midnight Voyager'),
+      ('Urban Odyssey'),
+      ('Coastal Connector'),
+      ('Mountain Trailblazer'),
+      ('Valley Hopper'),
+      ('City Circuit'),
+      ('Forest Pathway'),
+      ('River Run'),
+      ('Skyline Journey');
+                                                                                                                     ('Chevrolet', 'Aveo', 'Red', 'PETROL', 1.90, TRUE, TRUE, FALSE, 'COMFORT'),
+                                                                                                                           ('Kia', 'Rio', 'Black', 'PETROL', 2.10, TRUE, FALSE, TRUE, 'BUSINESS'),
+INSERT INTO Stop (stop_name, address) VALUES
+('Minsk Passazhirsky Bus Station', 'Minsk Passazhirsky'),
+('Vostocnyj', 'Minsk aut. nádr. Vostocnyj'),
+('Družnaja', 'Minsk aut. zast. Družnaja'),
+('Vakzaĺnaja', 'Minsk Aŭtobusny Prypynak - Vakzaĺnaja'),
+('Passazhirskij', 'Passazhirskij'),
+('Kamennaja Gorka', 'Kamennaja Gorka'),
+('Plošča Pieramohi', 'Plošča Pieramohi'),
+('Plošča Jakuba Kolasa', 'Plošča Jakuba Kolasa'),
+('Plošča Lenina', 'Plošča Lenina'),
+('Akademija Navuk', 'Akademija Navuk'),
+('Park Čaliuskincaŭ', 'Park Čaliuskincaŭ'),
+('Instytut Kuĺtury', 'Instytut Kuĺtury'),
+('Kastryčnickaja', 'Kastryčnickaja'),
+('Plaščad Svabody', 'Plaščad Svabody'),
+('Niamiha', 'Niamiha'),
+('Frunzenskaja', 'Frunzenskaja'),
+('Maladziožnaja', 'Maladziožnaja'),
+('Puškinskaja', 'Puškinskaja'),
+('Spartyŭnaja', 'Spartyŭnaja'),
+('Aŭtazavodskaja', 'Aŭtazavodskaja'),
+('Mahilioŭskaja', 'Mahilioŭskaja'),
+('Uschod', 'Uschod'),
+('Maskoŭskaja', 'Maskoŭskaja'),
+('Park Huščarova', 'Park Huščarova'),
+('Instytut Kuĺtury', 'Instytut Kuĺtury'),
+('Plošča Pieramohi', 'Plošča Pieramohi'),
+('Akademija Navuk', 'Akademija Navuk'),
+('Kastryčnickaja', 'Kastryčnickaja'),
+('Niamiha', 'Niamiha'),
+('Maladziožnaja', 'Maladziožnaja');
+                                                                                                                           ('Hyundai', 'Solaris', 'Grey', 'PETROL', 2.00, TRUE, TRUE, FALSE, 'ECONOMY'),
+                                                                                                                           ('Volkswagen', 'Polo', 'Blue', 'DIESEL', 2.30, TRUE, FALSE, TRUE, 'COMFORT'),
+                                                                                                                           ('Skoda', 'Rapid', 'Green', 'PETROL', 2.00, TRUE, TRUE, FALSE, 'BUSINESS'),
+                                                                                                                           ('Renault', 'Logan', 'Brown', 'PETROL', 1.70, TRUE, FALSE, TRUE, 'ECONOMY'),
+                                                                                                                           ('Mazda', '3', 'Silver', 'PETROL', 2.40, TRUE, TRUE, FALSE, 'COMFORT'),
+                                                                                                                           ('Ford', 'Fiesta', 'Yellow', 'PETROL', 2.20, TRUE, FALSE, TRUE, 'BUSINESS'),
+                                                                                                                           ('Toyota', 'Camry', 'Black', 'HYBRID', 3.00, TRUE, TRUE, FALSE, 'ECONOMY'),
+                                                                                                                           ('Honda', 'Accord', 'White', 'PETROL', 2.80, TRUE, FALSE, TRUE, 'COMFORT'),
+                                                                                                                           ('BMW', '3 Series', 'Blue', 'DIESEL', 3.20, TRUE, TRUE, FALSE, 'BUSINESS'),
+                                                                                                                           ('Audi', 'A4', 'Red', 'PETROL', 3.10, TRUE, FALSE, TRUE, 'BUSINESS'),
+                                                                                                                           ('Mercedes-Benz', 'C-Class', 'Black', 'DIESEL', 3.50, TRUE, TRUE, FALSE, 'COMFORT'),
+                                                                                                                           ('Lexus', 'ES', 'Silver', 'HYBRID', 3.80, TRUE, FALSE, TRUE, 'BUSINESS'),
+                                                                                                                           ('Infiniti', 'Q50', 'Grey', 'PETROL', 3.30, TRUE, TRUE, FALSE, 'BUSINESS'),
+                                                                                                                           ('Cadillac', 'ATS', 'White', 'PETROL', 3.40, TRUE, FALSE, TRUE, 'COMFORT'),
+                                                                                                                           ('Jaguar', 'XE', 'Blue', 'DIESEL', 3.60, TRUE, TRUE, FALSE, 'BUSINESS'),
+                                                                                                                           ('Tesla', 'Model 3', 'Red', 'ELECTRIC', 4.00, TRUE, FALSE, TRUE, 'BUSINESS'),
+                                                                                                                           ('Porsche', 'Panamera', 'Black', 'HYBRID', 4.50, TRUE, TRUE, FALSE, 'BUSINESS');

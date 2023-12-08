@@ -1,6 +1,4 @@
-//
-// Created by atema on 02.12.2023.
-//
+// order.h
 
 #ifndef COURSEWORK_ORDER_H
 #define COURSEWORK_ORDER_H
@@ -10,7 +8,7 @@
 #include <chrono>
 #include <sstream>
 
-class Orders {
+class Order {
 private:
     int orderId;
     int customerId;
@@ -18,30 +16,22 @@ private:
     std::string orderTime;
 
 public:
-    Orders() : orderId(0), customerId(0), carId(0), orderTime(getCurrentTime()) {}
+    Order();
+    Order(int orderId, int customerId, int carId, const std::string& orderTime);
 
-    Orders(int orderId, int customerId, int carId, const std::string& orderTime)
-            : orderId(orderId), customerId(customerId), carId(carId), orderTime(orderTime) {}
+    int getOrderId() const;
+    void setOrderId(int id);
 
-    int getOrderId() const { return orderId; }
-    void setOrderId(int id) { orderId = id; }
+    int getCustomerId() const;
+    void setCustomerId(int id);
 
-    int getCustomerId() const { return customerId; }
-    void setCustomerId(int id) { customerId = id; }
+    int getCarId() const;
+    void setCarId(int id);
 
-    int getCarId() const { return carId; }
-    void setCarId(int id) { carId = id; }
+    const std::string& getOrderTime() const;
+    void setOrderTime(const std::string& time);
 
-    const std::string& getOrderTime() const { return orderTime; }
-    void setOrderTime(const std::string& time) { orderTime = time; }
-
-    std::string getCurrentTime() const {
-        auto now = std::chrono::system_clock::now();
-        std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
-        std::stringstream ss;
-        ss << std::ctime(&currentTime);
-        return ss.str();
-    }
+    std::string getCurrentTime() const;
 };
 
-#endif //COURSEWORK_ORDER_H
+#endif // COURSEWORK_ORDER_H
