@@ -6,13 +6,13 @@
 #include "../models/Order.h"
 #include "../models/Bus.h"
 #include "../models/Route.h"
-#include "../models/schedule/TransportSchedule.h"
 #include "../models/ticket/TransportTicket.h"
 #include "../models/ticket/TicketManager.h"
 #include "../models/Trolleybus.h"
 #include "../models/price/RoutePrice.h"
 #include "../models/Customer.h"
 #include "../admin/Admin.h"
+#include "../models/schedule/Schedule.h"
 
 using namespace std;
 
@@ -179,6 +179,7 @@ void handleBusSelect(Database& Db) {
     cout << "3. View schedule" << endl;
     cout << "4. Get ticket price for a route" << endl;
     cout << "5. Book a ticket" << endl;
+    cout << "6. Stop case" << endl;
     cout << "Enter your choice (1/2/3/4/5): ";
 
     int actionChoice;
@@ -202,8 +203,8 @@ void handleBusSelect(Database& Db) {
             cout << "Enter bus id to find schedule:";
             int busId;
             cin >> busId;
-            TransportSchedule transportSchedule;
-            transportSchedule.getScheduleForTransport(Db, busId, PublicTransport::TransportType::BUS);
+            Schedule transportSchedule;
+            transportSchedule.getScheduleForRoute(Db, busId);
             break;
         }
         case 4: {
@@ -216,6 +217,14 @@ void handleBusSelect(Database& Db) {
         }
         case 5: {
             bookTransport(Db,PublicTransport::BUS);
+        }
+        case 6:{
+            Stop stop;
+            stop.findAllStops(Db);
+            cout << "Stop id:";
+            int stopId;
+            cin >> stopId;
+            stop.findStopById(Db, stopId);
         }
         default:
             cout << "Invalid choice. Please try again." << endl;
@@ -253,8 +262,8 @@ void handleTrolleyBusSelect(Database& Db) {
             cout << "Enter trolleybus id to find schedule:";
             int trolleybusId;
             cin >> trolleybusId;
-            TransportSchedule transportSchedule;
-            transportSchedule.getScheduleForTransport(Db, trolleybusId, PublicTransport::TransportType::TROLLEYBUS);
+            Schedule transportSchedule;
+            //transportSchedule.getScheduleForTransport(Db, trolleybusId, PublicTransport::TransportType::TROLLEYBUS);
             break;
         }
         case 4: {
@@ -388,26 +397,23 @@ void createAndAddRoute(Database& Db, int isLogged) {
 void createAndAddSchedule(Database& db, int isLogged) {
     Admin admin(db, "admin_username", "admin_password");
     int transport_id;
-    Admin::TransportType transport_type;
+    std::string transport_type;
     int route_id;
-    int stop_id;
     std::string arrival_time;
 
     std::cout << "Enter transport ID: ";
     std::cin >> transport_id;
-    std::cout << "Enter transport type (1 for BUS, 2 for TROLLEYBUS): ";
-    int transport_type_input;
-    std::cin >> transport_type_input;
-    transport_type = (transport_type_input == 1) ? Admin::BUS : Admin::TROLLEYBUS;
+    std::cout << "Enter transport type (BUS or TROLLEYBUS): ";
+    std::cin >> transport_type; // Теперь transport_type - это строка
     std::cout << "Enter route ID: ";
     std::cin >> route_id;
-    std::cout << "Enter stop ID: ";
-    std::cin >> stop_id;
     std::cout << "Enter arrival time (HH:MM:SS): ";
     std::cin >> arrival_time;
 
-    admin.addSchedule(db, transport_id, transport_type, route_id, stop_id, arrival_time, isLogged);
+    // Вызов функции addSchedule с передачей параметров
+    admin.addSchedule(db, route_id, transport_type, transport_id, isLogged);
 }
+
 
 void createAndSetRoutePrice(Database& db, int isLogged) {
     Admin admin(db, "admin_username", "admin_password");
@@ -452,15 +458,17 @@ void createAndLinkTransportToRoute(Database& db, int isLogged) {
 
 void createAndLinkStopToRoute(Database& db, int isLogged) {
     Admin admin(db, "admin_username", "admin_password");
-    int route_id, stop_id;
+    int routeId, stopId;
+    std::string transportType;
 
     std::cout << "Enter route ID: ";
-    std::cin >> route_id;
+    std::cin >> routeId;
     std::cout << "Enter stop ID: ";
-    std::cin >> stop_id;
+    std::cin >> stopId;
 
-    admin.linkStopToRoute(db, route_id, stop_id, isLogged);
+    admin.linkStopToRoute(db, routeId, stopId, isLogged);
 }
+
 
 void handleAdminActions(Database& Db) {
     Admin admin(Db, "admin_username", "admin_password");

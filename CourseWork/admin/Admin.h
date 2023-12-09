@@ -52,14 +52,13 @@ public:
 
     void addRoute(const std::string &routeName, int isLogged);
 
-    void addSchedule(Database &Db, int transportId, TransportType transportType, int routeId, int stopId,
-                     const std::string &arrivalTime, int isLogged);
+    void addSchedule(Database& db, int routeId, const std::string& transportType, int transportId, int isLogged);
 
     void setRoutePrice(Database &Db, int routeId, double price, int isLogged);
 
     void linkTransportToRoute(Database &Db, int route_id, TransportType transport_type, int transport_id, int isLogged);
 
-    void linkStopToRoute(Database &Db, int routeId, int stopId, int isLoggedIn);
+    void linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedIn);
 
     bool checkTransportExists(Database &Db, TransportType transportType, int transportId);
 

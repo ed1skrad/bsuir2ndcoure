@@ -40,7 +40,7 @@
 /* Define if <charconv> supports floating-point conversion. */
 /* #undef PQXX_HAVE_CHARCONV_FLOAT */
 /* Define if <charconv> supports integer conversion. */
-/* #undef PQXX_HAVE_CHARCONV_INT */
+#define PQXX_HAVE_CHARCONV_INT
 /* Define if compiler has C++20 std::cmp_greater etc. */
 #define PQXX_HAVE_CMP
 /* Define if compiler supports Concepts and <ranges> header. */

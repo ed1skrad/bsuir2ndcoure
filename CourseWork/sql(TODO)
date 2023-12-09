@@ -84,19 +84,17 @@ CREATE TABLE RouteStop ( //// NOT USE
 );
 
 CREATE TABLE StopRoute (
-    stop_id INT REFERENCES Stop(stop_id),
+    stoproute_id SERIAL PRIMARY KEY,
     route_id INT REFERENCES Route(route_id),
-    transport_type VARCHAR(255) NOT NULL,
-    transport_id INT NOT NULL,
-    PRIMARY KEY (stop_id, route_id, transport_type)
+    stop_id INT REFERENCES Stop(stop_id)
 );
 
-CREATE TABLE TransportSchedule (
+CREATE TABLE Schedule (
     schedule_id SERIAL PRIMARY KEY,
-    transport_type VARCHAR(255) NOT NULL,
-    transport_id INT NOT NULL,
     route_id INT REFERENCES Route(route_id),
     stop_id INT REFERENCES Stop(stop_id),
+    transport_type VARCHAR(255) NOT NULL,
+    transport_id INT NOT NULL,
     arrival_time TIME NOT NULL
 );
 
