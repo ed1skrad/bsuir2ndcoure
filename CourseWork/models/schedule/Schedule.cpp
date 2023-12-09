@@ -59,7 +59,7 @@ std::vector<Schedule> Schedule::getScheduleForRoute(Database& db, int routeId) {
     pqxx::result R = db.executeQuery("SELECT * FROM Schedule WHERE route_id = " + std::to_string(routeId) + ";");
 
     std::vector<Schedule> scheduleList;
-    for (auto row : R) {
+    for (auto row: R) {
         scheduleList.emplace_back(row["schedule_id"].as<int>(),
                                   row["route_id"].as<int>(),
                                   row["stop_id"].as<int>(),
@@ -69,3 +69,13 @@ std::vector<Schedule> Schedule::getScheduleForRoute(Database& db, int routeId) {
     }
     return scheduleList;
 }
+
+void Schedule::printStopsForRoute(Database& db, int routeId) {
+    pqxx::result R = db.executeQuery("SELECT * FROM StopRoute WHERE route_id = " + std::to_string(routeId) + " ORDER BY stop_id;");
+
+    std::cout << "Stops for route ID " << routeId << ":" << std::endl;
+    for (auto row : R) {
+        std::cout << "Stop ID: " << row["stop_id"].as<int>() << std::endl;
+    }
+}
+

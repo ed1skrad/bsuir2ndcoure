@@ -1,20 +1,16 @@
 #include "Route.h"
 
-Route::Route() : routeId(0), trolleybusId(0), busId(0) {}
+Route::Route() : routeId(0) {}
 
-Route::Route(int routeId, const std::string& routeName, int trolleybusId, int busId, const std::vector<Stop>& routeStops)
-        : routeId(routeId), routeName(routeName), trolleybusId(trolleybusId), busId(busId), stops(routeStops) {}
+Route::Route(int routeId, const std::string& routeName, const std::vector<Stop>& routeStops)
+        : routeId(routeId), routeName(routeName), stops(routeStops) {}
 
 int Route::getRouteId() const { return routeId; }
 const std::string& Route::getRouteName() const { return routeName; }
-int Route::getTrolleybusId() const { return trolleybusId; }
-int Route::getBusId() const { return busId; }
 const std::vector<Stop>& Route::getStops() const { return stops; }
 
 void Route::setRouteId(int newRouteId) { routeId = newRouteId; }
 void Route::setRouteName(const std::string& newRouteName) { routeName = newRouteName; }
-void Route::setTrolleybusId(int newTrolleybusId) { trolleybusId = newTrolleybusId; }
-void Route::setBusId(int newBusId) { busId = newBusId; }
 void Route::setStops(const std::vector<Stop>& newRouteStops) { stops = newRouteStops; }
 
 void Route::getStopsForRoute(Database& db, int routeId) {
@@ -72,3 +68,26 @@ void Route::getRoutesForTransport(Database& db, int transportId, PublicTransport
         std::cerr << "Error: " << e.what() << std::endl;
     }
 }
+
+void Route::displayAllRoutes(Database& db) {
+    try {
+        pqxx::result result = db.executeQuery("SELECT * FROM Route");
+
+        if (!result.empty()) {
+            std::cout << "All Routes:" << std::endl;
+            for (const auto& row : result) {
+                int routeId = row[0].as<int>();
+                std::string routeName = row[1].as<std::string>();
+
+                std::cout << "Route ID: " << routeId << ", Route Name: " << routeName << std::endl;
+
+                std::cout << std::endl;
+            }
+        } else {
+            std::cout << "No routes found in the database." << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+}
+

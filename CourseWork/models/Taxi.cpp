@@ -2,10 +2,10 @@
 
 #include "Taxi.h"
 
-Taxi::Taxi(std::string brand, std::string model, std::string color, EngineType engineType, int carId, double pricePerKil, double rating, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes)
-        : Transport(brand, model, color, engineType), carId(carId), pricePerKil(pricePerKil), rating(rating), hasDriver(hasDriver), hasWiFi(hasWiFi), hasChildSeat(hasChildSeat), rentCarTypes(rentCarTypes) {}
+Taxi::Taxi(std::string brand, std::string model, std::string color, EngineType engineType, int carId, double pricePerKil, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes)
+        : Transport(brand, model, color, engineType), carId(carId), pricePerKil(pricePerKil), hasDriver(hasDriver), hasWiFi(hasWiFi), hasChildSeat(hasChildSeat), rentCarTypes(rentCarTypes) {}
 
-Taxi::Taxi() : Transport("", "", "", EngineType::PETROL), carId(0), pricePerKil(0.0), rating(0.0), hasDriver(false), hasWiFi(false), hasChildSeat(false), rentCarTypes(RentCarTypes::ECONOMY) {}
+Taxi::Taxi() : Transport("", "", "", EngineType::PETROL), carId(0), pricePerKil(0.0), hasDriver(false), hasWiFi(false), hasChildSeat(false), rentCarTypes(RentCarTypes::ECONOMY) {}
 
 int Taxi::getCarId() const {
     return carId;
@@ -21,14 +21,6 @@ double Taxi::getPricePerKil() const {
 
 void Taxi::setPricePerKil(double pricePerKil) {
     this->pricePerKil = pricePerKil;
-}
-
-double Taxi::getRating() const {
-    return rating;
-}
-
-void Taxi::setRating(double rating) {
-    this->rating = rating;
 }
 
 bool Taxi::getHasDriver() const {
@@ -92,16 +84,14 @@ void Taxi::displayTaxiDetails(const pqxx::result::const_iterator& row) {
         bool hasChildSeat = row[8].as<bool>();
         RentCarTypes rentCarTypes = stringToRentCarTypes(row["rent_car_type"].as<std::string>());
 
-        // Создание объекта Taxi с использованием полученных значений
         std::unique_ptr<Taxi> taxi = std::make_unique<Taxi>(
                 brand, model, color,
                 engineType,
-                carId, pricePerKil, rating,
+                carId, pricePerKil,
                 hasDriver, hasWiFi, hasChildSeat,
                 rentCarTypes
         );
 
-        // Вывод деталей такси
         std::cout << "Taxi Details:" << std::endl;
         std::cout << "Car ID: " << taxi->getCarId() << std::endl;
         std::cout << "Brand: " << taxi->getBrand() << std::endl;
@@ -109,7 +99,6 @@ void Taxi::displayTaxiDetails(const pqxx::result::const_iterator& row) {
         std::cout << "Color: " << taxi->getColor() << std::endl;
         std::cout << "Engine Type: " << taxi->getEngineTypeString() << std::endl;
         std::cout << "Price per Kilometer: " << taxi->getPricePerKil() << std::endl;
-        std::cout << "Rating: " << taxi->getRating() << std::endl;
         std::cout << "Has Driver: " << (hasDriver ? "Yes" : "No") << std::endl;
         std::cout << "Has WiFi: " << (hasWiFi ? "Yes" : "No") << std::endl;
         std::cout << "Has Child Seat: " << (hasChildSeat ? "Yes" : "No") << std::endl;
@@ -134,6 +123,58 @@ void Taxi::displayAllTaxis(Database& Db) {
 
         for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
             displayTaxiDetails(c);
+        }
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+void Taxi::displayTaxiById(Database& Db, int taxiId) {
+    try {
+        pqxx::result R = Db.executeQuery("SELECT * FROM taxi WHERE taxi_id = " + std::to_string(taxiId));
+
+        for (const auto& row : R) {
+            displayTaxiDetails(row);
+        }
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+void Taxi::displayTaxisByBrand(Database& Db, const std::string& brand) {
+    try {
+        pqxx::result R = Db.executeQuery("SELECT * FROM taxi WHERE brand = '" + brand + "'");
+
+        for (const auto& row : R) {
+            displayTaxiDetails(row);
+        }
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+void Taxi::displayTaxisByRentCarType(Database& Db, RentCarTypes rentCarType) {
+    try {
+        std::string rentCarTypeStr;
+        switch (rentCarType) {
+            case ECONOMY:
+                rentCarTypeStr = "ECONOMY";
+                break;
+            case COMFORT:
+                rentCarTypeStr = "COMFORT";
+                break;
+            case BUSINESS:
+                rentCarTypeStr = "BUSINESS";
+                break;
+            default:
+                std::cerr << "Invalid rent car type." << std::endl;
+                return;
+        }
+
+        pqxx::result R = Db.executeQuery("SELECT * FROM taxi WHERE rent_car_type = '" + rentCarTypeStr + "'");
+
+        for (const auto& row : R) {
+            displayTaxiDetails(row);
         }
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

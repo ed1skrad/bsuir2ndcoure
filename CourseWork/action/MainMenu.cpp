@@ -151,16 +151,20 @@ void orderTaxi(Database& Db) {
     }
 }
 
-void handleTaxiSelect(Database& Db){
+void handleTaxiSelect(Database& Db) {
+    Taxi taxi;
     cout << "Choose an action:" << endl;
     cout << "1. View all taxis" << endl;
     cout << "2. Call taxi" << endl;
+    cout << "3. Display taxi by ID" << endl;
+    cout << "4. Display taxis by brand" << endl;
+    cout << "5. Display taxis by RentCarType" << endl;
+
     int actionChoice;
     cin >> actionChoice;
 
     switch (actionChoice) {
         case 1: {
-            Taxi taxi;
             taxi.displayAllTaxis(Db);
             break;
         }
@@ -168,8 +172,56 @@ void handleTaxiSelect(Database& Db){
             orderTaxi(Db);
             break;
         }
+        case 3: {
+            int taxiId;
+            cout << "Enter taxiId:";
+            cin >> taxiId;
+            taxi.displayTaxiById(Db, taxiId);
+            break;
+        }
+        case 4: {
+            string brand;
+            cout << "Enter brand:";
+            cin >> brand;
+            taxi.displayTaxisByBrand(Db, brand);
+            break;
+        }
+        case 5: {
+            cout << "Choose RentCarType:" << endl;
+            cout << "1. Economy" << endl;
+            cout << "2. Comfort" << endl;
+            cout << "3. Business" << endl;
+
+            int rentCarTypeChoice;
+            cin >> rentCarTypeChoice;
+
+            RentCarTypes rentCarType;
+
+            switch (rentCarTypeChoice) {
+                case 1:
+                    rentCarType = ECONOMY;
+                    break;
+                case 2:
+                    rentCarType = COMFORT;
+                    break;
+                case 3:
+                    rentCarType = BUSINESS;
+                    break;
+                default:
+                    cout << "Invalid choice" << endl;
+                    return;
+            }
+
+            taxi.displayTaxisByRentCarType(Db, rentCarType);
+            break;
+        }
+        default: {
+            cout << "Invalid choice" << endl;
+            break;
+        }
     }
 }
+
 
 
 void handleBusSelect(Database& Db) {
@@ -197,14 +249,15 @@ void handleBusSelect(Database& Db) {
             cin >> busId;
             Route route;
             route.getRoutesForTransport(Db, busId, PublicTransport::BUS);
+            route.displayAllRoutes(Db);
             break;
         }
         case 3: {
-            cout << "Enter bus id to find schedule:";
+            cout << "Enter route id:";
             int busId;
             cin >> busId;
             Schedule transportSchedule;
-            transportSchedule.getScheduleForRoute(Db, busId);
+            transportSchedule.printStopsForRoute(Db, busId);
             break;
         }
         case 4: {

@@ -252,7 +252,6 @@ void Admin::addSchedule(Database& db, int routeId, const std::string& transportT
     std::cout << "Schedule added successfully for all linked stops with individual arrival times." << std::endl;
 }
 
-
 void Admin::setRoutePrice(Database &Db, int routeId, double price, int isLogged) {
     if (!isLogged) {
         std::cerr << "Error: You must be logged in as an admin to set the route price." << std::endl;
@@ -331,7 +330,6 @@ void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedI
         return;
     }
 
-    // Проверяем существование маршрута
     std::string checkRouteQuery = "SELECT EXISTS(SELECT 1 FROM Route WHERE route_id = " + std::to_string(routeId) + ");";
     auto routeExists = db.executeQuery(checkRouteQuery);
     if (routeExists.empty() || !routeExists[0][0].as<bool>()) {
@@ -339,7 +337,6 @@ void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedI
         return;
     }
 
-    // Проверяем существование остановки
     std::string checkStopQuery = "SELECT EXISTS(SELECT 1 FROM Stop WHERE stop_id = " + std::to_string(stopId) + ");";
     auto stopExists = db.executeQuery(checkStopQuery);
     if (stopExists.empty() || !stopExists[0][0].as<bool>()) {
@@ -347,7 +344,6 @@ void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedI
         return;
     }
 
-    // Проверяем, не связаны ли уже остановка и маршрут
     std::string checkLinkQuery = "SELECT 1 FROM StopRoute WHERE route_id = " + std::to_string(routeId) +
                                  " AND stop_id = " + std::to_string(stopId) + ";";
     auto checkLinkResult = db.executeQuery(checkLinkQuery);
@@ -356,7 +352,6 @@ void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedI
         return;
     }
 
-    // Вставляем новую связь между остановкой и маршрутом
     std::string insertQuery = "INSERT INTO StopRoute (route_id, stop_id) VALUES (" +
                               std::to_string(routeId) + ", " +
                               std::to_string(stopId) + ");";

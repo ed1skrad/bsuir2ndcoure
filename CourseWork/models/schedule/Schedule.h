@@ -42,6 +42,9 @@ public:
 
     // Static method to get the schedule for a specific route
     static std::vector<Schedule> getScheduleForRoute(Database& db, int routeId);
+    // Вызов метода
+    void printStopsForRoute(Database& db, int routeId);
+
 };
 
 #endif // SCHEDULE_H

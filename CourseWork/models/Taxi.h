@@ -17,14 +17,13 @@ class Taxi : public Transport {
 private:
     int carId;
     double pricePerKil;
-    double rating;
     bool hasDriver;
     bool hasWiFi;
     bool hasChildSeat;
     RentCarTypes rentCarTypes;
 
 public:
-    Taxi(std::string brand, std::string model, std::string color, EngineType engineType, int carId, double pricePerKil, double rating, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes);
+    Taxi(std::string brand, std::string model, std::string color, EngineType engineType, int carId, double pricePerKil, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes);
 
     Taxi();
 
@@ -33,9 +32,6 @@ public:
 
     double getPricePerKil() const;
     void setPricePerKil(double pricePerKil);
-
-    double getRating() const;
-    void setRating(double rating);
 
     bool getHasDriver() const;
     void setHasDriver(bool hasDriver);
@@ -51,11 +47,17 @@ public:
 
     ~Taxi();
 
-    RentCarTypes stringToRentCarTypes(const std::string& rentCarTypesStr);
+    static RentCarTypes stringToRentCarTypes(const std::string& rentCarTypesStr);
 
-    void displayTaxiDetails(const pqxx::result::const_iterator& row);
+    static void displayTaxiDetails(const pqxx::result::const_iterator& row);
 
     void displayAllTaxis(Database& Db);
+
+    static void displayTaxiById(Database& Db, int taxiId);
+
+    static void displayTaxisByBrand(Database& Db, const std::string& brand);
+
+    static void displayTaxisByRentCarType(Database& Db, RentCarTypes rentCarType);
 };
 
 #endif // COURSEWORK_TAXI_H
