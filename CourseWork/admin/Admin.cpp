@@ -1,3 +1,4 @@
+#include <regex>
 #include "Admin.h"
 
 Admin::Admin(Database& db, const std::string& username, const std::string& password)
@@ -27,15 +28,6 @@ bool Admin::login() {
     }
 }
 
-Admin::TransportType Admin::stringToTransportType(const std::string &typeStr) {
-    if (typeStr == "BUS") {
-        return BUS;
-    } else if (typeStr == "TROLLEYBUS") {
-        return TROLLEYBUS;
-    }
-    return BUS;
-}
-
 std::string Admin::engineTypeToString(EngineType engineType) {
     switch (engineType) {
         case DIESEL:
@@ -51,21 +43,8 @@ std::string Admin::engineTypeToString(EngineType engineType) {
     }
 }
 
-bool Admin::isValidTransportID(Database &db, int transportId, const std::string &transportType) {
-    std::string query = "SELECT EXISTS(SELECT 1 FROM TransportRoute WHERE transport_id = " +
-                        std::to_string(transportId) + " AND transportType = '" + transportType + "');";
-    auto result = db.executeQuery(query);
-    return !result.empty() && result[0][0].as<bool>();
-}
-
 bool Admin::isValidRouteID(Database &db, int routeId) {
     std::string query = "SELECT EXISTS(SELECT 1 FROM Route WHERE route_id = " + std::to_string(routeId) + ");";
-    auto result = db.executeQuery(query);
-    return !result.empty() && result[0][0].as<bool>();
-}
-
-bool Admin::isValidStopID(Database &db, int stopId) {
-    std::string query = "SELECT EXISTS(SELECT 1 FROM Stop WHERE stop_id = " + std::to_string(stopId) + ");";
     auto result = db.executeQuery(query);
     return !result.empty() && result[0][0].as<bool>();
 }
@@ -74,21 +53,6 @@ bool Admin::isValidStopID(Database &db, int stopId) {
 bool Admin::adminLogin(Database &db, const std::string &username, const std::string &password) {
     Admin admin(db, username, password);
     return admin.login();
-}
-
-std::string engineTypeToString(EngineType engineType) {
-    switch (engineType) {
-        case EngineType::DIESEL:
-            return "DIESEL";
-        case EngineType::PETROL:
-            return "PETROL";
-        case EngineType::ELECTRIC:
-            return "ELECTRIC";
-        case EngineType::HYBRID:
-            return "HYBRID";
-        default:
-            return "UNKNOWN";
-    }
 }
 
 bool Admin::registerAdmin(Database &db, const std::string &username, const std::string &password) {
@@ -215,15 +179,19 @@ void Admin::addRoute(const std::string &routeName, int isLogged) {
     }
 }
 
-void Admin::addSchedule(Database& db, int routeId, const std::string& transportType, int transportId, int isLogged) {
+void Admin::addSchedule(Database& db, int routeId, TransportType transportType, int transportId, int isLogged) {
     if (!isLogged) {
         std::cerr << "Error: You must be logged in as an admin to add a schedule." << std::endl;
         return;
     }
 
+    std::string transportTypeStr = (transportType == BUS) ? "BUS" : "TROLLEYBUS";
+    std::string transportTable = (transportType == BUS) ? "bus" : "trolleybus";
+    std::string transportIdColumn = (transportType == BUS) ? "bus_id" : "trolleybus_id";
+
     std::string checkTransportRouteQuery = "SELECT EXISTS(SELECT 1 FROM TransportRoute WHERE route_id = " +
                                            std::to_string(routeId) + " AND transport_type = '" +
-                                           transportType + "' AND transport_id = " +
+                                           transportTypeStr + "' AND transport_id = " +
                                            std::to_string(transportId) + ");";
     auto transportRouteExists = db.executeQuery(checkTransportRouteQuery);
     if (transportRouteExists.empty() || !transportRouteExists[0][0].as<bool>()) {
@@ -234,21 +202,30 @@ void Admin::addSchedule(Database& db, int routeId, const std::string& transportT
     std::string getStopsQuery = "SELECT stop_id FROM StopRoute WHERE route_id = " + std::to_string(routeId) + ";";
     auto stops = db.executeQuery(getStopsQuery);
 
+    std::regex timeRegex(R"((2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9]))");
+
     for (const auto& stop : stops) {
         int stopId = stop[0].as<int>();
         std::string arrivalTime;
 
-        std::cout << "Enter arrival time for stop ID " << stopId << " (HH:MM:SS): ";
-        std::cin >> arrivalTime;
+        do {
+            std::cout << "Enter arrival time for stop ID " << stopId << " (HH:MM:SS): ";
+            std::cin >> arrivalTime;
+
+            if (!std::regex_match(arrivalTime, timeRegex)) {
+                std::cerr << "Error: Invalid time format. Please enter the time in HH:MM:SS format." << std::endl;
+            }
+        } while (!std::regex_match(arrivalTime, timeRegex));
 
         std::string insertScheduleQuery = "INSERT INTO Schedule (route_id, stop_id, transport_type, transport_id, arrival_time) VALUES (" +
                                           std::to_string(routeId) + ", " +
                                           std::to_string(stopId) + ", '" +
-                                          transportType + "', " +
+                                          transportTypeStr + "', " +
                                           std::to_string(transportId) + ", '" +
                                           arrivalTime + "');";
         db.executeQuery(insertScheduleQuery);
     }
+
     std::cout << "Schedule added successfully for all linked stops with individual arrival times." << std::endl;
 }
 
@@ -291,7 +268,6 @@ void Admin::linkTransportToRoute(Database &Db, int routeId, TransportType transp
     }
 
     std::string transportTypeStr = (transportType == BUS) ? "BUS" : "TROLLEYBUS";
-
     std::string transportTable = (transportType == BUS) ? "bus" : "trolleybus";
     std::string transportIdColumn = (transportType == BUS) ? "bus_id" : "trolleybus_id";
     std::string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTable +

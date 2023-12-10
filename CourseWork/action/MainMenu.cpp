@@ -16,117 +16,138 @@
 
 using namespace std;
 
+template <typename T>
+T getPositiveInput(const std::string &prompt) {
+    T value;
+    std::string input;
+
+    while (true) {
+        std::cout << prompt;
+
+        std::getline(std::cin, input);
+
+        try {
+            size_t pos = 0;
+            value = std::stod(input, &pos);
+
+            if (pos == input.length() && value > 0) {
+                break;
+            } else {
+                std::cout << "Error: Input is not a positive number. Please try again." << std::endl;
+            }
+        } catch (std::invalid_argument&) {
+            std::cout << "Error: Input is not a number. Please try again." << std::endl;
+        } catch (std::out_of_range&) {
+            std::cout << "Error: Input is too large. Please try again." << std::endl;
+        }
+
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    return value;
+}
+
+std::string getStringInput(const std::string &prompt) {
+    std::string input;
+
+    while (true) {
+        std::cout << prompt;
+
+        std::getline(std::cin, input);
+
+        if (!std::cin.fail()) {
+            break;  // Всё в порядке, выходим из цикла
+        } else {
+            std::cout << "Error: Input failed. Please try again." << std::endl;
+        }
+
+        // Очищаем входной поток, чтобы избежать зацикливания
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    return input;
+}
+
 void displayMenu() {
     cout << "Choose the type of transport:" << endl;
     cout << "1. Taxi" << endl;
     cout << "2. Bus" << endl;
     cout << "3. Trolleybus" << endl;
+    cout << "4. Admin panel" << endl;
     cout << "0. Exit" << endl;
-    cout << "Enter your choice (1/2/3/0): ";
+    cout << "Enter your choice (1/2/3/4/0): ";
 }
 
 void bookTransport(Database& Db, PublicTransport::TransportType transportType) {
     string transportTypeName = (transportType == PublicTransport::BUS) ? "bus" : "trolleybus";
-    cout << "Do you want to book a " << transportTypeName << "? (yes/no): ";
-    string bookChoice;
-    cin >> bookChoice;
 
-    if (bookChoice == "yes" || bookChoice == "Yes") {
+    try {
+        Customer customer;
+
+        customer.setName(getStringInput("Enter your name: "));
+        customer.setSurname(getStringInput("Enter your surname: "));
+        customer.setContactInformation(getStringInput("Enter your contact information: "));
+
+        string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
+                                  customer.getName() + "','" +
+                                  customer.getSurname() + "','" +
+                                  customer.getContactInformation() + "') RETURNING customer_id";
+        pqxx::result customerIdResult = Db.executeQuery(addCustomerQuery);
+        customer.setCustomerId(customerIdResult[0][0].as<int>());
+
+        int routeId = getPositiveInput<int>("Enter the route ID: ");
+
+        RoutePrice routePrice;
         try {
-            Customer customer;
-
-            cout << "Enter your name: ";
-            string name;
-            cin >> name;
-            customer.setName(name);
-
-            cout << "Enter your surname: ";
-            string surname;
-            cin >> surname;
-            customer.setSurname(surname);
-
-            cout << "Enter your contact information: ";
-            string contactInformation;
-            cin >> contactInformation;
-            customer.setContactInformation(contactInformation);
-
-            string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
-                                      customer.getName() + "','" +
-                                      customer.getSurname() + "','" +
-                                      customer.getContactInformation() + "') RETURNING customer_id";
-            pqxx::result customerIdResult = Db.executeQuery(addCustomerQuery);
-            customer.setCustomerId(customerIdResult[0][0].as<int>());
-
-            cout << "Enter the route ID: ";
-            int routeId;
-            cin >> routeId;
-
-            RoutePrice routePrice;
-            try {
-                routePrice = RoutePrice().getTicketPrice(Db, routeId);
-                cout << "The price for the ticket on Route ID: " << routeId
-                     << " is $" << routePrice.getPrice() << std::endl;
-            } catch (const std::exception& e) {
-                cerr << "Error: " << e.what() << endl;
-                return;
-            }
-
-            cout << "Enter the " << transportTypeName << " ID: ";
-            int transportId;
-            cin >> transportId;
-
-            string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTypeName + " WHERE " + transportTypeName + "_id = " + std::to_string(transportId) + ")";
-            pqxx::result transportExistsResult = Db.executeQuery(checkTransportQuery);
-            bool transportExists = transportExistsResult[0][0].as<bool>();
-            if (!transportExists) {
-                cout << "No " << transportTypeName << " with ID " << transportId << " found. Please enter a valid ID." << endl;
-                return;
-            }
-
-            TransportTicket ticket;
-            ticket.setTransportId(transportId);
-            ticket.setCustomerId(customer.getCustomerId());
-            ticket.setPrice(routePrice.getPrice());
-
-            TicketManager ticketManager;
-            int ticket_id = ticketManager.insertTicket(ticket);
-
-            cout << transportTypeName << " booked successfully! Ticket ID: " << ticket_id << endl;
+            routePrice = RoutePrice().getTicketPrice(Db, routeId);
+            cout << "The price for the ticket on Route ID: " << routeId
+                 << " is $" << routePrice.getPrice() << std::endl;
         } catch (const std::exception& e) {
-            cerr << e.what() << endl;
+            cerr << "Error: " << e.what() << endl;
+            return;
         }
+
+        int transportId = getPositiveInput<int>("Enter the " + transportTypeName + " ID: ");
+
+        string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTypeName + " WHERE " + transportTypeName + "_id = " + std::to_string(transportId) + ")";
+        pqxx::result transportExistsResult = Db.executeQuery(checkTransportQuery);
+        bool transportExists = transportExistsResult[0][0].as<bool>();
+        if (!transportExists) {
+            cout << "No " << transportTypeName << " with ID " << transportId << " found. Please enter a valid ID." << endl;
+            return;
+        }
+
+        TransportTicket ticket;
+        ticket.setTransportId(transportId);
+        ticket.setCustomerId(customer.getCustomerId());
+        ticket.setPrice(routePrice.getPrice());
+
+        TicketManager ticketManager;
+        int ticketId = ticketManager.insertTicket(ticket);
+
+        cout << transportTypeName << " booked successfully! Ticket ID: " << ticketId << endl;
+    } catch (const std::exception& e) {
+        cerr << e.what() << endl;
     }
 }
 
 void orderTaxi(Database& Db) {
-    cout << "Do you want to order a taxi? (yes/no): ";
-    string orderChoice;
-    cin >> orderChoice;
+    try {
+        int carId = getPositiveInput<int>("Enter the car ID: ");
 
-    if (orderChoice == "yes" || orderChoice == "Yes") {
-        cout << "Enter the car ID: ";
-        int carId;
-        cin >> carId;
-
-        pqxx::result taxiExistsResult = Db.executeQuery("SELECT EXISTS(SELECT 1 FROM taxi WHERE taxi_id = " + to_string(carId) + ")");
+        string checkTaxiQuery = "SELECT EXISTS(SELECT 1 FROM taxi WHERE taxi_id = " + to_string(carId) + ")";
+        pqxx::result taxiExistsResult = Db.executeQuery(checkTaxiQuery);
         bool taxiExists = taxiExistsResult[0][0].as<bool>();
         if (!taxiExists) {
             cout << "Taxi with ID " << carId << " does not exist. Please enter a valid taxi ID." << endl;
             return;
         }
 
-        cout << "Taxi order placed successfully!" << endl;
-
-        string name, surname, contactInformation;
-
-        cout << "Enter your name: ";
-        cin >> name;
-
-        cout << "Enter your surname: ";
-        cin >> surname;
-
-        cout << "Enter your contact information: ";
-        cin >> contactInformation;
+        string name = getStringInput("Enter your name: ");
+        string surname = getStringInput("Enter your surname: ");
+        string contactInformation = getStringInput("Enter your contact information: ");
 
         string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
                                   name + "','" +
@@ -148,190 +169,215 @@ void orderTaxi(Database& Db) {
         Db.executeQuery(addOrderQuery);
 
         cout << "Order placed successfully! Your taxi ID is " << carId << "." << endl;
+    } catch (const std::exception& e) {
+        cerr << e.what() << endl;
     }
 }
 
 void handleTaxiSelect(Database& Db) {
-    Taxi taxi;
-    cout << "Choose an action:" << endl;
-    cout << "1. View all taxis" << endl;
-    cout << "2. Call taxi" << endl;
-    cout << "3. Display taxi by ID" << endl;
-    cout << "4. Display taxis by brand" << endl;
-    cout << "5. Display taxis by RentCarType" << endl;
+    bool exitMenu = false;
+    while (!exitMenu) {
+        Taxi taxi;
+        cout << "Choose an action:" << endl;
+        cout << "1. View all taxis" << endl;
+        cout << "2. Call taxi" << endl;
+        cout << "3. Display taxi by ID" << endl;
+        cout << "4. Display taxis by brand" << endl;
+        cout << "5. Display taxis by RentCarType" << endl;
+        cout << "0. Back to the main menu" << endl;
 
-    int actionChoice;
-    cin >> actionChoice;
+        int actionChoice;
+        cin >> actionChoice;
+        cin.ignore();
 
-    switch (actionChoice) {
-        case 1: {
-            taxi.displayAllTaxis(Db);
-            break;
-        }
-        case 2: {
-            orderTaxi(Db);
-            break;
-        }
-        case 3: {
-            int taxiId;
-            cout << "Enter taxiId:";
-            cin >> taxiId;
-            taxi.displayTaxiById(Db, taxiId);
-            break;
-        }
-        case 4: {
-            string brand;
-            cout << "Enter brand:";
-            cin >> brand;
-            taxi.displayTaxisByBrand(Db, brand);
-            break;
-        }
-        case 5: {
-            cout << "Choose RentCarType:" << endl;
-            cout << "1. Economy" << endl;
-            cout << "2. Comfort" << endl;
-            cout << "3. Business" << endl;
-
-            int rentCarTypeChoice;
-            cin >> rentCarTypeChoice;
-
-            RentCarTypes rentCarType;
-
-            switch (rentCarTypeChoice) {
-                case 1:
-                    rentCarType = ECONOMY;
-                    break;
-                case 2:
-                    rentCarType = COMFORT;
-                    break;
-                case 3:
-                    rentCarType = BUSINESS;
-                    break;
-                default:
-                    cout << "Invalid choice" << endl;
-                    return;
+        switch (actionChoice) {
+            case 1: {
+                taxi.displayAllTaxis(Db);
+                break;
             }
+            case 2: {
+                orderTaxi(Db);
+                break;
+            }
+            case 3: {
+                int taxiId = getPositiveInput<int>("Enter taxi ID: ");
+                taxi.displayTaxiById(Db, taxiId);
+                break;
+            }
+            case 4: {
+                string brand = getStringInput("Enter brand: ");
+                taxi.displayTaxisByBrand(Db, brand);
+                break;
+            }
+            case 5: {
+                cout << "Choose RentCarType:" << endl;
+                cout << "1. Economy" << endl;
+                cout << "2. Comfort" << endl;
+                cout << "3. Business" << endl;
 
-            taxi.displayTaxisByRentCarType(Db, rentCarType);
-            break;
-        }
-        default: {
-            cout << "Invalid choice" << endl;
-            break;
+                int rentCarTypeChoice;
+                cin >> rentCarTypeChoice;
+                cin.ignore();
+
+                RentCarTypes rentCarType;
+
+                switch (rentCarTypeChoice) {
+                    case 1:
+                        rentCarType = ECONOMY;
+                        break;
+                    case 2:
+                        rentCarType = COMFORT;
+                        break;
+                    case 3:
+                        rentCarType = BUSINESS;
+                        break;
+                    default:
+                        cout << "Invalid choice" << endl;
+                        continue;
+                }
+
+                Taxi::displayTaxisByRentCarType(Db, rentCarType);
+                break;
+            }
+            case 0: {
+                exitMenu = true;
+                break;
+            }
+            default: {
+                cout << "Invalid choice" << endl;
+                break;
+            }
         }
     }
 }
 
-
-
 void handleBusSelect(Database& Db) {
-    cout << "Choose an action:" << endl;
-    cout << "1. View all buses" << endl;
-    cout << "2. View all routes" << endl;
-    cout << "3. View schedule" << endl;
-    cout << "4. Get ticket price for a route" << endl;
-    cout << "5. Book a ticket" << endl;
-    cout << "6. Stop case" << endl;
-    cout << "Enter your choice (1/2/3/4/5): ";
+    bool exitMenu = false;
+    while (!exitMenu) {
+        cout << "Choose an action:" << endl;
+        cout << "1. View all buses" << endl;
+        cout << "2. View all routes" << endl;
+        cout << "3. View schedule" << endl;
+        cout << "4. Get ticket price for a route" << endl;
+        cout << "5. Stop case" << endl;
+        cout << "6. Book a ticket" << endl;
+        cout << "0. Back to main menu" << endl;
+        cout << "Enter your choice (1/2/3/4/5/6/0): ";
 
-    int actionChoice;
-    cin >> actionChoice;
+        int actionChoice;
+        cin >> actionChoice;
+        cin.ignore();
 
-    switch (actionChoice) {
-        case 1: {
-            Bus bus;
-            bus.displayAllBuses(Db);
-            break;
+        switch (actionChoice) {
+            case 1: {
+                Bus bus;
+                bus.displayAllBuses(Db);
+                break;
+            }
+            case 2: {
+                int busId = getPositiveInput<int>("Enter bus ID to find linked routes: ");
+                Route route;
+                route.getRoutesForTransport(Db, busId, PublicTransport::BUS);
+                int choice = getPositiveInput<int>("Wanna see all routes? (1 - yes, 2 - no): ");
+                if (choice == 1) {
+                    route.displayAllRoutes(Db);
+                }
+                break;
+            }
+            case 3: {
+                int routeId = getPositiveInput<int>("Enter route ID: ");
+                Schedule transportSchedule;
+                transportSchedule.printStopsForRoute(Db, routeId);
+                break;
+            }
+            case 4: {
+                int routeId = getPositiveInput<int>("Enter the route ID to get the ticket price: ");
+                RoutePrice routePrice;
+                routePrice.displayTicketPrice(Db, routeId);
+                break;
+            }
+            case 5: {
+                Stop::findAllStops(Db);
+                int stopId = getPositiveInput<int>("Enter stop ID: ");
+                Stop::findStopById(Db, stopId);
+                break;
+            }
+            case 6: {
+                bookTransport(Db, PublicTransport::BUS);
+                break;
+            }
+            case 0: {
+                exitMenu = true;
+                break;
+            }
+            default:
+                cout << "Invalid choice. Please try again." << endl;
         }
-        case 2: {
-            cout << "Enter bus id to find linked routes:";
-            int busId;
-            cin >> busId;
-            Route route;
-            route.getRoutesForTransport(Db, busId, PublicTransport::BUS);
-            route.displayAllRoutes(Db);
-            break;
-        }
-        case 3: {
-            cout << "Enter route id:";
-            int busId;
-            cin >> busId;
-            Schedule transportSchedule;
-            transportSchedule.printStopsForRoute(Db, busId);
-            break;
-        }
-        case 4: {
-            int routeId;
-            cout << "Enter the route ID to get the ticket price: ";
-            cin >> routeId;
-            RoutePrice routePrice;
-            routePrice.displayTicketPrice(Db, routeId);
-            break;
-        }
-        case 5: {
-            bookTransport(Db,PublicTransport::BUS);
-        }
-        case 6:{
-            Stop stop;
-            stop.findAllStops(Db);
-            cout << "Stop id:";
-            int stopId;
-            cin >> stopId;
-            stop.findStopById(Db, stopId);
-        }
-        default:
-            cout << "Invalid choice. Please try again." << endl;
     }
 }
 
 void handleTrolleyBusSelect(Database& Db) {
-    cout << "Choose an action:" << endl;
-    cout << "1. View all trolleybuses" << endl;
-    cout << "2. View all routes" << endl;
-    cout << "3. View schedule" << endl;
-    cout << "4. Get ticket price for a route" << endl;
-    cout << "5. Book a ticket" << endl;
-    cout << "Enter your choice (1/2/3/4/5): ";
+    bool exitMenu = false;
+    while (!exitMenu) {
+        cout << "Choose an action:" << endl;
+        cout << "1. View all trolleybuses" << endl;
+        cout << "2. View all routes" << endl;
+        cout << "3. View schedule" << endl;
+        cout << "4. Get ticket price for a route" << endl;
+        cout << "5. Stop case" << endl;
+        cout << "6. Book a ticket" << endl;
+        cout << "0. Back to main menu" << endl;
+        cout << "Enter your choice (1/2/3/4/5/6/0): ";
 
-    int actionChoice;
-    cin >> actionChoice;
+        int actionChoice;
+        cin >> actionChoice;
+        cin.ignore();
 
-    switch (actionChoice) {
-        case 1: {
-            TrolleyBus trolleyBus;
-
-            trolleyBus.displayAllTrolleyBuses(Db);
-            break;
+        switch (actionChoice) {
+            case 1: {
+                TrolleyBus trolleyBus;
+                trolleyBus.displayAllTrolleyBuses(Db);
+                break;
+            }
+            case 2: {
+                int trolleybusId = getPositiveInput<int>("Enter trolleybus ID to find linked routes: ");
+                Route route;
+                route.getRoutesForTransport(Db, trolleybusId, PublicTransport::TROLLEYBUS);
+                int choice = getPositiveInput<int>("Wanna see all routes? (1 - yes, 2 - no): ");
+                if (choice == 1) {
+                    route.displayAllRoutes(Db);
+                }
+                break;
+            }
+            case 3: {
+                int routeId = getPositiveInput<int>("Enter route ID: ");
+                Schedule transportSchedule;
+                transportSchedule.printStopsForRoute(Db, routeId);
+                break;
+            }
+            case 4: {
+                int routeId = getPositiveInput<int>("Enter the route ID to get the ticket price: ");
+                RoutePrice routePrice;
+                routePrice.displayTicketPrice(Db, routeId);
+                break;
+            }
+            case 5: {
+                Stop::findAllStops(Db);
+                int stopId = getPositiveInput<int>("Enter stop ID: ");
+                Stop::findStopById(Db, stopId);
+                break;
+            }
+            case 6: {
+                bookTransport(Db, PublicTransport::TROLLEYBUS);
+                break;
+            }
+            case 0: {
+                exitMenu = true;
+                break;
+            }
+            default:
+                cout << "Invalid choice. Please try again." << endl;
         }
-        case 2: {
-            cout << "Enter trolleybus id to find linked routes:";
-            int trolleybusId;
-            cin >> trolleybusId;
-            Route route;
-            route.getRoutesForTransport(Db, trolleybusId, PublicTransport::TROLLEYBUS);
-            break;
-        }
-        case 3: {
-            cout << "Enter trolleybus id to find schedule:";
-            int trolleybusId;
-            cin >> trolleybusId;
-            Schedule transportSchedule;
-            //transportSchedule.getScheduleForTransport(Db, trolleybusId, PublicTransport::TransportType::TROLLEYBUS);
-            break;
-        }
-        case 4: {
-            int routeId;
-            cout << "Enter the route ID to get the ticket price: ";
-            cin >> routeId;
-            RoutePrice routePrice;
-            routePrice.displayTicketPrice(Db, routeId);
-            break;
-        }
-        case 5: {
-            bookTransport(Db, PublicTransport::TROLLEYBUS);
-        }
-        default:
-            cout << "Invalid choice. Please try again." << endl;
     }
 }
 
@@ -340,26 +386,37 @@ void createAndAddBus(Database& Db, int isLogged) {
     std::string brand, model, color;
     EngineType engineType;
     int capacity;
-    bool has_contactless_payment;
+    bool hasContactlessPayment;
 
-    std::cout << "Enter bus brand: ";
-    std::cin >> brand;
-    std::cout << "Enter bus model: ";
-    std::cin >> model;
-    std::cout << "Enter bus color: ";
-    std::cin >> color;
-    std::cout << "Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ";
-    int engineTypeInput;
-    std::cin >> engineTypeInput;
-    engineType = static_cast<EngineType>(engineTypeInput);
-    std::cout << "Enter bus capacity: ";
-    std::cin >> capacity;
-    std::cout << "Does the bus have contactless payment? (1 for YES, 0 for NO): ";
-    int hasContactlessPaymentInput;
-    std::cin >> hasContactlessPaymentInput;
-    has_contactless_payment = hasContactlessPaymentInput != 0;
+    brand = getStringInput("Enter bus brand: ");
+    model = getStringInput("Enter bus model: ");
+    color = getStringInput("Enter bus color: ");
 
-    admin.addBus(brand, model, color, engineType, capacity, has_contactless_payment, isLogged);
+    int engineTypeInput = getPositiveInput<int>("Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ");
+    switch (engineTypeInput) {
+        case 1:
+            engineType = DIESEL;
+            break;
+        case 2:
+            engineType = PETROL;
+            break;
+        case 3:
+            engineType = HYBRID;
+            break;
+        case 4:
+            engineType = ELECTRIC;
+            break;
+        default:
+            std::cerr << "Invalid engine type selected." << std::endl;
+            return;
+    }
+
+    capacity = getPositiveInput<int>("Enter bus capacity: ");
+
+    int hasContactlessPaymentInput = getPositiveInput<int>("Does the bus have contactless payment? (1 for YES, 0 for NO): ");
+    hasContactlessPayment = hasContactlessPaymentInput != 0;
+
+    admin.addBus(brand, model, color, engineType, capacity, hasContactlessPayment, isLogged);
 }
 
 void createAndAddTrolleyBus(Database& Db, int isLogged) {
@@ -367,26 +424,37 @@ void createAndAddTrolleyBus(Database& Db, int isLogged) {
     std::string brand, model, color;
     EngineType engineType;
     int capacity;
-    bool has_sockets;
+    bool hasSockets;
 
-    std::cout << "Enter trolleybus brand: ";
-    std::cin >> brand;
-    std::cout << "Enter trolleybus model: ";
-    std::cin >> model;
-    std::cout << "Enter trolleybus color: ";
-    std::cin >> color;
-    std::cout << "Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ";
-    int engineTypeInput;
-    std::cin >> engineTypeInput;
-    engineType = static_cast<EngineType>(engineTypeInput);
-    std::cout << "Enter trolleybus capacity: ";
-    std::cin >> capacity;
-    std::cout << "Does the trolleybus have electrical sockets? (1 for YES, 0 for NO): ";
-    int hasSocketsInput;
-    std::cin >> hasSocketsInput;
-    has_sockets = hasSocketsInput != 0;
+    brand = getStringInput("Enter trolleybus brand: ");
+    model = getStringInput("Enter trolleybus model: ");
+    color = getStringInput("Enter trolleybus color: ");
 
-    admin.addTrolleyBus(brand, model, color, engineType, capacity, has_sockets, isLogged);
+    int engineTypeInput = getPositiveInput<int>("Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ");
+    switch (engineTypeInput) {
+        case 1:
+            engineType = DIESEL;
+            break;
+        case 2:
+            engineType = PETROL;
+            break;
+        case 3:
+            engineType = HYBRID;
+            break;
+        case 4:
+            engineType = ELECTRIC;
+            break;
+        default:
+            std::cerr << "Invalid engine type selected." << std::endl;
+            return;
+    }
+
+    capacity = getPositiveInput<int>("Enter trolleybus capacity: ");
+
+    int hasSocketsInput = getPositiveInput<int>("Does the trolleybus have electrical sockets? (1 for YES, 0 for NO): ");
+    hasSockets = hasSocketsInput != 0;
+
+    admin.addTrolleyBus(brand, model, color, engineType, capacity, hasSockets, isLogged);
 }
 
 void createAndAddTaxi(Database& Db, int isLogged) {
@@ -396,146 +464,147 @@ void createAndAddTaxi(Database& Db, int isLogged) {
     bool hasDriver, hasWiFi, hasChildSeat;
     RentCarTypes carType;
 
-    std::cout << "Enter taxi brand: ";
-    std::cin >> brand;
-    std::cout << "Enter taxi model: ";
-    std::cin >> model;
-    std::cout << "Enter taxi color: ";
-    std::cin >> color;
-    std::cout << "Enter engine type (e.g., DIESEL, PETROL): ";
-    std::cin >> engineType;
-    std::cout << "Enter price per kilometer: ";
-    std::cin >> pricePerKilometer;
-    std::cout << "Does the taxi have a driver? (1 for YES, 0 for NO): ";
-    int hasDriverInput;
-    std::cin >> hasDriverInput;
+    brand = getStringInput("Enter taxi brand: ");
+    model = getStringInput("Enter taxi model: ");
+    color = getStringInput("Enter taxi color: ");
+    engineType = getStringInput("Enter engine type (e.g., DIESEL, PETROL): ");
+
+    pricePerKilometer = getPositiveInput<double>("Enter price per kilometer: ");
+
+    int hasDriverInput = getPositiveInput<int>("Does the taxi have a driver? (1 for YES, 0 for NO): ");
     hasDriver = hasDriverInput != 0;
-    std::cout << "Does the taxi have WiFi? (1 for YES, 0 for NO): ";
-    int hasWiFiInput;
-    std::cin >> hasWiFiInput;
+
+    int hasWiFiInput = getPositiveInput<int>("Does the taxi have WiFi? (1 for YES, 0 for NO): ");
     hasWiFi = hasWiFiInput != 0;
-    std::cout << "Does the taxi have a child seat? (1 for YES, 0 for NO): ";
-    int hasChildSeatInput;
-    std::cin >> hasChildSeatInput;
+
+    int hasChildSeatInput = getPositiveInput<int>("Does the taxi have a child seat? (1 for YES, 0 for NO): ");
     hasChildSeat = hasChildSeatInput != 0;
-    std::cout << "Enter car type (0 for ECONOMY, 1 for COMFORT, 2 for BUSINESS): ";
-    int carTypeInput;
-    std::cin >> carTypeInput;
-    carType = static_cast<RentCarTypes>(carTypeInput);
+
+    int carTypeInput = getPositiveInput<int>("Enter car type (0 for ECONOMY, 1 for COMFORT, 2 for BUSINESS): ");
+    switch (carTypeInput) {
+        case 0:
+            carType = ECONOMY;
+            break;
+        case 1:
+            carType = COMFORT;
+            break;
+        case 2:
+            carType = BUSINESS;
+            break;
+        default:
+            std::cerr << "Invalid car type selected." << std::endl;
+            return;
+    }
 
     admin.addTaxi(brand, model, color, engineType, pricePerKilometer, hasDriver, hasWiFi, hasChildSeat, carType, isLogged);
 }
 
+
 void createAndAddStop(Database& Db, int isLogged) {
     Admin admin(Db, "admin_username", "admin_password");
 
-    std::cout << "Enter stop name: ";
-    std::string stopName;
-    std::cin >> stopName;
-    std::cout << "Enter address: ";
-    std::string address;
-    std::cin >> address;
+    std::string stopName = getStringInput("Enter stop name: ");
+    std::string address = getStringInput("Enter address: ");
+
     admin.addStop(stopName, address, isLogged);
 }
+
 
 void createAndAddRoute(Database& Db, int isLogged) {
     Admin admin(Db, "admin_username", "admin_password");
 
-    std::string routeName;
-    std::cout << "Enter route name:";
-    std::cin >> routeName;
-    admin.addRoute(routeName,  isLogged);
+    std::string routeName = getStringInput("Enter route name: ");
+    admin.addRoute(routeName, isLogged);
 }
 
 void createAndAddSchedule(Database& db, int isLogged) {
     Admin admin(db, "admin_username", "admin_password");
-    int transport_id;
-    std::string transport_type;
-    int route_id;
-    std::string arrival_time;
+    int transportId;
+    int routeId;
+    std::string arrivalTime;
+    Admin::TransportType transportType;
 
-    std::cout << "Enter transport ID: ";
-    std::cin >> transport_id;
-    std::cout << "Enter transport type (BUS or TROLLEYBUS): ";
-    std::cin >> transport_type; // Теперь transport_type - это строка
-    std::cout << "Enter route ID: ";
-    std::cin >> route_id;
-    std::cout << "Enter arrival time (HH:MM:SS): ";
-    std::cin >> arrival_time;
+    transportId = getPositiveInput<int>("Enter transport ID: ");
 
-    // Вызов функции addSchedule с передачей параметров
-    admin.addSchedule(db, route_id, transport_type, transport_id, isLogged);
-}
-
-
-void createAndSetRoutePrice(Database& db, int isLogged) {
-    Admin admin(db, "admin_username", "admin_password");
-    int route_id;
-    double price;
-
-    std::cout << "Enter route ID: ";
-    std::cin >> route_id;
-    std::cout << "Enter price: ";
-    std::cin >> price;
-
-    admin.setRoutePrice(db, route_id, price, isLogged);
-}
-
-void createAndLinkTransportToRoute(Database& db, int isLogged) {
-    Admin admin(db, "admin_username", "admin_password");
-    int route_id;
-    Admin::TransportType transport_type;
-    int transport_id;
-
-    std::cout << "Enter route ID: ";
-    std::cin >> route_id;
-    std::cout << "Enter transport type (1 for BUS, 2 for TROLLEYBUS): ";
-    int transport_type_input;
-    std::cin >> transport_type_input;
-    switch (transport_type_input) {
+    int transportTypeInput = getPositiveInput<int>("Enter transport type (1 for BUS, 2 for TROLLEYBUS): ");
+    switch (transportTypeInput) {
         case 1:
-            transport_type = Admin::BUS;
+            transportType = Admin::BUS;
             break;
         case 2:
-            transport_type = Admin::TROLLEYBUS;
+            transportType = Admin::TROLLEYBUS;
             break;
         default:
             std::cerr << "Invalid transport type selected." << std::endl;
             return;
     }
-    std::cout << "Enter transport ID: ";
-    std::cin >> transport_id;
 
-    admin.linkTransportToRoute(db, route_id, transport_type, transport_id, isLogged);
+    routeId = getPositiveInput<int>("Enter route ID: ");
+    arrivalTime = getStringInput("Enter arrival time (HH:MM:SS): ");
+
+    admin.addSchedule(db, routeId, transportType, transportId, isLogged);
+}
+
+void createAndSetRoutePrice(Database& db, int isLogged) {
+    Admin admin(db, "admin_username", "admin_password");
+    int routeId;
+    double price;
+
+    routeId = getPositiveInput<int>("Enter route ID: ");
+    price = getPositiveInput<double>("Enter price: ");
+
+    admin.setRoutePrice(db, routeId, price, isLogged);
+}
+
+void createAndLinkTransportToRoute(Database& db, int isLogged) {
+    Admin admin(db, "admin_username", "admin_password");
+    int routeId;
+    Admin::TransportType transportType;
+    int transportId;
+
+    routeId = getPositiveInput<int>("Enter route ID: ");
+
+    int transportTypeInput = getPositiveInput<int>("Enter transport type (1 for BUS, 2 for TROLLEYBUS): ");
+    switch (transportTypeInput) {
+        case 1:
+            transportType = Admin::BUS;
+            break;
+        case 2:
+            transportType = Admin::TROLLEYBUS;
+            break;
+        default:
+            std::cerr << "Invalid transport type selected." << std::endl;
+            return;
+    }
+
+    transportId = getPositiveInput<int>("Enter transport ID: ");
+
+    admin.linkTransportToRoute(db, routeId, transportType, transportId, isLogged);
 }
 
 void createAndLinkStopToRoute(Database& db, int isLogged) {
     Admin admin(db, "admin_username", "admin_password");
     int routeId, stopId;
-    std::string transportType;
 
-    std::cout << "Enter route ID: ";
-    std::cin >> routeId;
-    std::cout << "Enter stop ID: ";
-    std::cin >> stopId;
+    routeId = getPositiveInput<int>("Enter route ID: ");
+    stopId = getPositiveInput<int>("Enter stop ID: ");
 
     admin.linkStopToRoute(db, routeId, stopId, isLogged);
 }
-
 
 void handleAdminActions(Database& Db) {
     Admin admin(Db, "admin_username", "admin_password");
     std::cout << "1. Login\n2. Register\nChoose an option: ";
     int choice;
     std::cin >> choice;
+    cin.ignore();
     std::string username, password;
     int isLogged = 0;
     switch (choice) {
         case 1:
-            std::cout << "Enter username: ";
-            std::cin >> username;
-            std::cout << "Enter password: ";
-            std::cin >> password;
+            username = getStringInput("Enter username: ");
+            password = getStringInput("Enter password: ");
+
             if (admin.adminLogin(Db, username, password)) {
                 std::cout << "Logged in successfully." << std::endl;
                 isLogged = 1;
@@ -544,10 +613,8 @@ void handleAdminActions(Database& Db) {
             }
             break;
         case 2:
-            std::cout << "Enter username for registration: ";
-            std::cin >> username;
-            std::cout << "Enter password for registration: ";
-            std::cin >> password;
+            username = getStringInput("Enter username for registration: ");
+            password = getStringInput("Enter password for registration: ");
             if (admin.registerAdmin(Db, username, password)) {
                 std::cout << "Registered successfully." << std::endl;
                 isLogged = 1;
@@ -560,20 +627,20 @@ void handleAdminActions(Database& Db) {
             break;
     }
     while (isLogged == 1) {
-        std::cout << "Select an action:\n"
-                  << "1. Add Bus\n"
-                  << "2. Add Trolleybus\n"
-                  << "3. Add Taxi\n"
-                  << "4. Set Stop\n"
-                  << "5. Set Route\n"
-                  << "6. Set Schedule\n"
-                  << "7. Set Price\n"
-                  << "8. Set link transport to route\n"
-                  << "9. createAndLinkStopToRoute\n"
-                  << "0. Logout\n"
-                  << "Enter your choice: ";
-        int action;
-        std::cin >> action;
+        int action = getPositiveInput<int>("        s<< \"Select an action:\\n\"\n"
+                                           "                  << \"1. Add Bus\\n\"\n"
+                                           "                  << \"2. Add Trolleybus\\n\"\n"
+                                           "                  << \"3. Add Taxi\\n\"\n"
+                                           "                  << \"4. Set Stop\\n\"\n"
+                                           "                  << \"5. Set Route\\n\"\n"
+                                           "                  << \"6. Set Schedule\\n\"\n"
+                                           "                  << \"7. Set Price\\n\"\n"
+                                           "                  << \"8. Set link transport to route\\n\"\n"
+                                           "                  << \"9. createAndLinkStopToRoute\\n\"\n"
+                                           "                  << \"10. Get orders\\n\"\n"
+                                           "                  << \"0. Logout\\n\"\n"
+                                           "                  << \"Enter your choice: \"");
+
         switch (action) {
             case 1:
                 createAndAddBus(Db, isLogged);
@@ -601,6 +668,9 @@ void handleAdminActions(Database& Db) {
                 break;
             case 9:
                 createAndLinkStopToRoute(Db, isLogged);
+                break;
+            case 10:
+                Order::printAllOrders(Db, isLogged);
                 break;
             case 0:
                 isLogged = false;

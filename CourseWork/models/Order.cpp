@@ -1,6 +1,8 @@
 // order.cpp
 
+#include <vector>
 #include "order.h"
+#include "../database/Database.h"
 
 Order::Order() : orderId(0), customerId(0), carId(0), orderTime(getCurrentTime()) {}
 
@@ -25,4 +27,14 @@ std::string Order::getCurrentTime() const {
     std::stringstream ss;
     ss << std::ctime(&currentTime);
     return ss.str();
+}
+
+void Order::printAllOrders(Database& db, int isLogged) {
+    pqxx::result result = db.executeQuery("SELECT * FROM orders");
+
+    std::cout << "All Orders:" << std::endl;
+    for (auto row : result) {
+        std::cout << "Order ID: " << row["order_id"].as<int>() << ", Customer ID: " << row["customer_id"].as<int>()
+                  << ", Car ID: " << row["car_id"].as<int>() << ", Order Time: " << row["order_time"].as<std::string>() << std::endl;
+    }
 }

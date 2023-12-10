@@ -7,6 +7,7 @@
 #include <string>
 #include <chrono>
 #include <sstream>
+#include "../database/Database.h"
 
 class Order {
 private:
@@ -32,6 +33,8 @@ public:
     void setOrderTime(const std::string& time);
 
     std::string getCurrentTime() const;
+
+    static void printAllOrders(Database &db, int isLogged);
 };
 
 #endif // COURSEWORK_ORDER_H

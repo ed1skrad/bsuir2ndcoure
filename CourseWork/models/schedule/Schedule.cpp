@@ -1,8 +1,5 @@
-// Schedule.cpp
-
 #include "Schedule.h"
 
-// Implementation of the Schedule class methods
 
 Schedule::Schedule(int scheduleId, int routeId, int stopId, const std::string& transportType, int transportId, const std::string& arrivalTime)
         : scheduleId(scheduleId), routeId(routeId), stopId(stopId), transportType(transportType), transportId(transportId), arrivalTime(arrivalTime) {}
@@ -71,11 +68,17 @@ std::vector<Schedule> Schedule::getScheduleForRoute(Database& db, int routeId) {
 }
 
 void Schedule::printStopsForRoute(Database& db, int routeId) {
-    pqxx::result R = db.executeQuery("SELECT * FROM StopRoute WHERE route_id = " + std::to_string(routeId) + " ORDER BY stop_id;");
+    pqxx::result R = db.executeQuery("SELECT s.stop_id, s.stop_name, s.address, sch.arrival_time "
+                                     "FROM Stop s "
+                                     "JOIN StopRoute sr ON s.stop_id = sr.stop_id "
+                                     "JOIN Schedule sch ON sr.route_id = sch.route_id AND sr.stop_id = sch.stop_id "
+                                     "WHERE sr.route_id = " + std::to_string(routeId) + " "
+                                                                                        "ORDER BY sr.stop_id;");
 
     std::cout << "Stops for route ID " << routeId << ":" << std::endl;
     for (auto row : R) {
-        std::cout << "Stop ID: " << row["stop_id"].as<int>() << std::endl;
+        std::cout << "Stop ID: " << row["stop_id"].as<int>() << ", Stop Name: " << row["stop_name"].as<std::string>()
+                  << ", Address: " << row["address"].as<std::string>() << ", Arrival Time: " << row["arrival_time"].as<std::string>() << std::endl;
     }
 }
 

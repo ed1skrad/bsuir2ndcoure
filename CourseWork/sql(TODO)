@@ -76,13 +76,6 @@ CREATE TABLE RoutePrice (
     price DECIMAL(10, 2) NOT NULL
 );
 
-
-CREATE TABLE RouteStop ( //// NOT USE
-    route_id INT REFERENCES Route(route_id),
-    stop_id INT REFERENCES Stop(stop_id),
-    PRIMARY KEY (route_id, stop_id)
-);
-
 CREATE TABLE StopRoute (
     stoproute_id SERIAL PRIMARY KEY,
     route_id INT REFERENCES Route(route_id),

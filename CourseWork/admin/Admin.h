@@ -28,11 +28,7 @@ public:
 
     bool login();
 
-    bool isValidTransportID(Database &db, int transportId, const std::string &transportType);
-
     bool isValidRouteID(Database &db, int routeId);
-
-    bool isValidStopID(Database &db, int stopId);
 
     std::string engineTypeToString(EngineType engineType);
 
@@ -52,7 +48,7 @@ public:
 
     void addRoute(const std::string &routeName, int isLogged);
 
-    void addSchedule(Database& db, int routeId, const std::string& transportType, int transportId, int isLogged);
+    void addSchedule(Database& db, int routeId, TransportType transportType, int transportId, int isLogged);
 
     void setRoutePrice(Database &Db, int routeId, double price, int isLogged);
 
@@ -64,7 +60,6 @@ public:
 
     bool adminLogin(Database &db, const std::string &username, const std::string &password);
 
-    TransportType stringToTransportType(const std::string &typeStr);
 };
 
 #endif
