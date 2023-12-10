@@ -25,6 +25,8 @@ public:
     int getCapacity();
     void setCapacity(int capacity);
 
+    void bookTransport(Database& Db, PublicTransport::TransportType transportType);
+
     ~PublicTransport();
 };
 

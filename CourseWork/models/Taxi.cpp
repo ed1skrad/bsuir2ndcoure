@@ -1,6 +1,8 @@
 // Taxi.cpp
 
 #include "Taxi.h"
+#include "Order.h"
+#include "../action/InputUtils.h"
 
 Taxi::Taxi(std::string brand, std::string model, std::string color, EngineType engineType, int carId, double pricePerKil, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes)
         : Transport(brand, model, color, engineType), carId(carId), pricePerKil(pricePerKil), hasDriver(hasDriver), hasWiFi(hasWiFi), hasChildSeat(hasChildSeat), rentCarTypes(rentCarTypes) {}
@@ -177,6 +179,53 @@ void Taxi::displayTaxisByRentCarType(Database& Db, RentCarTypes rentCarType) {
             displayTaxiDetails(row);
         }
     } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+std::string Taxi::to_string(const int value) {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
+
+void Taxi::orderTaxi(Database& Db) {
+    try {
+        int carId = InputUtils::getPositiveInput<int>("Enter the car ID: ");
+
+        std::string checkTaxiQuery = "SELECT EXISTS(SELECT 1 FROM taxi WHERE taxi_id = " + to_string(carId) + ")";
+        pqxx::result taxiExistsResult = Db.executeQuery(checkTaxiQuery);
+        bool taxiExists = taxiExistsResult[0][0].as<bool>();
+        if (!taxiExists) {
+            std::cout << "Taxi with ID " << carId << " does not exist. Please enter a valid taxi ID." << std::endl;
+            return;
+        }
+
+        std::string name = InputUtils::getStringInput("Enter your name: ");
+        std::string surname = InputUtils::getStringInput("Enter your surname: ");
+        std::string contactInformation = InputUtils::getStringInput("Enter your contact information: ");
+
+        std::string addCustomerQuery = "INSERT INTO customer (name, surname, contact_information) VALUES ('" +
+                                  name + "','" +
+                                  surname + "','" +
+                                  contactInformation + "')";
+        Db.executeQuery(addCustomerQuery);
+
+        pqxx::result customerIdResult = Db.executeQuery("SELECT MAX(customer_id) FROM customer");
+        int customerId = customerIdResult[0][0].as<int>();
+
+        Order order;
+        order.setCustomerId(customerId);
+        order.setCarId(carId);
+
+        std::string addOrderQuery = "INSERT INTO orders (customer_id, car_id, order_time) VALUES (" +
+                               to_string(customerId) + "," +
+                               to_string(carId) + ",'" +
+                               order.getOrderTime() + "')";
+        Db.executeQuery(addOrderQuery);
+
+        std::cout << "Order placed successfully! Your taxi ID is " << carId << "." << std::endl;
+    } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
     }
 }

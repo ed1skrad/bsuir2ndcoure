@@ -58,6 +58,10 @@ public:
     static void displayTaxisByBrand(Database& Db, const std::string& brand);
 
     static void displayTaxisByRentCarType(Database& Db, RentCarTypes rentCarType);
+
+    std::string to_string(const int value);
+
+    void orderTaxi(Database& Db);
 };
 
 #endif // COURSEWORK_TAXI_H
