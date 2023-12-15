@@ -1,7 +1,9 @@
-#include "Schedule.h"
+// Schedule.cpp
 
+#include "Schedule.h"  // Include your own header file first
+#include <iostream>
 
-Schedule::Schedule(int scheduleId, int routeId, int stopId, const std::string& transportType, int transportId, const std::string& arrivalTime)
+Schedule::Schedule(int scheduleId, int routeId, int stopId, TransportType transportType, int transportId, const std::string& arrivalTime)
         : scheduleId(scheduleId), routeId(routeId), stopId(stopId), transportType(transportType), transportId(transportId), arrivalTime(arrivalTime) {}
 
 int Schedule::getScheduleId() const {
@@ -28,11 +30,11 @@ void Schedule::setStopId(int stopId) {
     this->stopId = stopId;
 }
 
-const std::string& Schedule::getTransportType() const {
+TransportType Schedule::getTransportType() const {
     return transportType;
 }
 
-void Schedule::setTransportType(const std::string& transportType) {
+void Schedule::setTransportType(TransportType transportType) {
     this->transportType = transportType;
 }
 
@@ -60,7 +62,7 @@ std::vector<Schedule> Schedule::getScheduleForRoute(Database& db, int routeId) {
         scheduleList.emplace_back(row["schedule_id"].as<int>(),
                                   row["route_id"].as<int>(),
                                   row["stop_id"].as<int>(),
-                                  row["transport_type"].as<std::string>(),
+                                  static_cast<TransportType>(row["transport_type"].as<int>()), // Assuming transport_type is stored as an integer in the database
                                   row["transport_id"].as<int>(),
                                   row["arrival_time"].as<std::string>());
     }
@@ -81,4 +83,3 @@ void Schedule::printStopsForRoute(Database& db, int routeId) {
                   << ", Address: " << row["address"].as<std::string>() << ", Arrival Time: " << row["arrival_time"].as<std::string>() << std::endl;
     }
 }
-

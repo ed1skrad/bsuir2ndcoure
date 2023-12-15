@@ -3,9 +3,9 @@
 #include "TransportTicket.h"
 
 TransportTicket::TransportTicket()
-        : ticketId(0), transportId(0), customerId(0), price(0.0), purchaseTime(""), transportType(PublicTransport::TransportType::BUS) {}
+        : ticketId(0), transportId(0), customerId(0), price(0.0), purchaseTime(""), transportType(TransportType::BUS) {}
 
-TransportTicket::TransportTicket(int tId, int trId, int cId, double p, const std::string& pTime, PublicTransport::TransportType tType)
+TransportTicket::TransportTicket(int tId, int trId, int cId, double p, const std::string& pTime, TransportType tType)
         : ticketId(tId), transportId(trId), customerId(cId), price(p), purchaseTime(pTime), transportType(tType) {}
 
 int TransportTicket::getTicketId() const {
@@ -28,7 +28,7 @@ std::string TransportTicket::getPurchaseTime() const {
     return purchaseTime;
 }
 
-PublicTransport::TransportType TransportTicket::getTransportType() const {
+TransportType TransportTicket::getTransportType() const {
     return transportType;
 }
 
@@ -50,7 +50,6 @@ void TransportTicket::displayTicketInfo() const {
     std::cout << "Customer ID: " << getCustomerId() << std::endl;
     std::cout << "Price: " << getPrice() << std::endl;
     std::cout << "Purchase Time: " << getPurchaseTime() << std::endl;
-    std::cout << "Transport Type: " << (getTransportType() == PublicTransport::TransportType::BUS ? "Bus" : "Trolleybus") << std::endl;
+    std::cout << "Transport Type: " << (getTransportType() == TransportType::BUS ? "Bus" : "Trolleybus") << std::endl;
     std::cout << std::endl;
 }
-

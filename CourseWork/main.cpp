@@ -1,12 +1,12 @@
 #include "action/MainMenu.h"
+#include "action/InputUtils.h"
 
 int main() {
     Database Db;
     bool isRunning = true;
     while (isRunning) {
         displayMenu();
-        int actionChoice;
-        std::cin >> actionChoice;
+        int actionChoice = InputUtils::getPositiveInput<int>("");
         switch (actionChoice) {
             case 1:
                 handleTaxiSelect(Db);

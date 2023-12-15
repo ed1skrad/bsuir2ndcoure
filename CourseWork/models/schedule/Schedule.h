@@ -6,20 +6,21 @@
 #include <vector>
 #include <string>
 #include "../../database/Database.h"
+#include "../PublicTransport.h"
 
 class Schedule {
 private:
     int scheduleId;
     int routeId;
     int stopId;
-    std::string transportType;
+    TransportType transportType;
     int transportId;
     std::string arrivalTime;
 
 public:
     Schedule() = default;  // Default constructor
 
-    Schedule(int scheduleId, int routeId, int stopId, const std::string& transportType, int transportId, const std::string& arrivalTime);
+    Schedule(int scheduleId, int routeId, int stopId, TransportType transportType, int transportId, const std::string& arrivalTime);
 
     // Getters and setters for each field
     int getScheduleId() const;
@@ -31,8 +32,8 @@ public:
     int getStopId() const;
     void setStopId(int stopId);
 
-    const std::string& getTransportType() const;
-    void setTransportType(const std::string& transportType);
+    TransportType getTransportType() const;
+    void setTransportType(TransportType transportType);
 
     int getTransportId() const;
     void setTransportId(int transportId);

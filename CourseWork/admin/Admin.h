@@ -21,11 +21,6 @@ private:
 public:
     Admin(Database &db, const std::string &username, const std::string &password);
 
-    enum TransportType {
-        BUS,
-        TROLLEYBUS,
-    };
-
     bool login();
 
     bool isValidRouteID(Database &db, int routeId);

@@ -6,7 +6,12 @@
 #include <iostream>
 #include <chrono>
 #include <sstream>
-#include "../PublicTransport.h"
+#include "../../database/Database.h"
+
+enum TransportType{
+    BUS,
+    TROLLEYBUS
+};
 
 class TransportTicket {
 private:
@@ -15,19 +20,20 @@ private:
     int customerId;
     double price;
     std::string purchaseTime;
-    PublicTransport::TransportType transportType;
+    TransportType transportType;
+    Database db;
 
 public:
     TransportTicket();
 
-    TransportTicket(int tId, int trId, int cId, double p, const std::string& pTime, PublicTransport::TransportType tType);
+    TransportTicket(int tId, int trId, int cId, double p, const std::string& pTime, TransportType tType);
 
     int getTicketId() const;
     int getTransportId() const;
     int getCustomerId() const;
     double getPrice() const;
     std::string getPurchaseTime() const;
-    PublicTransport::TransportType getTransportType() const;
+    TransportType getTransportType() const;
 
     void setCustomerId(int customerId);
     void setTransportId(int transportId);

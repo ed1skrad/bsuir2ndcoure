@@ -54,7 +54,7 @@
 /* Define if likely & unlikely work. */
 #define PQXX_HAVE_LIKELY
 /* Define if compiler has usable std::filesystem::path. */
-/* #undef PQXX_HAVE_PATH */
+#define PQXX_HAVE_PATH
 /* Define if poll() is available. */
 /* #undef PQXX_HAVE_POLL */
 /* Define if std::this_thread::sleep_for works. */
@@ -68,7 +68,7 @@
 /* Define if thread_local is fully supported. */
 /* #undef PQXX_HAVE_THREAD_LOCAL */
 /* Define if std::chrono has year_month_day etc. */
-#define PQXX_HAVE_YEAR_MONTH_DAY
+/* #undef PQXX_HAVE_YEAR_MONTH_DAY */
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */

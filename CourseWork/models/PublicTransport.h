@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "Transport.h"
+#include "ticket/TransportTicket.h"
 
 class PublicTransport : public Transport {
 private:
@@ -24,6 +25,10 @@ public:
 
     int getCapacity();
     void setCapacity(int capacity);
+
+    std::string getCurrentTimestampAsString();
+
+    int insertTicket(Database& db, const TransportTicket& ticket);
 
     void bookTransport(Database& Db, PublicTransport::TransportType transportType);
 

@@ -375,17 +375,17 @@ void createAndAddSchedule(Database& db, int isLogged) {
     int transportId;
     int routeId;
     std::string arrivalTime;
-    Admin::TransportType transportType;
+    PublicTransport::TransportType transportType;
 
     transportId = InputUtils::getPositiveInput<int>("Enter transport ID: ");
 
     int transportTypeInput = InputUtils::getPositiveInput<int>("Enter transport type (1 for BUS, 2 for TROLLEYBUS): ");
     switch (transportTypeInput) {
         case 1:
-            transportType = Admin::BUS;
+            transportType = PublicTransport::BUS;
             break;
         case 2:
-            transportType = Admin::TROLLEYBUS;
+            transportType = PublicTransport::TROLLEYBUS;
             break;
         default:
             std::cerr << "Invalid transport type selected." << std::endl;
@@ -393,9 +393,8 @@ void createAndAddSchedule(Database& db, int isLogged) {
     }
 
     routeId = InputUtils::getPositiveInput<int>("Enter route ID: ");
-    arrivalTime = InputUtils::getStringInput("Enter arrival time (HH:MM:SS): ");
 
-    admin.addSchedule(db, routeId, transportType, transportId, isLogged);
+    admin.addSchedule(db, routeId, static_cast<TransportType>(transportType), transportId, isLogged);
 }
 
 void createAndSetRoutePrice(Database& db, int isLogged) {
@@ -412,7 +411,7 @@ void createAndSetRoutePrice(Database& db, int isLogged) {
 void createAndLinkTransportToRoute(Database& db, int isLogged) {
     Admin admin(db, "admin_username", "admin_password");
     int routeId;
-    Admin::TransportType transportType;
+    PublicTransport::TransportType transportType;
     int transportId;
 
     routeId = InputUtils::getPositiveInput<int>("Enter route ID: ");
@@ -420,10 +419,10 @@ void createAndLinkTransportToRoute(Database& db, int isLogged) {
     int transportTypeInput = InputUtils::getPositiveInput<int>("Enter transport type (1 for BUS, 2 for TROLLEYBUS): ");
     switch (transportTypeInput) {
         case 1:
-            transportType = Admin::BUS;
+            transportType = PublicTransport::BUS;
             break;
         case 2:
-            transportType = Admin::TROLLEYBUS;
+            transportType = PublicTransport::TROLLEYBUS;
             break;
         default:
             std::cerr << "Invalid transport type selected." << std::endl;
@@ -432,7 +431,7 @@ void createAndLinkTransportToRoute(Database& db, int isLogged) {
 
     transportId = InputUtils::getPositiveInput<int>("Enter transport ID: ");
 
-    admin.linkTransportToRoute(db, routeId, transportType, transportId, isLogged);
+    admin.linkTransportToRoute(db, routeId, static_cast<TransportType>(transportType), transportId, isLogged);
 }
 
 void createAndLinkStopToRoute(Database& db, int isLogged) {
@@ -481,18 +480,18 @@ void handleAdminActions(Database& Db) {
     }
     while (isLogged == 1) {
         int action = InputUtils::getPositiveInput<int>("        s<< \"Select an action:\\n\"\n"
-                                           "                  << \"1. Add Bus\\n\"\n"
-                                           "                  << \"2. Add Trolleybus\\n\"\n"
-                                           "                  << \"3. Add Taxi\\n\"\n"
-                                           "                  << \"4. Set Stop\\n\"\n"
-                                           "                  << \"5. Set Route\\n\"\n"
-                                           "                  << \"6. Set Schedule\\n\"\n"
-                                           "                  << \"7. Set Price\\n\"\n"
-                                           "                  << \"8. Set link transport to route\\n\"\n"
-                                           "                  << \"9. createAndLinkStopToRoute\\n\"\n"
-                                           "                  << \"10. Get orders\\n\"\n"
-                                           "                  << \"0. Logout\\n\"\n"
-                                           "                  << \"Enter your choice: \"");
+                                                       "                  << \"1. Add Bus\\n\"\n"
+                                                       "                  << \"2. Add Trolleybus\\n\"\n"
+                                                       "                  << \"3. Add Taxi\\n\"\n"
+                                                       "                  << \"4. Set Stop\\n\"\n"
+                                                       "                  << \"5. Set Route\\n\"\n"
+                                                       "                  << \"6. Set Schedule\\n\"\n"
+                                                       "                  << \"7. Set Price\\n\"\n"
+                                                       "                  << \"8. Set link transport to route\\n\"\n"
+                                                       "                  << \"9. createAndLinkStopToRoute\\n\"\n"
+                                                       "                  << \"10. Get orders\\n\"\n"
+                                                       "                  << \"0. Logout\\n\"\n"
+                                                       "                  << \"Enter your choice: \"");
 
         switch (action) {
             case 1:

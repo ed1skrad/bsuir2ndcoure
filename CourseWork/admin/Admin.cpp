@@ -75,7 +75,7 @@ bool Admin::registerAdmin(Database &db, const std::string &username, const std::
 }
 
 void Admin::addBus(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
-            int capacity, bool hasContactlessPayment, int isLogged) {
+                   int capacity, bool hasContactlessPayment, int isLogged) {
     if (!isLogged) {
         std::cerr << "Error: You must be logged in as an admin to add a bus." << std::endl;
         return;
@@ -93,7 +93,7 @@ void Admin::addBus(const std::string &brand, const std::string &model, const std
 }
 
 void Admin::addTrolleyBus(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
-              int capacity, bool hasSockets, int isLogged) {
+                          int capacity, bool hasSockets, int isLogged) {
     if (!isLogged) {
         std::cerr << "Error: You must be logged in as an admin to add a trolleybus." << std::endl;
         return;
@@ -110,8 +110,8 @@ void Admin::addTrolleyBus(const std::string &brand, const std::string &model, co
 }
 
 void Admin::addTaxi(const std::string &brand, const std::string &model, const std::string &color, const std::string &engineType,
-        double pricePerKilometer, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes,
-        int isLogged) {
+                    double pricePerKilometer, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes,
+                    int isLogged) {
     if (!isLogged) {
         std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
         return;
@@ -347,5 +347,3 @@ bool Admin::checkTransportExists(Database &Db, TransportType transportType, int 
     }
     return true;
 }
-
-
