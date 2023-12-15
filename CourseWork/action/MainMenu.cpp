@@ -24,6 +24,23 @@ void displayMenu() {
     cout << "Enter your choice (1/2/3/4/0): ";
 }
 
+RentCarTypes parseEnumRentCarType(int rentCarTypeInput, RentCarTypes rentCarTypes){
+    switch (rentCarTypeInput) {
+        case 1:
+            rentCarTypes = ECONOMY;
+            break;
+        case 2:
+            rentCarTypes = COMFORT;
+            break;
+        case 3:
+            rentCarTypes = BUSINESS;
+            break;
+        default:
+            cout << "Invalid choice" << endl;
+            break;
+    }
+}
+
 void handleTaxiSelect(Database& Db) {
     bool exitMenu = false;
     while (!exitMenu) {
@@ -71,21 +88,6 @@ void handleTaxiSelect(Database& Db) {
                 cin.ignore();
 
                 RentCarTypes rentCarType;
-
-                switch (rentCarTypeChoice) {
-                    case 1:
-                        rentCarType = ECONOMY;
-                        break;
-                    case 2:
-                        rentCarType = COMFORT;
-                        break;
-                    case 3:
-                        rentCarType = BUSINESS;
-                        break;
-                    default:
-                        cout << "Invalid choice" << endl;
-                        continue;
-                }
 
                 Taxi::displayTaxisByRentCarType(Db, rentCarType);
                 break;
@@ -312,7 +314,8 @@ void createAndAddTrolleyBus(Database& Db, int isLogged) {
 
 void createAndAddTaxi(Database& Db, int isLogged) {
     Admin admin(Db, "admin_username", "admin_password");
-    std::string brand, model, color, engineType;
+    std::string brand, model, color;
+    EngineType engineType;
     double pricePerKilometer;
     bool hasDriver, hasWiFi, hasChildSeat;
     RentCarTypes carType;
@@ -320,7 +323,24 @@ void createAndAddTaxi(Database& Db, int isLogged) {
     brand = InputUtils::getStringInput("Enter taxi brand: ");
     model = InputUtils::getStringInput("Enter taxi model: ");
     color = InputUtils::getStringInput("Enter taxi color: ");
-    engineType = InputUtils::getStringInput("Enter engine type (e.g., DIESEL, PETROL): ");
+    int engineTypeInput = InputUtils::getPositiveInput<int>("Enter car type (0 for PETROL, 1 for DIESEL, 2 for HYBRID, 3 for ELECTRIC): ");
+    switch (engineTypeInput) {
+        case 0:
+            engineType = PETROL;
+            break;
+        case 1:
+            engineType = DIESEL;
+            break;
+        case 2:
+            engineType = HYBRID;
+            break;
+        case 3:
+            engineType = ELECTRIC;
+            break;
+        default:
+            std::cerr << "Invalid car type selected." << std::endl;
+            return;
+    }
 
     pricePerKilometer = InputUtils::getPositiveInput<double>("Enter price per kilometer: ");
 
@@ -334,23 +354,11 @@ void createAndAddTaxi(Database& Db, int isLogged) {
     hasChildSeat = hasChildSeatInput != 0;
 
     int carTypeInput = InputUtils::getPositiveInput<int>("Enter car type (0 for ECONOMY, 1 for COMFORT, 2 for BUSINESS): ");
-    switch (carTypeInput) {
-        case 0:
-            carType = ECONOMY;
-            break;
-        case 1:
-            carType = COMFORT;
-            break;
-        case 2:
-            carType = BUSINESS;
-            break;
-        default:
-            std::cerr << "Invalid car type selected." << std::endl;
-            return;
-    }
+    carType = parseEnumRentCarType(carTypeInput, carType);
 
     admin.addTaxi(brand, model, color, engineType, pricePerKilometer, hasDriver, hasWiFi, hasChildSeat, carType, isLogged);
 }
+
 
 
 void createAndAddStop(Database& Db, int isLogged) {

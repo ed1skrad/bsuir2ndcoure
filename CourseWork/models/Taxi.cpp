@@ -115,6 +115,11 @@ void Taxi::displayAllTaxis(Database& Db) {
     try {
         pqxx::result R = Db.executeQuery("SELECT * FROM taxi");
 
+        if (R.empty()) {
+            std::cout << "No taxis found in the database." << std::endl;
+            return;
+        }
+
         std::cout << "Printing query result:" << std::endl;
         for (const auto& row : R) {
             for (const auto& field : row) {
@@ -127,7 +132,7 @@ void Taxi::displayAllTaxis(Database& Db) {
             displayTaxiDetails(c);
         }
     } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Error displaying all taxis: " << e.what() << std::endl;
     }
 }
 
@@ -135,11 +140,16 @@ void Taxi::displayTaxiById(Database& Db, int taxiId) {
     try {
         pqxx::result R = Db.executeQuery("SELECT * FROM taxi WHERE taxi_id = " + std::to_string(taxiId));
 
+        if (R.empty()) {
+            std::cout << "No taxi found with ID " << taxiId << std::endl;
+            return;
+        }
+
         for (const auto& row : R) {
             displayTaxiDetails(row);
         }
     } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Error displaying taxi by ID: " << e.what() << std::endl;
     }
 }
 
@@ -147,11 +157,16 @@ void Taxi::displayTaxisByBrand(Database& Db, const std::string& brand) {
     try {
         pqxx::result R = Db.executeQuery("SELECT * FROM taxi WHERE brand = '" + brand + "'");
 
+        if (R.empty()) {
+            std::cout << "No taxis found with brand '" << brand << "'" << std::endl;
+            return;
+        }
+
         for (const auto& row : R) {
             displayTaxiDetails(row);
         }
     } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Error displaying taxis by brand: " << e.what() << std::endl;
     }
 }
 

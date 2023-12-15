@@ -43,6 +43,23 @@ std::string Admin::engineTypeToString(EngineType engineType) {
     }
 }
 
+std::string Admin::rentCarTypesToString(RentCarTypes rentCarTypes) {
+        switch (rentCarTypes) {
+            case ECONOMY:
+                return "ECONOMY";
+            break;
+            case COMFORT:
+                return "COMFORT";
+            break;
+            case BUSINESS:
+                return "BUSINESS";
+            break;
+            default:
+                return "UNKNOWN";
+            break;
+        }
+};
+
 bool Admin::isValidRouteID(Database &db, int routeId) {
     std::string query = "SELECT EXISTS(SELECT 1 FROM Route WHERE route_id = " + std::to_string(routeId) + ");";
     auto result = db.executeQuery(query);
@@ -109,7 +126,7 @@ void Admin::addTrolleyBus(const std::string &brand, const std::string &model, co
     }
 }
 
-void Admin::addTaxi(const std::string &brand, const std::string &model, const std::string &color, const std::string &engineType,
+void Admin::addTaxi(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
                     double pricePerKilometer, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes,
                     int isLogged) {
     if (!isLogged) {
@@ -117,25 +134,12 @@ void Admin::addTaxi(const std::string &brand, const std::string &model, const st
         return;
     }
 
-    std::string rentCarTypeStr;
-    switch (rentCarTypes) {
-        case ECONOMY:
-            rentCarTypeStr = "ECONOMY";
-            break;
-        case COMFORT:
-            rentCarTypeStr = "COMFORT";
-            break;
-        case BUSINESS:
-            rentCarTypeStr = "BUSINESS";
-            break;
-        default:
-            rentCarTypeStr = "UNKNOWN";
-            break;
-    }
+    std::string rentCarTypeStr = rentCarTypesToString(rentCarTypes);
+    std::string engineTypeStr = engineTypeToString(engineType);
 
     std::string query =
             "INSERT INTO taxi (brand, model, color, engineType, price_per_kil, has_driver, has_wifi, has_child_seat, rent_car_type) VALUES ('"
-            + brand + "', '" + model + "', '" + color + "', '" + engineType + "', " +
+            + brand + "', '" + model + "', '" + color + "', '" + engineTypeStr + "', " +
             std::to_string(pricePerKilometer) + ", "
             + (hasDriver ? "TRUE" : "FALSE") + ", " + (hasWiFi ? "TRUE" : "FALSE") + ", " +
             (hasChildSeat ? "TRUE" : "FALSE") + ", '"
@@ -333,17 +337,4 @@ void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedI
                               std::to_string(stopId) + ");";
     db.executeQuery(insertQuery);
     std::cout << "Stop linked to route successfully." << std::endl;
-}
-
-bool Admin::checkTransportExists(Database &Db, TransportType transportType, int transportId) {
-    std::string transportTable = (transportType == BUS) ? "bus" : "trolleybus";
-    std::string transportIdColumn = (transportType == BUS) ? "bus_id" : "trolleybus_id";
-    std::string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTable +
-                                      " WHERE " + transportIdColumn + " = " + std::to_string(transportId) + ");";
-    auto transportExists = Db.executeQuery(checkTransportQuery);
-    if (transportExists.empty() || !transportExists[0][0].as<bool>()) {
-        std::cerr << "Transport ID does not exist in the database." << std::endl;
-        return false;
-    }
-    return true;
 }

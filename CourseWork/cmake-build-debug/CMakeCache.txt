@@ -167,7 +167,7 @@ CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 CMAKE_LINKER:FILEPATH=C:/Program Files/JetBrains/CLion 2022.2.5/bin/mingw/bin/ld.exe
 
 //make program
-CMAKE_MAKE_PROGRAM:FILEPATH=C:/PROGRA~1/JETBRA~1/CLION2~1.5/bin/ninja/win/ninja.exe
+CMAKE_MAKE_PROGRAM:FILEPATH=C:/Program Files/JetBrains/CLion 2022.2.5/bin/ninja/win/ninja.exe
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -573,7 +573,7 @@ PQXX_HAVE_STRERROR_S:INTERNAL=TRUE
 //Result of TRY_COMPILE
 PQXX_HAVE_THREAD_LOCAL:INTERNAL=FALSE
 //Result of TRY_COMPILE
-PQXX_HAVE_YEAR_MONTH_DAY:INTERNAL=FALSE
+PQXX_HAVE_YEAR_MONTH_DAY:INTERNAL=TRUE
 //ADVANCED property for variable: PostgreSQL_INCLUDE_DIR
 PostgreSQL_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PostgreSQL_LIBRARY_DEBUG

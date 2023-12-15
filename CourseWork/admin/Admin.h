@@ -27,6 +27,8 @@ public:
 
     std::string engineTypeToString(EngineType engineType);
 
+    std::string rentCarTypesToString(RentCarTypes rentCarTypes);
+
     bool registerAdmin(Database &db, const std::string &username, const std::string &password);
 
     void addBus(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
@@ -35,9 +37,9 @@ public:
     void addTrolleyBus(const std::string &brand, const std::string &model, const std::string &color,
                        EngineType engineType, int capacity, bool hasSockets, int isLogged);
 
-    void addTaxi(const std::string &brand, const std::string &model, const std::string &color,
-                 const std::string &engineType, double pricePerKilometer, bool hasDriver, bool hasWiFi,
-                 bool hasChildSeat, RentCarTypes rentCarTypes, int isLogged);
+    void addTaxi(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
+                        double pricePerKilometer, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes,
+                        int isLogged);
 
     void addStop(const std::string &stopName, const std::string &address, int isLogged);
 
@@ -50,8 +52,6 @@ public:
     void linkTransportToRoute(Database &Db, int route_id, TransportType transport_type, int transport_id, int isLogged);
 
     void linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedIn);
-
-    bool checkTransportExists(Database &Db, TransportType transportType, int transportId);
 
     bool adminLogin(Database &db, const std::string &username, const std::string &password);
 
