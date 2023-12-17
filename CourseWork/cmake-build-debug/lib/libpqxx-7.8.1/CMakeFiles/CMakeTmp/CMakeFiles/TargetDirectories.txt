@@ -1,3 +1,0 @@
-C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_c04c0.dir
-C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/CMakeFiles/CMakeTmp/CMakeFiles/edit_cache.dir
-C:/Users/atema/Desktop/CourseWork/cmake-build-debug/lib/libpqxx-7.8.1/CMakeFiles/CMakeTmp/CMakeFiles/rebuild_cache.dir

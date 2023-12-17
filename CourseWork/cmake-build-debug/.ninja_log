@@ -88,3 +88,7 @@
 1594	2487	7243322696628842	lib/libpqxx-7.8.1/src/libpqxx.a	34c8e1d11c86752b
 2487	4360	7243322715260999	CourseWork.exe	e2f477ccd352b795
 26	4075	7243330616021055	CMakeFiles/CourseWork.dir/admin/Admin.cpp.obj	b7fb9cc3d8e34f05
+11	2098	7243343005792821	CMakeFiles/CourseWork.dir/action/MainMenu.cpp.obj	a43f24de0362a5c2
+2098	4097	7243343025648643	CourseWork.exe	e2f477ccd352b795
+14	1763	7243345724675603	CMakeFiles/CourseWork.dir/action/MainMenu.cpp.obj	a43f24de0362a5c2
+1763	3769	7243345744643397	CourseWork.exe	e2f477ccd352b795

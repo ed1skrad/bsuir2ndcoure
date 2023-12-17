@@ -24,7 +24,8 @@ void displayMenu() {
     cout << "Enter your choice (1/2/3/4/0): ";
 }
 
-RentCarTypes parseEnumRentCarType(int rentCarTypeInput, RentCarTypes rentCarTypes){
+RentCarTypes parseEnumRentCarType(int rentCarTypeInput) {
+    RentCarTypes rentCarTypes;
     switch (rentCarTypeInput) {
         case 1:
             rentCarTypes = ECONOMY;
@@ -39,7 +40,31 @@ RentCarTypes parseEnumRentCarType(int rentCarTypeInput, RentCarTypes rentCarType
             cout << "Invalid choice" << endl;
             break;
     }
+    return rentCarTypes;
 }
+
+EngineType parseEnumEngineType(int engineTypeInput) {
+    EngineType engineType;
+    switch (engineTypeInput) {
+        case 1:
+            engineType = DIESEL;
+            break;
+        case 2:
+            engineType = PETROL;
+            break;
+        case 3:
+            engineType = HYBRID;
+            break;
+        case 4:
+            engineType = ELECTRIC;
+            break;
+        default:
+            std::cerr << "Invalid engine type selected." << std::endl;
+            break;
+    }
+    return engineType;
+}
+
 
 void handleTaxiSelect(Database& Db) {
     bool exitMenu = false;
@@ -248,23 +273,7 @@ void createAndAddBus(Database& Db, int isLogged) {
     color = InputUtils::getStringInput("Enter bus color: ");
 
     int engineTypeInput = InputUtils::getPositiveInput<int>("Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ");
-    switch (engineTypeInput) {
-        case 1:
-            engineType = DIESEL;
-            break;
-        case 2:
-            engineType = PETROL;
-            break;
-        case 3:
-            engineType = HYBRID;
-            break;
-        case 4:
-            engineType = ELECTRIC;
-            break;
-        default:
-            std::cerr << "Invalid engine type selected." << std::endl;
-            return;
-    }
+    engineType = parseEnumEngineType(engineTypeInput);
 
     capacity = InputUtils::getPositiveInput<int>("Enter bus capacity: ");
 
@@ -286,23 +295,7 @@ void createAndAddTrolleyBus(Database& Db, int isLogged) {
     color = InputUtils::getStringInput("Enter trolleybus color: ");
 
     int engineTypeInput = InputUtils::getPositiveInput<int>("Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ");
-    switch (engineTypeInput) {
-        case 1:
-            engineType = DIESEL;
-            break;
-        case 2:
-            engineType = PETROL;
-            break;
-        case 3:
-            engineType = HYBRID;
-            break;
-        case 4:
-            engineType = ELECTRIC;
-            break;
-        default:
-            std::cerr << "Invalid engine type selected." << std::endl;
-            return;
-    }
+    engineType = parseEnumEngineType(engineTypeInput);
 
     capacity = InputUtils::getPositiveInput<int>("Enter trolleybus capacity: ");
 
@@ -324,23 +317,7 @@ void createAndAddTaxi(Database& Db, int isLogged) {
     model = InputUtils::getStringInput("Enter taxi model: ");
     color = InputUtils::getStringInput("Enter taxi color: ");
     int engineTypeInput = InputUtils::getPositiveInput<int>("Enter car type (0 for PETROL, 1 for DIESEL, 2 for HYBRID, 3 for ELECTRIC): ");
-    switch (engineTypeInput) {
-        case 0:
-            engineType = PETROL;
-            break;
-        case 1:
-            engineType = DIESEL;
-            break;
-        case 2:
-            engineType = HYBRID;
-            break;
-        case 3:
-            engineType = ELECTRIC;
-            break;
-        default:
-            std::cerr << "Invalid car type selected." << std::endl;
-            return;
-    }
+    engineType = parseEnumEngineType(engineTypeInput);
 
     pricePerKilometer = InputUtils::getPositiveInput<double>("Enter price per kilometer: ");
 
@@ -354,7 +331,8 @@ void createAndAddTaxi(Database& Db, int isLogged) {
     hasChildSeat = hasChildSeatInput != 0;
 
     int carTypeInput = InputUtils::getPositiveInput<int>("Enter car type (0 for ECONOMY, 1 for COMFORT, 2 for BUSINESS): ");
-    carType = parseEnumRentCarType(carTypeInput, carType);
+
+    carType = parseEnumRentCarType(carTypeInput);
 
     admin.addTaxi(brand, model, color, engineType, pricePerKilometer, hasDriver, hasWiFi, hasChildSeat, carType, isLogged);
 }
