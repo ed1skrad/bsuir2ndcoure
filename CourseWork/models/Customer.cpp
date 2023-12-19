@@ -6,14 +6,30 @@ Customer::Customer() {
     customerId = 0;
 }
 
-int Customer::getCustomerId() const { return customerId; }
-void Customer::setCustomerId(int id) { customerId = id; }
+int Customer::getCustomerId() {
+    return customerId;
+}
+void Customer::setCustomerId(int customerId) {
+    this->customerId = customerId;
+}
 
-const std::string& Customer::getName() const { return name; }
-void Customer::setName(const std::string& n) { name = n; }
+std::string Customer::getName() {
+    return name;
+}
+void Customer::setName(std::string name) {
+    this->name = name;
+}
 
-const std::string& Customer::getSurname() const { return surname; }
-void Customer::setSurname(const std::string& s) { surname = s; }
+std::string Customer::getSurname() {
+    return surname;
+}
+void Customer::setSurname(std::string surname) {
+    this->surname = surname;
+}
 
-const std::string& Customer::getContactInformation() const { return contactInformation; }
-void Customer::setContactInformation(const std::string& info) { contactInformation = info; }
+std::string Customer::getContactInformation()  {
+    return contactInformation;
+}
+void Customer::setContactInformation(std::string contactInformation) {
+    this->contactInformation = contactInformation;
+}

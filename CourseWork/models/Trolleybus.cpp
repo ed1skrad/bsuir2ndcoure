@@ -10,10 +10,9 @@ TrolleyBus::TrolleyBus(int transportId, std::string brand, std::string model, st
 TrolleyBus::TrolleyBus(const std::string& brand, const std::string& model, const std::string& color, EngineType engineType, int capacity, bool hasSockets)
         : PublicTransport(brand, model, color, engineType, capacity), hasSockets(hasSockets) {}
 
-bool TrolleyBus::getHasSockets() const {
+bool TrolleyBus::getHasSockets(){
     return hasSockets;
 }
-
 void TrolleyBus::setHasSockets(bool hasSockets) {
     this->hasSockets = hasSockets;
 }

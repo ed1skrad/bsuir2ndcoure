@@ -23,6 +23,8 @@ public:
 
     bool login();
 
+    bool checkAuthorization(int isLogged);
+
     bool isValidRouteID(Database &db, int routeId);
 
     std::string engineTypeToString(EngineType engineType);

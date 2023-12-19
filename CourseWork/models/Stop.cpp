@@ -8,28 +8,28 @@ Stop::Stop(int stopId, const std::string& stopName, const std::string& stopAddre
 Stop::Stop() : stopId(0), stopName(""), address("") {
 }
 
-int Stop::getStopId() const {
+int Stop::getStopId() {
     return stopId;
 }
 
 void Stop::setStopId(int stopId) {
-    Stop::stopId = stopId;
+    this->stopId = stopId;
 }
 
-const std::string &Stop::getStopName() const {
+ std::string Stop::getStopName() {
     return stopName;
 }
 
-void Stop::setStopName(const std::string &stopName) {
-    Stop::stopName = stopName;
+void Stop::setStopName(std::string stopName) {
+    this->stopName = stopName;
 }
 
-const std::string &Stop::getAddress() const {
+std::string Stop::getAddress() {
     return address;
 }
 
-void Stop::setAddress(const std::string &address) {
-    Stop::address = address;
+void Stop::setAddress(std::string address) {
+    this->address = address;
 }
 
 std::vector<Stop> Stop::findAllStops(Database& db) {

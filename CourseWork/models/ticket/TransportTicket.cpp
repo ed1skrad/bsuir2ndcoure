@@ -5,30 +5,30 @@
 TransportTicket::TransportTicket()
         : ticketId(0), transportId(0), customerId(0), price(0.0), purchaseTime(""), transportType(TransportType::BUS) {}
 
-TransportTicket::TransportTicket(int tId, int trId, int cId, double p, const std::string& pTime, TransportType tType)
-        : ticketId(tId), transportId(trId), customerId(cId), price(p), purchaseTime(pTime), transportType(tType) {}
+TransportTicket::TransportTicket(int ticketId, int transportId, int customerId, double price, const std::string& purchaseTime, TransportType transportType)
+        : ticketId(ticketId), transportId(transportId), customerId(customerId), price(price), purchaseTime(purchaseTime), transportType(transportType) {}
 
-int TransportTicket::getTicketId() const {
+int TransportTicket::getTicketId() {
     return ticketId;
 }
 
-int TransportTicket::getTransportId() const {
+int TransportTicket::getTransportId(){
     return transportId;
 }
 
-int TransportTicket::getCustomerId() const {
+int TransportTicket::getCustomerId(){
     return customerId;
 }
 
-double TransportTicket::getPrice() const {
+double TransportTicket::getPrice(){
     return price;
 }
 
-std::string TransportTicket::getPurchaseTime() const {
+std::string TransportTicket::getPurchaseTime(){
     return purchaseTime;
 }
 
-TransportType TransportTicket::getTransportType() const {
+TransportType TransportTicket::getTransportType(){
     return transportType;
 }
 
@@ -44,7 +44,7 @@ void TransportTicket::setPrice(double price) {
     this->price = price;
 }
 
-void TransportTicket::displayTicketInfo() const {
+void TransportTicket::displayTicketInfo() {
     std::cout << "Ticket ID: " << getTicketId() << std::endl;
     std::cout << "Transport ID: " << getTransportId() << std::endl;
     std::cout << "Customer ID: " << getCustomerId() << std::endl;

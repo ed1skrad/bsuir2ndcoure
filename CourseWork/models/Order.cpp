@@ -9,19 +9,37 @@ Order::Order() : orderId(0), customerId(0), carId(0), orderTime(getCurrentTime()
 Order::Order(int orderId, int customerId, int carId, const std::string& orderTime)
         : orderId(orderId), customerId(customerId), carId(carId), orderTime(orderTime) {}
 
-int Order::getOrderId() const { return orderId; }
-void Order::setOrderId(int id) { orderId = id; }
+int Order::getOrderId() {
+    return orderId;
+}
+void Order::setOrderId(int orderId) {
+    this->orderId = orderId;
+}
 
-int Order::getCustomerId() const { return customerId; }
-void Order::setCustomerId(int id) { customerId = id; }
+int Order::getCustomerId() {
+    return customerId;
+}
+void Order::setCustomerId(int customerId) {
+    this->customerId = customerId;
+}
 
-int Order::getCarId() const { return carId; }
-void Order::setCarId(int id) { carId = id; }
+int Order::getCarId() {
+    return carId;
+}
 
-const std::string& Order::getOrderTime() const { return orderTime; }
-void Order::setOrderTime(const std::string& time) { orderTime = time; }
+void Order::setCarId(int carId){
+    this->carId = carId;
+}
 
-std::string Order::getCurrentTime() const {
+std::string Order::getOrderTime() {
+    return orderTime;
+}
+
+void Order::setOrderTime(std::string orderTime) {
+    this->orderTime = orderTime;
+}
+
+std::string Order::getCurrentTime() {
     auto now = std::chrono::system_clock::now();
     std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
     std::stringstream ss;

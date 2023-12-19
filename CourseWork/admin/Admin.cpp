@@ -13,6 +13,14 @@ std::string Admin::hashPassword(const std::string &password) {
     return hashed;
 }
 
+bool Admin::checkAuthorization(int isLogged) {
+    if (!isLogged) {
+        std::cerr << "Error: You must be logged in as an admin to link transport to a route." << std::endl;
+        return false;
+    }
+    return true;
+}
+
 bool Admin::login() {
     std::string query =
             "SELECT admin_id FROM Admins WHERE username = '" + username + "' AND password = '" + hashedPassword +
@@ -93,8 +101,7 @@ bool Admin::registerAdmin(Database &db, const std::string &username, const std::
 
 void Admin::addBus(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
                    int capacity, bool hasContactlessPayment, int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to add a bus." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
     std::string query =
@@ -111,8 +118,7 @@ void Admin::addBus(const std::string &brand, const std::string &model, const std
 
 void Admin::addTrolleyBus(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
                           int capacity, bool hasSockets, int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to add a trolleybus." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
     std::string query = "INSERT INTO trolleybus (brand, model, color, engineType, capacity, has_sockets) VALUES ('"
@@ -129,8 +135,7 @@ void Admin::addTrolleyBus(const std::string &brand, const std::string &model, co
 void Admin::addTaxi(const std::string &brand, const std::string &model, const std::string &color, EngineType engineType,
                     double pricePerKilometer, bool hasDriver, bool hasWiFi, bool hasChildSeat, RentCarTypes rentCarTypes,
                     int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
 
@@ -153,8 +158,7 @@ void Admin::addTaxi(const std::string &brand, const std::string &model, const st
 }
 
 void Admin::addStop(const std::string &stopName, const std::string &address, int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
     std::string query = "INSERT INTO Stop (stop_name, address) VALUES ('"
@@ -168,8 +172,7 @@ void Admin::addStop(const std::string &stopName, const std::string &address, int
 }
 
 void Admin::addRoute(const std::string &routeName, int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to add a taxi." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
 
@@ -184,8 +187,7 @@ void Admin::addRoute(const std::string &routeName, int isLogged) {
 }
 
 void Admin::addSchedule(Database& db, int routeId, TransportType transportType, int transportId, int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to add a schedule." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
 
@@ -234,8 +236,7 @@ void Admin::addSchedule(Database& db, int routeId, TransportType transportType, 
 }
 
 void Admin::setRoutePrice(Database &Db, int routeId, double price, int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to set the route price." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
 
@@ -261,8 +262,7 @@ void Admin::setRoutePrice(Database &Db, int routeId, double price, int isLogged)
 }
 
 void Admin::linkTransportToRoute(Database &Db, int routeId, TransportType transportType, int transport_id, int isLogged) {
-    if (!isLogged) {
-        std::cerr << "Error: You must be logged in as an admin to link transport to a route." << std::endl;
+    if (!checkAuthorization(isLogged)) {
         return;
     }
 
@@ -304,9 +304,8 @@ void Admin::linkTransportToRoute(Database &Db, int routeId, TransportType transp
     }
 }
 
-void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLoggedIn) {
-    if (!isLoggedIn) {
-        std::cerr << "Error: You must be logged in as an admin to link a stop to a route." << std::endl;
+void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLogged) {
+    if (!checkAuthorization(isLogged)) {
         return;
     }
 

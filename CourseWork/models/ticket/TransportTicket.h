@@ -21,25 +21,26 @@ private:
     double price;
     std::string purchaseTime;
     TransportType transportType;
-    Database db;
+    Database* db;
 
 public:
     TransportTicket();
 
-    TransportTicket(int tId, int trId, int cId, double p, const std::string& pTime, TransportType tType);
+    TransportTicket(int ticketId, int transportId, int customerId, double price, const std::string& purchaseTime, TransportType transportType);
 
-    int getTicketId() const;
-    int getTransportId() const;
-    int getCustomerId() const;
-    double getPrice() const;
-    std::string getPurchaseTime() const;
-    TransportType getTransportType() const;
+    TransportTicket(Database* db) : db(db) {}
+    int getTicketId();
+    int getTransportId();
+    int getCustomerId();
+    double getPrice();
+    std::string getPurchaseTime();
+    TransportType getTransportType();
 
     void setCustomerId(int customerId);
     void setTransportId(int transportId);
     void setPrice(double price);
 
-    void displayTicketInfo() const;
+    void displayTicketInfo();
 };
 
 #endif // COURSEWORK_TRANSPORTTICKET_H

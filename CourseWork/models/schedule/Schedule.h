@@ -18,32 +18,30 @@ private:
     std::string arrivalTime;
 
 public:
-    Schedule() = default;  // Default constructor
+    Schedule();
 
     Schedule(int scheduleId, int routeId, int stopId, TransportType transportType, int transportId, const std::string& arrivalTime);
 
-    // Getters and setters for each field
-    int getScheduleId() const;
+    int getScheduleId();
     void setScheduleId(int scheduleId);
 
-    int getRouteId() const;
+    int getRouteId();
     void setRouteId(int routeId);
 
-    int getStopId() const;
+    int getStopId();
     void setStopId(int stopId);
 
-    TransportType getTransportType() const;
+    TransportType getTransportType();
     void setTransportType(TransportType transportType);
 
-    int getTransportId() const;
+    int getTransportId();
     void setTransportId(int transportId);
 
-    const std::string& getArrivalTime() const;
-    void setArrivalTime(const std::string& arrivalTime);
+    std::string getArrivalTime();
+    void setArrivalTime(std::string arrivalTime);
 
-    // Static method to get the schedule for a specific route
     static std::vector<Schedule> getScheduleForRoute(Database& db, int routeId);
-    // Вызов метода
+
     void printStopsForRoute(Database& db, int routeId);
 
 };

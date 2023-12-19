@@ -28,7 +28,7 @@ public:
 
     std::string getCurrentTimestampAsString();
 
-    int insertTicket(Database& db, const TransportTicket& ticket);
+    int insertTicket(Database& db, TransportTicket ticket);
 
     void bookTransport(Database& Db, PublicTransport::TransportType transportType);
 

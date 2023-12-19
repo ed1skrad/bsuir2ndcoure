@@ -6,11 +6,11 @@ RoutePrice::RoutePrice() : routeId(0), price(0.0) {}
 
 RoutePrice::RoutePrice(int id, double price) : routeId(id), price(price) {}
 
-int RoutePrice::getRouteId() const {
+int RoutePrice::getRouteId() {
     return routeId;
 }
 
-double RoutePrice::getPrice() const {
+double RoutePrice::getPrice() {
     return price;
 }
 

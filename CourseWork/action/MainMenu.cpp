@@ -465,19 +465,20 @@ void handleAdminActions(Database& Db) {
             break;
     }
     while (isLogged == 1) {
-        int action = InputUtils::getPositiveInput<int>("        s<< \"Select an action:\\n\"\n"
-                                                       "                  << \"1. Add Bus\\n\"\n"
-                                                       "                  << \"2. Add Trolleybus\\n\"\n"
-                                                       "                  << \"3. Add Taxi\\n\"\n"
-                                                       "                  << \"4. Set Stop\\n\"\n"
-                                                       "                  << \"5. Set Route\\n\"\n"
-                                                       "                  << \"6. Set Schedule\\n\"\n"
-                                                       "                  << \"7. Set Price\\n\"\n"
-                                                       "                  << \"8. Set link transport to route\\n\"\n"
-                                                       "                  << \"9. createAndLinkStopToRoute\\n\"\n"
-                                                       "                  << \"10. Get orders\\n\"\n"
-                                                       "                  << \"0. Logout\\n\"\n"
-                                                       "                  << \"Enter your choice: \"");
+        int action = InputUtils::getPositiveInput<int>("Select an action:\n"
+                                                       "1. Add Bus\n"
+                                                       "2. Add Trolleybus\n"
+                                                       "3. Add Taxi\n"
+                                                       "4. Set Stop\n"
+                                                       "5. Set Route\n"
+                                                       "6. Set Schedule\n"
+                                                       "7. Set Price\n"
+                                                       "8. Set link transport to route\n"
+                                                       "9. createAndLinkStopToRoute\n"
+                                                       "10. Get orders\n"
+                                                       "0. Logout\n"
+                                                       "Enter your choice: ");
+
 
         switch (action) {
             case 1:

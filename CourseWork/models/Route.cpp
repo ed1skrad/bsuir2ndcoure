@@ -5,13 +5,19 @@ Route::Route() : routeId(0) {}
 Route::Route(int routeId, const std::string& routeName, const std::vector<Stop>& routeStops)
         : routeId(routeId), routeName(routeName), stops(routeStops) {}
 
-int Route::getRouteId() const { return routeId; }
-const std::string& Route::getRouteName() const { return routeName; }
-const std::vector<Stop>& Route::getStops() const { return stops; }
+int Route::getRouteId(){ return routeId; }
+std::string Route::getRouteName(){ return routeName; }
+std::vector<Stop> Route::getStops(){ return stops; }
 
-void Route::setRouteId(int newRouteId) { routeId = newRouteId; }
-void Route::setRouteName(const std::string& newRouteName) { routeName = newRouteName; }
-void Route::setStops(const std::vector<Stop>& newRouteStops) { stops = newRouteStops; }
+void Route::setRouteId(int routeId) {
+    this->routeId = routeId;
+}
+void Route::setRouteName(std::string routeName) {
+    this->routeName = routeName;
+}
+void Route::setStops(std::vector<Stop> stops) {
+    this->stops = stops;
+}
 
 void Route::getStopsForRoute(Database& db, int routeId) {
     std::cout << "Attempting to get stops for Route ID: " << routeId << std::endl;

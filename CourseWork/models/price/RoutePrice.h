@@ -16,8 +16,8 @@ public:
 
     RoutePrice(int id, double price);
 
-    int getRouteId() const;
-    double getPrice() const;
+    int getRouteId();
+    double getPrice();
 
     static RoutePrice fromSQLResult(const pqxx::row& row);
 

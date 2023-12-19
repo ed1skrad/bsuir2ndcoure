@@ -17,13 +17,13 @@ public:
     Route();
     Route(int routeId, const std::string& routeName, const std::vector<Stop>& routeStops);
 
-    int getRouteId() const;
-    const std::string& getRouteName() const;
-    const std::vector<Stop>& getStops() const;
+    int getRouteId();
+    std::string getRouteName();
+    std::vector<Stop> getStops();
 
-    void setRouteId(int newRouteId);
-    void setRouteName(const std::string& newRouteName);
-    void setStops(const std::vector<Stop>& newRouteStops);
+    void setRouteId(int routeId);
+    void setRouteName(std::string routeName);
+    void setStops(std::vector<Stop> stops);
 
     void getStopsForRoute(Database& db, int routeId);
     void getRoutesForTransport(Database& db, int transportId, PublicTransport::TransportType transportType);

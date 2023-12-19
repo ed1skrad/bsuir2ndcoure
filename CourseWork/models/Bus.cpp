@@ -8,12 +8,12 @@ Bus::Bus(const std::string& brand, const std::string& model, const std::string& 
 Bus::Bus(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, bool hasContactlessPayment)
         : PublicTransport(transportId, brand, model, color, engineType, capacity), hasContactlessPayment(hasContactlessPayment) {}
 
-bool Bus::isHasContactlessPayment() const {
+bool Bus::isHasContactlessPayment(){
     return hasContactlessPayment;
 }
 
 void Bus::setHasContactlessPayment(bool hasContactlessPayment) {
-    hasContactlessPayment = hasContactlessPayment;
+    this->hasContactlessPayment = hasContactlessPayment;
 }
 
 void Bus::displayBusDetails(const pqxx::result::const_iterator& row) {

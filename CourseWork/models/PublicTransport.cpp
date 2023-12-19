@@ -16,8 +16,8 @@ int PublicTransport::getTransportId() {
     return transportId;
 }
 
-void PublicTransport::setTransportId(int id) {
-    transportId = id;
+void PublicTransport::setTransportId(int transporId) {
+    this->transportId = transporId;
 }
 
 int PublicTransport::getCapacity() {
@@ -36,7 +36,7 @@ std::string PublicTransport::getCurrentTimestampAsString() {
     return ss.str();
 }
 
-int PublicTransport::insertTicket(Database& db, const TransportTicket& ticket) {
+int PublicTransport::insertTicket(Database& db, TransportTicket ticket) {
     try {
         std::string currentTimestamp = getCurrentTimestampAsString();
 

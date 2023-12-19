@@ -6,7 +6,11 @@
 Schedule::Schedule(int scheduleId, int routeId, int stopId, TransportType transportType, int transportId, const std::string& arrivalTime)
         : scheduleId(scheduleId), routeId(routeId), stopId(stopId), transportType(transportType), transportId(transportId), arrivalTime(arrivalTime) {}
 
-int Schedule::getScheduleId() const {
+Schedule::Schedule()
+        : scheduleId(0), routeId(0), stopId(0), transportType(TransportType::BUS), transportId(0), arrivalTime("") {}
+
+
+int Schedule::getScheduleId() {
     return scheduleId;
 }
 
@@ -14,7 +18,7 @@ void Schedule::setScheduleId(int scheduleId) {
     this->scheduleId = scheduleId;
 }
 
-int Schedule::getRouteId() const {
+int Schedule::getRouteId() {
     return routeId;
 }
 
@@ -22,7 +26,7 @@ void Schedule::setRouteId(int routeId) {
     this->routeId = routeId;
 }
 
-int Schedule::getStopId() const {
+int Schedule::getStopId() {
     return stopId;
 }
 
@@ -30,7 +34,7 @@ void Schedule::setStopId(int stopId) {
     this->stopId = stopId;
 }
 
-TransportType Schedule::getTransportType() const {
+TransportType Schedule::getTransportType() {
     return transportType;
 }
 
@@ -38,7 +42,7 @@ void Schedule::setTransportType(TransportType transportType) {
     this->transportType = transportType;
 }
 
-int Schedule::getTransportId() const {
+int Schedule::getTransportId() {
     return transportId;
 }
 
@@ -46,11 +50,11 @@ void Schedule::setTransportId(int transportId) {
     this->transportId = transportId;
 }
 
-const std::string& Schedule::getArrivalTime() const {
+std::string Schedule::getArrivalTime() {
     return arrivalTime;
 }
 
-void Schedule::setArrivalTime(const std::string& arrivalTime) {
+void Schedule::setArrivalTime(std::string arrivalTime) {
     this->arrivalTime = arrivalTime;
 }
 

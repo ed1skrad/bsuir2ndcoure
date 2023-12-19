@@ -15,14 +15,14 @@ private:
 public:
     Stop(int stopId, const std::string& stopName, const std::string& stopAddress);
     Stop();
-    int getStopId() const;
+    int getStopId();
     void setStopId(int stopId);
 
-    const std::string &getStopName() const;
-    void setStopName(const std::string &stopName);
+    std::string getStopName();
+    void setStopName(std::string stopName);
 
-    const std::string &getAddress() const;
-    void setAddress(const std::string &address);
+    std::string getAddress();
+    void setAddress( std::string address);
 
     static std::vector<Stop> findAllStops(Database& db);
 

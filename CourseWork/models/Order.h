@@ -20,19 +20,19 @@ public:
     Order();
     Order(int orderId, int customerId, int carId, const std::string& orderTime);
 
-    int getOrderId() const;
-    void setOrderId(int id);
+    int getOrderId();
+    void setOrderId(int orderId);
 
-    int getCustomerId() const;
-    void setCustomerId(int id);
+    int getCustomerId();
+    void setCustomerId(int customerId);
 
-    int getCarId() const;
-    void setCarId(int id);
+    int getCarId();
+    void setCarId(int carId);
 
-    const std::string& getOrderTime() const;
-    void setOrderTime(const std::string& time);
+    std::string getOrderTime();
+    void setOrderTime(std::string orderTime);
 
-    std::string getCurrentTime() const;
+    std::string getCurrentTime();
 
     static void printAllOrders(Database &db, int isLogged);
 };

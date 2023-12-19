@@ -27,22 +27,22 @@ public:
 
     Taxi();
 
-    int getCarId() const;
-    void setCarId(int id);
+    int getCarId();
+    void setCarId(int carId);
 
-    double getPricePerKil() const;
+    double getPricePerKil();
     void setPricePerKil(double pricePerKil);
 
-    bool getHasDriver() const;
+    bool getHasDriver();
     void setHasDriver(bool hasDriver);
 
-    bool getHasWiFi() const;
+    bool getHasWiFi();
     void setHasWiFi(bool hasWiFi);
 
-    bool getHasChildSeat() const;
+    bool getHasChildSeat();
     void setHasChildSeat(bool hasChildSeat);
 
-    RentCarTypes getRentCarTypes() const;
+    RentCarTypes getRentCarTypes();
     void setRentCarTypes(RentCarTypes rentCarTypes);
 
     ~Taxi();

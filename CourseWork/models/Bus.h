@@ -19,7 +19,7 @@ public:
 
     Bus(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, bool hasContactlessPayment);
 
-    bool isHasContactlessPayment() const;
+    bool isHasContactlessPayment();
 
     void setHasContactlessPayment(bool hasContactlessPayment);
 

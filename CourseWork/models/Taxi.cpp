@@ -9,15 +9,15 @@ Taxi::Taxi(std::string brand, std::string model, std::string color, EngineType e
 
 Taxi::Taxi() : Transport("", "", "", EngineType::PETROL), carId(0), pricePerKil(0.0), hasDriver(false), hasWiFi(false), hasChildSeat(false), rentCarTypes(RentCarTypes::ECONOMY) {}
 
-int Taxi::getCarId() const {
+int Taxi::getCarId(){
     return carId;
 }
 
-void Taxi::setCarId(int id) {
-    carId = id;
+void Taxi::setCarId(int carId) {
+    this->carId = carId;
 }
 
-double Taxi::getPricePerKil() const {
+double Taxi::getPricePerKil() {
     return pricePerKil;
 }
 
@@ -25,7 +25,7 @@ void Taxi::setPricePerKil(double pricePerKil) {
     this->pricePerKil = pricePerKil;
 }
 
-bool Taxi::getHasDriver() const {
+bool Taxi::getHasDriver() {
     return hasDriver;
 }
 
@@ -33,7 +33,7 @@ void Taxi::setHasDriver(bool hasDriver) {
     this->hasDriver = hasDriver;
 }
 
-bool Taxi::getHasWiFi() const {
+bool Taxi::getHasWiFi() {
     return hasWiFi;
 }
 
@@ -41,7 +41,7 @@ void Taxi::setHasWiFi(bool hasWiFi) {
     this->hasWiFi = hasWiFi;
 }
 
-bool Taxi::getHasChildSeat() const {
+bool Taxi::getHasChildSeat() {
     return hasChildSeat;
 }
 
@@ -49,7 +49,7 @@ void Taxi::setHasChildSeat(bool hasChildSeat) {
     this->hasChildSeat = hasChildSeat;
 }
 
-RentCarTypes Taxi::getRentCarTypes() const {
+RentCarTypes Taxi::getRentCarTypes() {
     return rentCarTypes;
 }
 

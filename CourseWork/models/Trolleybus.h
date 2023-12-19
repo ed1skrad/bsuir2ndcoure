@@ -17,7 +17,7 @@ public:
     TrolleyBus(int transportId, std::string brand, std::string model, std::string color, EngineType engineType, int capacity, bool hasSockets);
     TrolleyBus(const std::string& brand, const std::string& model, const std::string& color, EngineType engineType, int capacity, bool hasSockets);
 
-    bool getHasSockets() const;
+    bool getHasSockets();
     void setHasSockets(bool hasSockets);
 
     void displayTrolleyBusDetails(const pqxx::result::const_iterator& row);
