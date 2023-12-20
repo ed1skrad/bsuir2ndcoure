@@ -6,15 +6,15 @@
 
 template <typename T>
 void objToFile(T& obj, const char* filename){
-    std::ofstream outFile(filename);
+    std::ofstream outFile(filename, std::ios::binary); // открываем файл в бинарном режиме
     if (outFile.is_open()) {
-        outFile << obj;
+        outFile << obj; // используем оператор для вывода объекта в файл
         outFile.close();
-    }
-    else {
+    } else {
         std::cerr << "Unable to open file for writing." << std::endl;
     }
 }
+
 
 void createWatches(ElectronicWatch& watch1, ElectronicWatch& watch2, ElectronicWatch& watch3) {
     watch1.setBrand("Apple");
@@ -42,20 +42,47 @@ void createWatches(ElectronicWatch& watch1, ElectronicWatch& watch2, ElectronicW
 
 
 int main() {
-    std::string outFlName = "C:\\Users\\atema\\CLionProjects\\labka5\\allStack.bin";
-    Stack<ElectronicWatch> watchStack;
-    ElectronicWatch watch1, watch2, watch3;
-    createWatches(watch1, watch2, watch3);
-    File file(outFlName.c_str());
-    file.open();
-    file.writeStackBin(watchStack);  // Запись стека в бинарный файл
+    try {
+        std::string outFlName = "C:\\Users\\Artem\\Desktop\\bsuir2ndcoure\\labka5\\call.bin";
+        Stack<ElectronicWatch> watchStack;
+
+        // Создаем часы и добавляем их в стек
+        ElectronicWatch watch1, watch2, watch3;
+        createWatches(watch1, watch2, watch3);
+        watchStack.push(watch1);
+        watchStack.push(watch2);
+        watchStack.push(watch3);
+
+        // Открываем файл и записываем стек в него
+        File file(outFlName.c_str());
+        file.open();
+        std::cout << "Open";
+        file.writeStackBin(watchStack);
+        std::cout << "Write";
 
         watchStack = file.readStackBin<ElectronicWatch>();
+        std::cout << "Read";
 
-        while (!watchStack.isEmpty()) {
-            ElectronicWatch watch = watchStack.pop();
-            // Используйте методы get для вывода информации
-            std::cout << "Brand: " << watch.getBrand() << ", Weight: " << watch.getWeight() << ", Price: " << watch.getPrice() << "...\n";
+        // Проверяем, что стек не пустой и выводим данные
+        if (!watchStack.isEmpty()) {
+            while (!watchStack.isEmpty()) {
+                ElectronicWatch watch = watchStack.pop();
+                std::cout << "Brand: " << watch.getBrand() << ", Weight: " << watch.getWeight() << ", Price: " << watch.getPrice() << "...\n";
+            }
+        } else {
+            std::cout << "Stack is empty." << std::endl;
         }
+
+    } catch (const StackIncorrectSizeException& e) {
+        std::cerr << "Incorrect stack size: " << std::endl;
+        return EXIT_FAILURE;
+    } catch (const std::bad_alloc& e) {
+        std::cerr << "Memory allocation failed: " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    } catch (...) {
+        std::cerr << "An unknown error occurred." << std::endl;
+        return EXIT_FAILURE;
+    }
+
     return 0;
 }

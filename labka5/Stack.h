@@ -12,7 +12,7 @@ class Stack {
     int capacity;
 
 public:
-    Stack(int capacity = 10) {
+    Stack(int capacity = 100) {
         if (capacity <= 0) {
             throw StackIncorrectSizeException();
         }
@@ -107,29 +107,19 @@ void Stack<T>::serialize(std::ostream& os) const {
     // Записываем каждый элемент стека в поток
     for (int i = top; i >= 0; --i) {
         os << data[i] << std::endl;
+        std::cout << "Serializing stack..." << std::endl;
     }
 }
 
-template<class T>
-void Stack<T>::deserialize(std::istream& is) {
-    // Очищаем стек
-    delete[] data;
-    top = -1;
-
-    // Читаем количество элементов из потока
-    int count;
-    is >> count;
-
-    // Пересоздаем стек с новой емкостью
-    capacity = count;
-    data = new T[capacity];
-
-    // Заполняем стек значениями из потока
-    for (int i = 0; i < count; ++i) {
-        T value;
-        is >> value;
-        push(value); // используем метод push для добавления элемента в стек
+template <typename T>
+void Stack<T>::deserialize(std::istream &is) {
+    T item;
+    while (is.read(reinterpret_cast<char*>(&item), sizeof(T))) {
+        push(item);
+        std::cout << "Added item to stack: " << item << std::endl;  // Диагностическое сообщение
     }
 }
+
+
 
 #endif

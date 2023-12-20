@@ -74,13 +74,16 @@ void File::writeStack(Stack<T> &myStack) {
     }
 }
 
-template<class T>
+template <typename T>
 void File::writeStackBin(Stack<T> &myStack) {
     std::ostream &os = *fstr;
     if (fstr->is_open()) {
         myStack.serialize(os);
+        // Сбросьте указатель файла обратно в начало
+        fstr->seekg(0, std::ios::beg);
     }
 }
+
 
 template<class T>
 void File::readStack(Stack<T> &myStack) {

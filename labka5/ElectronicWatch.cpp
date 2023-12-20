@@ -1,4 +1,6 @@
 #include "ElectronicWatch.h"
+#include <iostream>
+
 
 ElectronicWatch::ElectronicWatch() : Clock() {
     battery_charge = 0;
@@ -39,23 +41,22 @@ void ElectronicWatch::setScreenBrightness(int newScreenBrightness) {
     screen_brightness = newScreenBrightness;
 }
 
-// Определение оператора вывода
+// Определение оператора для вывода объекта ElectronicWatch в поток
 std::ostream& operator<<(std::ostream& os, const ElectronicWatch& watch) {
-    os << watch.getBrand() << " " << watch.getWeight() << " " << watch.getPrice() << " "
-       << watch.getBatteryCharge() << " " << watch.getMaxCharge() << " " << watch.getScreenBrightness();
+    os << "Brand: " << watch.getBrand() << ", Weight: " << watch.getWeight()
+       << ", Price: " << watch.getPrice() << ", Battery Charge: " << watch.battery_charge
+       << ", Max Charge: " << watch.max_charge << ", Screen Brightness: " << watch.screen_brightness;
     return os;
 }
 
-// Определение оператора ввода
+// Определение оператора для чтения объекта ElectronicWatch из потока
 std::istream& operator>>(std::istream& is, ElectronicWatch& watch) {
-    std::string brand;
+    char brand[50];
     int weight, price, batteryCharge, maxCharge, screenBrightness;
 
-    is >> brand >> reinterpret_cast<ElectronicWatch &>(weight) >> reinterpret_cast<ElectronicWatch &>(price)
-       >> reinterpret_cast<ElectronicWatch &>(batteryCharge) >> reinterpret_cast<ElectronicWatch &>(maxCharge)
-       >> reinterpret_cast<ElectronicWatch &>(screenBrightness);
+    is >> brand >> weight >> price >> batteryCharge >> maxCharge >> screenBrightness;
 
-    watch.setBrand(brand.c_str());
+    watch.setBrand(brand);
     watch.setWeight(weight);
     watch.setPrice(price);
     watch.setBatteryCharge(batteryCharge);
@@ -64,3 +65,4 @@ std::istream& operator>>(std::istream& is, ElectronicWatch& watch) {
 
     return is;
 }
+

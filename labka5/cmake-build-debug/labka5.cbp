@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="labka5"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="labka5">
+				<Option output="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/labka5.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 labka5"/>
+					<CompileFile command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="labka5/fast">
+				<Option output="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/labka5.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="D:/CLion 2023.2.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 labka5/fast"/>
+					<CompileFile command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/CLion 2023.2.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/Clock.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/Clock.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/ElectronicWatch.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/ElectronicWatch.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/Exception.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/Exception.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/File.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/FitnessTracker.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/FitnessTracker.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/MechanicClock.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/MechanicClock.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/Stack.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/WallClock.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/WallClock.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/Watch.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/Watch.h">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/main.cpp">
+			<Option target="labka5"/>
+		</Unit>
+		<Unit filename="C:/Users/Artem/Desktop/bsuir2ndcoure/labka5/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
