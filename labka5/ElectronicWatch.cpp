@@ -38,3 +38,29 @@ void ElectronicWatch::setMaxCharge(int newMaxCharge) {
 void ElectronicWatch::setScreenBrightness(int newScreenBrightness) {
     screen_brightness = newScreenBrightness;
 }
+
+// Определение оператора вывода
+std::ostream& operator<<(std::ostream& os, const ElectronicWatch& watch) {
+    os << watch.getBrand() << " " << watch.getWeight() << " " << watch.getPrice() << " "
+       << watch.getBatteryCharge() << " " << watch.getMaxCharge() << " " << watch.getScreenBrightness();
+    return os;
+}
+
+// Определение оператора ввода
+std::istream& operator>>(std::istream& is, ElectronicWatch& watch) {
+    std::string brand;
+    int weight, price, batteryCharge, maxCharge, screenBrightness;
+
+    is >> brand >> reinterpret_cast<ElectronicWatch &>(weight) >> reinterpret_cast<ElectronicWatch &>(price)
+       >> reinterpret_cast<ElectronicWatch &>(batteryCharge) >> reinterpret_cast<ElectronicWatch &>(maxCharge)
+       >> reinterpret_cast<ElectronicWatch &>(screenBrightness);
+
+    watch.setBrand(brand.c_str());
+    watch.setWeight(weight);
+    watch.setPrice(price);
+    watch.setBatteryCharge(batteryCharge);
+    watch.setMaxCharge(maxCharge);
+    watch.setScreenBrightness(screenBrightness);
+
+    return is;
+}

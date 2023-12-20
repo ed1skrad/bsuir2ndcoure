@@ -1,3 +1,6 @@
+#ifndef STACK_H
+#define STACK_H
+
 #include <iostream>
 #include "Exception.h"
 
@@ -28,6 +31,10 @@ public:
     ~Stack(){
         delete[] data;
     }
+
+    void serialize(std::ostream &os) const;
+
+    void deserialize(std::istream &is);
 };
 
 
@@ -91,3 +98,38 @@ void Stack<T>::print() {
         std::cout << data[i] << " ";
     }
 }
+
+template<class T>
+void Stack<T>::serialize(std::ostream& os) const {
+    // Записываем количество элементов в стеке
+    os << top + 1 << std::endl;
+
+    // Записываем каждый элемент стека в поток
+    for (int i = top; i >= 0; --i) {
+        os << data[i] << std::endl;
+    }
+}
+
+template<class T>
+void Stack<T>::deserialize(std::istream& is) {
+    // Очищаем стек
+    delete[] data;
+    top = -1;
+
+    // Читаем количество элементов из потока
+    int count;
+    is >> count;
+
+    // Пересоздаем стек с новой емкостью
+    capacity = count;
+    data = new T[capacity];
+
+    // Заполняем стек значениями из потока
+    for (int i = 0; i < count; ++i) {
+        T value;
+        is >> value;
+        push(value); // используем метод push для добавления элемента в стек
+    }
+}
+
+#endif

@@ -5,6 +5,7 @@
 #ifndef UNTITLED10_ELECTRONICWATCH_H
 #define UNTITLED10_ELECTRONICWATCH_H
 
+#include <ostream>
 #include "Clock.h"
 
 class ElectronicWatch : public Clock {
@@ -25,5 +26,8 @@ public:
     void setBatteryCharge(int newBatteryCharge);
     void setMaxCharge(int newMaxCharge);
     void setScreenBrightness(int newScreenBrightness);
+
+    friend std::ostream& operator<<(std::ostream& os, const ElectronicWatch& watch);
+    friend std::istream& operator>>(std::istream& is, ElectronicWatch& watch);
 };
 #endif //UNTITLED10_ELECTRONICWATCH_H
