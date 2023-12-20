@@ -1,0 +1,10 @@
+# ninja log v5
+56	231	7223711979454761	CMakeFiles/labka5.dir/FitnessTracker.cpp.obj	f95229ffd037abb3
+80	258	7223711979763758	CMakeFiles/labka5.dir/MechanicClock.cpp.obj	78b443089e7423b0
+25	234	7223711979476506	CMakeFiles/labka5.dir/ElectronicWatch.cpp.obj	7d4711f8835273db
+90	281	7223711979975896	CMakeFiles/labka5.dir/WallClock.cpp.obj	b6190ca6e16cbb1b
+66	249	7223711979663775	CMakeFiles/labka5.dir/Watch.cpp.obj	bf8b6048427a54b0
+5	548	7231223333256272	CMakeFiles/labka5.dir/main.cpp.obj	3984e2ae9750f224
+14	481	7231212771653295	CMakeFiles/labka5.dir/Clock.cpp.obj	11082e1daf1df827
+13	584	7231234987487513	CMakeFiles/labka5.dir/Exception.cpp.obj	5699df0dbc8442e0
+584	762	7231234989220057	labka5.exe	babfa8996bf3fdc1
