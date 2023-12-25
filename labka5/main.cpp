@@ -18,8 +18,8 @@ void printMenu() {
 }
 
 int main() {
-    Stack<ElectronicWatch> stack;
-    Stack<ElectronicWatch> tempStack;
+    Stack<ElectronicWatch> stack(10); // Изменено для соответствия вашей реализации стека
+    Stack<ElectronicWatch> tempStack(10); // Изменено для соответствия вашей реализации стека
     int choice;
     std::string brand;
     int weight, price, batteryCharge, maxCharge, screenBrightness;
@@ -41,9 +41,10 @@ int main() {
                     batteryCharge = InputUtils::getPositiveInput<int>("Enter battery charge for watch " + std::to_string(i+1) + ": ");
                     maxCharge = InputUtils::getPositiveInput<int>("Enter max charge for watch " + std::to_string(i+1) + ": ");
                     screenBrightness = InputUtils::getPositiveInput<int>("Enter screen brightness for watch " + std::to_string(i+1) + ": ");
-                    stack.push(new ElectronicWatch(brand.c_str(), weight, price, batteryCharge, maxCharge, screenBrightness));
+                    stack.push(ElectronicWatch(brand.c_str(), weight, price, batteryCharge, maxCharge, screenBrightness));
                 }
                 break;
+
             case 2:
                 stack.pop();
                 break;

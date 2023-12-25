@@ -41,7 +41,7 @@ void ElectronicWatch::setScreenBrightness(int newScreenBrightness) {
 
 void ElectronicWatch::serialize(std::ostream& os) const {
     Clock::serialize(os);
-    os << "\t" << battery_charge << "\t" << max_charge << "\t" << screen_brightness;
+    os << battery_charge << " " << max_charge << " " << screen_brightness << "";
 }
 
 void ElectronicWatch::deserialize(std::istream& is) {

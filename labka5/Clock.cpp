@@ -57,7 +57,7 @@ void Clock::setPrice(int price) {
 }
 
 void Clock::serialize(std::ostream& os) const {
-    os << brand << '\t' << weight << '\t' << price << '\t';
+    os << brand << ' ' << weight << ' ' << price << ' ';
 }
 
 void Clock::deserialize(std::istream& is) {
