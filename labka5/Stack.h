@@ -21,7 +21,7 @@ public:
     Node* end();
     void push(T* value);
     void pop();
-    T peek();
+    T* peek();
     bool isEmpty();
     int getSize();
     void print();
@@ -94,12 +94,13 @@ void Stack<T>::pop() {
 }
 
 template<typename T>
-T Stack<T>::peek() {
-    if (isEmpty()) {
-        throw StackUnderflowException();
+T* Stack<T>::peek() {
+    if (!isEmpty()) {
+        return top->data;
     }
-    return *top->data;
+    return nullptr;
 }
+
 template<typename T>
 bool Stack<T>::isEmpty() {
     return top == nullptr;
@@ -114,11 +115,16 @@ template<typename T>
 void Stack<T>::print() {
     Node* tempNode = top;
     if (!tempNode) {
-        std::cout << "is empty";
+        std::cout << "Stack is empty";
     }
     while (tempNode) {
         if (tempNode->data != nullptr) {
-            std::cout << tempNode->data->getBrand() << " ";
+            std::cout << "Brand: " << tempNode->data->getBrand()
+                      << ", Weight: " << tempNode->data->getWeight()
+                      << ", Price: " << tempNode->data->getPrice()
+                      << ", Battery Charge: " << tempNode->data->getBatteryCharge()
+                      << ", Max Charge: " << tempNode->data->getMaxCharge()
+                      << ", Screen Brightness: " << tempNode->data->getScreenBrightness() << "\n";
         }
         else {
             std::cout << "null";
@@ -127,6 +133,7 @@ void Stack<T>::print() {
     }
     std::cout << std::endl;
 }
+
 
 template<typename T>
 void Stack<T>::serialize(std::ofstream& file) {

@@ -10,7 +10,6 @@ private:
     char brand[50];
     int weight;
     int price;
-    time_t currentTime;
 
 public:
     Clock();
@@ -20,7 +19,6 @@ public:
     const char* getBrand() const;
     int getWeight() const;
     int getPrice() const;
-    time_t getCurrentTime() const;
 
     void setBrand(const char* brand);
     void setWeight(int weight);
