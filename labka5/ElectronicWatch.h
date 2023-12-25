@@ -1,12 +1,9 @@
-//
-// Created by atema on 11.10.2023.
-//
+#ifndef ELECTRONICWATCH_H
+#define ELECTRONICWATCH_H
 
-#ifndef UNTITLED10_ELECTRONICWATCH_H
-#define UNTITLED10_ELECTRONICWATCH_H
-
-#include <ostream>
 #include "Clock.h"
+#include <fstream>
+#include <iostream>
 
 class ElectronicWatch : public Clock {
 private:
@@ -27,7 +24,10 @@ public:
     void setMaxCharge(int newMaxCharge);
     void setScreenBrightness(int newScreenBrightness);
 
-    friend std::ostream& operator<<(std::ostream& os, const ElectronicWatch& watch);
-    friend std::istream& operator>>(std::istream& is, ElectronicWatch& watch);
+    void serialize(std::ostream& os) const override;
+    void deserialize(std::istream& is) override;
+    void serialize_bin(std::ofstream& os) const override;
+    void deserialize_bin(std::ifstream& is) override;
 };
-#endif //UNTITLED10_ELECTRONICWATCH_H
+
+#endif

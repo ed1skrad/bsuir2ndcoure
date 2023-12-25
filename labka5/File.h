@@ -3,36 +3,32 @@
 
 #include "cstring"
 #include "fstream"
-#include "Stack.h"
-
+#include "Serializable.h"
 class File {
     char filename[80];
-    std::fstream *fstr;
+    std::fstream* fstr;
     int maxpos;
     void updateMaxPos();
 public:
-    File(const char *filename);
+    File(const char* filename);
     ~File();
     int open();
-    const char *getName();
+    const char* getName();
 
-    //write to file
     template<class T>
-    void writeStack(Stack<T> &myStack);
-    template<class T>
-    void writeStackBin(Stack<T> &myStack);
+    void writeText(std::string path, T& data);
 
-    //read file
+    void writeBinary(std::string path, Serializable& data);
     template<class T>
-    void readStack(Stack<T> &myStack);
-    template<class T>
-    Stack<T> readStackBin();
+    void readText(std::string path, T& data);
+
+    void readBinary(std::string path, Serializable& data);
 
     void remote();
     int del();
 };
 
-File::File(const char *filename_t) {
+File::File(const char* filename_t) {
     strncpy(filename, filename_t, 80);
     fstr = new std::fstream;
 }
@@ -50,62 +46,43 @@ int File::open() {
     return 0;
 }
 
-const char *File::getName() {
+const char* File::getName() {
     return this->filename;
 }
 
-void File::updateMaxPos() {
-    fstr->seekg(0, std::ios::end);
-    maxpos = fstr->tellg();
-    fstr->seekg(0, std::ios::beg);
+template<class T>
+void File::writeText(std::string path, T& data) {
+    std::ofstream file(path);
+    if (!file.good())
+        throw std::runtime_error("Unable to open file");
+    file << data;
+    file.close();
+}
+
+void File::writeBinary(std::string path, Serializable& data) {
+    std::ofstream file(path, std::ios::binary);
+    if (!file.good())
+        throw std::runtime_error("Unable to open file");
+    data.serialize(file);
+    file.close();
 }
 
 template<class T>
-void File::writeStack(Stack<T> &myStack) {
-    if (fstr->is_open()) {
-        Stack<T> tempStack = myStack;
-        while (!tempStack.isEmpty()) {
-            *fstr << tempStack.peek();
-            tempStack.pop();
-        }
-        fstr->close();
-    } else {
-
-    }
+void File::readText(std::string path, T& data) {
+    std::ifstream file(path);
+    if (!file.good())
+        throw std::runtime_error("Unable to open file");
+    file >> data;
+    file.close();
 }
 
-template <typename T>
-void File::writeStackBin(Stack<T> &myStack) {
-    std::ostream &os = *fstr;
-    if (fstr->is_open()) {
-        myStack.serialize(os);
-        // Сбросьте указатель файла обратно в начало
-        fstr->seekg(0, std::ios::beg);
-    }
+void File::readBinary(std::string path, Serializable& data) {
+    std::ifstream file(path, std::ios::binary);
+    if (!file.good())
+        throw std::runtime_error("Unable to open file");
+    data.deserialize(file);
+    file.close();
 }
 
 
-template<class T>
-void File::readStack(Stack<T> &myStack) {
-    if (fstr->is_open()) {
-        T tempObject;
-        while (*fstr >> tempObject) {
-            myStack.push(tempObject);
-        }
-        fstr->close();
-    } else {
-        //throw Exp(201, "Can't open file to read");
-    }
-}
-
-template<class T>
-Stack<T> File::readStackBin() {
-    Stack<T> myStack;
-    if (fstr->is_open()) {
-        myStack.deserialize(*fstr);
-    }
-    return myStack;
-}
-
-
-#endif//LABSCPP_FILEPROC_H
+#endif

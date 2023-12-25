@@ -1,125 +1,153 @@
 #ifndef STACK_H
 #define STACK_H
-
 #include <iostream>
+#include "Serializable.h"
 #include "Exception.h"
 
+template<typename T>
+class Stack : public Serializable {
+    struct Node {
+        T* data;
+        Node* next;
+    };
 
-template <class T>
-class Stack {
-    int top;
-    T* data;
-    int capacity;
+    Node* top;
+    int size;
 
 public:
-    Stack(int capacity = 100) {
-        if (capacity <= 0) {
-            throw StackIncorrectSizeException();
-        }
-        top = -1;
-        this->capacity = capacity;
-        data = new T[capacity];
-    }
-
-    bool isEmpty();
-    bool isFull();
-    bool push(const T& x);
-    T pop();
+    Stack();
+    ~Stack();
+    Node* begin();
+    Node* end();
+    void push(T* value);
+    void pop();
     T peek();
-    int size();
+    bool isEmpty();
+    int getSize();
     void print();
-    ~Stack(){
-        delete[] data;
+    void serialize(std::ofstream& file) override;
+    void deserialize(std::ifstream& file) override;
+
+    friend std::ostream& operator<<(std::ostream& os, Stack& stack) {
+        os << stack.size << "\n";
+        Node* tempNode = stack.top;
+        while (tempNode) {
+            os << *(tempNode->data) << "\n";
+            tempNode = tempNode->next;
+        }
+        return os;
     }
 
-    void serialize(std::ostream &os) const;
-
-    void deserialize(std::istream &is);
+    friend std::istream& operator>>(std::istream& is, Stack& stack) {
+        int size;
+        is >> size;
+        for (int i = 0; i < size; i++) {
+            T* data = new T;
+            is >> *data;
+            stack.push(data);
+        }
+        return is;
+    }
 };
 
+template<typename T>
+Stack<T>::Stack() : top(nullptr), size(0) {}
 
-
-
-template<class T>
-bool Stack<T>::isEmpty() {
-    return (top == -1);
-}
-
-template<class T>
-bool Stack<T>::isFull() {
-    return (top == capacity - 1);
-}
-
-template<class T>
-bool Stack<T>::push(const T& x) {
-    try {
-        if (isFull()) {
-            throw StackOverflowException();
-        }
-        data[++top] = x;
-    } catch (const StackOverflowException& e) {
-        e.show();
-        return false;
+template<typename T>
+Stack<T>::~Stack() {
+    while (!isEmpty()) {
+        pop();
     }
-    return true;
 }
 
-template<class T>
-T Stack<T>::pop() {
-    T poppedValue;
-    try {
-        if (isEmpty()) {
-            throw StackUnderflowException();
-        }
-        poppedValue = data[top--];
-    } catch (const StackUnderflowException& e) {
-        e.show();
+template<typename T>
+typename Stack<T>::Node* Stack<T>::begin() {
+    return top;
+}
+
+template<typename T>
+typename Stack<T>::Node* Stack<T>::end() {
+    return nullptr;
+}
+
+template<typename T>
+void Stack<T>::push(T* value) {
+    if (size >= 10) {
+        throw StackOverflowException();
     }
-    return poppedValue;
+    Node* newNode = new Node;
+    newNode->data = value;
+    newNode->next = top;
+    top = newNode;
+    size++;
 }
 
-template<class T>
+template<typename T>
+void Stack<T>::pop() {
+    if (isEmpty()) {
+        throw StackUnderflowException();
+    }
+    Node* tempNode = top;
+    top = top->next;
+    delete tempNode;
+    size--;
+}
+
+template<typename T>
 T Stack<T>::peek() {
-    if (!isEmpty()) {
-        return data[top];
-    } else {
-        return 0;
+    if (isEmpty()) {
+        throw StackUnderflowException();
     }
+    return *top->data;
+}
+template<typename T>
+bool Stack<T>::isEmpty() {
+    return top == nullptr;
 }
 
-template<class T>
-int Stack<T>::size() {
-    return top + 1;
+template<typename T>
+int Stack<T>::getSize() {
+    return size;
 }
 
-template<class T>
+template<typename T>
 void Stack<T>::print() {
-    for (int i = 0; i <= top; ++i) {
-        std::cout << data[i] << " ";
+    Node* tempNode = top;
+    if (!tempNode) {
+        std::cout << "is empty";
+    }
+    while (tempNode) {
+        if (tempNode->data != nullptr) {
+            std::cout << tempNode->data->getBrand() << " ";
+        }
+        else {
+            std::cout << "null";
+        }
+        tempNode = tempNode->next;
+    }
+    std::cout << std::endl;
+}
+
+template<typename T>
+void Stack<T>::serialize(std::ofstream& file) {
+    file.write(reinterpret_cast<const char*>(&size), sizeof(int));
+    Node* tempNode = top;
+    while (tempNode) {
+        tempNode->data->serialize_bin(file);
+        tempNode = tempNode->next;
     }
 }
 
-template<class T>
-void Stack<T>::serialize(std::ostream& os) const {
-    // Записываем количество элементов в стеке
-    os << top + 1 << std::endl;
-
-    // Записываем каждый элемент стека в поток
-    for (int i = top; i >= 0; --i) {
-        os << data[i] << std::endl;
-        std::cout << "Serializing stack..." << std::endl;
+template<typename T>
+void Stack<T>::deserialize(std::ifstream& file) {
+    int size;
+    file.read(reinterpret_cast<char*>(&size), sizeof(int));
+    for (int i = 0; i < size; ++i) {
+        T* data = new T;
+        data->deserialize_bin(file);
+        push(data);
     }
 }
 
-template <typename T>
-void Stack<T>::deserialize(std::istream &is) {
-    T item;
-    while (is.read(reinterpret_cast<char*>(&item), sizeof(T))) {
-        push(item);
-        std::cout << "Added item to stack: " << item << std::endl;  // Диагностическое сообщение
-    }
-}
+#endif // STACK_H
 
-
-
-#endif

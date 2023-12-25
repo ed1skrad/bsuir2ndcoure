@@ -46,7 +46,6 @@ int Clock::getPrice() const {
     return price;
 }
 
-
 std::time_t Clock::getCurrentTime() const {
     return currentTime;
 }
@@ -62,3 +61,37 @@ void Clock::setWeight(int weight) {
 void Clock::setPrice(int price) {
     this->price = price;
 }
+
+void Clock::serialize(std::ostream& os) const {
+    os << brand << '\t' << weight << '\t' << price << '\t' << currentTime;
+}
+
+void Clock::deserialize(std::istream& is) {
+    is >> brand >> weight >> price >> currentTime;
+    is.ignore();
+}
+
+void Clock::serialize_bin(std::ofstream& os) const {
+    os.write(reinterpret_cast<const char*>(&brand), sizeof(brand));
+    os.write(reinterpret_cast<const char*>(&weight), sizeof(weight));
+    os.write(reinterpret_cast<const char*>(&price), sizeof(price));
+    os.write(reinterpret_cast<const char*>(&currentTime), sizeof(currentTime));
+}
+
+void Clock::deserialize_bin(std::ifstream& is) {
+    is.read(reinterpret_cast<char*>(&brand), sizeof(brand));
+    is.read(reinterpret_cast<char*>(&weight), sizeof(weight));
+    is.read(reinterpret_cast<char*>(&price), sizeof(price));
+    is.read(reinterpret_cast<char*>(&currentTime), sizeof(currentTime));
+}
+
+std::ostream& operator<<(std::ostream& os, const Clock& clock) {
+    clock.serialize(os);
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, Clock& clock) {
+    clock.deserialize(is);
+    return is;
+}
+

@@ -1,6 +1,4 @@
 #include "ElectronicWatch.h"
-#include <iostream>
-
 
 ElectronicWatch::ElectronicWatch() : Clock() {
     battery_charge = 0;
@@ -41,28 +39,27 @@ void ElectronicWatch::setScreenBrightness(int newScreenBrightness) {
     screen_brightness = newScreenBrightness;
 }
 
-// Определение оператора для вывода объекта ElectronicWatch в поток
-std::ostream& operator<<(std::ostream& os, const ElectronicWatch& watch) {
-    os << "Brand: " << watch.getBrand() << ", Weight: " << watch.getWeight()
-       << ", Price: " << watch.getPrice() << ", Battery Charge: " << watch.battery_charge
-       << ", Max Charge: " << watch.max_charge << ", Screen Brightness: " << watch.screen_brightness;
-    return os;
+void ElectronicWatch::serialize(std::ostream& os) const {
+    Clock::serialize(os);
+    os << "\t" << battery_charge << "\t" << max_charge << "\t" << screen_brightness;
 }
 
-// Определение оператора для чтения объекта ElectronicWatch из потока
-std::istream& operator>>(std::istream& is, ElectronicWatch& watch) {
-    char brand[50];
-    int weight, price, batteryCharge, maxCharge, screenBrightness;
-
-    is >> brand >> weight >> price >> batteryCharge >> maxCharge >> screenBrightness;
-
-    watch.setBrand(brand);
-    watch.setWeight(weight);
-    watch.setPrice(price);
-    watch.setBatteryCharge(batteryCharge);
-    watch.setMaxCharge(maxCharge);
-    watch.setScreenBrightness(screenBrightness);
-
-    return is;
+void ElectronicWatch::deserialize(std::istream& is) {
+    Clock::deserialize(is);
+    is >> battery_charge >> max_charge >> screen_brightness;
+    is.ignore();
 }
 
+void ElectronicWatch::serialize_bin(std::ofstream& os) const {
+    Clock::serialize_bin(os);
+    os.write(reinterpret_cast<const char*>(&battery_charge), sizeof(battery_charge));
+    os.write(reinterpret_cast<const char*>(&max_charge), sizeof(max_charge));
+    os.write(reinterpret_cast<const char*>(&screen_brightness), sizeof(screen_brightness));
+}
+
+void ElectronicWatch::deserialize_bin(std::ifstream& is) {
+    Clock::deserialize_bin(is);
+    is.read(reinterpret_cast<char*>(&battery_charge), sizeof(battery_charge));
+    is.read(reinterpret_cast<char*>(&max_charge), sizeof(max_charge));
+    is.read(reinterpret_cast<char*>(&screen_brightness), sizeof(screen_brightness));
+}
