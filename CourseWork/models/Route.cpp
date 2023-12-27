@@ -2,12 +2,12 @@
 
 Route::Route() : routeId(0) {}
 
-Route::Route(int routeId, const std::string& routeName, const std::vector<Stop>& routeStops)
+Route::Route(int routeId, const std::string& routeName, const MyVector<Stop>& routeStops)
         : routeId(routeId), routeName(routeName), stops(routeStops) {}
 
 int Route::getRouteId(){ return routeId; }
 std::string Route::getRouteName(){ return routeName; }
-std::vector<Stop> Route::getStops(){ return stops; }
+MyVector<Stop> Route::getStops(){ return stops; }
 
 void Route::setRouteId(int routeId) {
     this->routeId = routeId;
@@ -15,7 +15,7 @@ void Route::setRouteId(int routeId) {
 void Route::setRouteName(std::string routeName) {
     this->routeName = routeName;
 }
-void Route::setStops(std::vector<Stop> stops) {
+void Route::setStops(MyVector<Stop> stops) {
     this->stops = stops;
 }
 
@@ -24,14 +24,12 @@ void Route::getStopsForRoute(Database& db, int routeId) {
 
     pqxx::result routeCheck = db.executeQuery("SELECT route_id FROM Route WHERE route_id = " + std::to_string(routeId));
     if (routeCheck.empty()) {
-        std::cout << "Route ID: " << routeId << " does not exist in the Route table." << std::endl;
-        return;
+        throw RouteNotFoundException();
     }
 
     pqxx::result routeStopCheck = db.executeQuery("SELECT stop_id FROM RouteStop WHERE route_id = " + std::to_string(routeId));
     if (routeStopCheck.empty()) {
-        std::cout << "No stops are linked to Route ID: " << routeId << " in the RouteStop table." << std::endl;
-        return;
+        throw RouteStopsException();
     }
 
     try {
@@ -45,7 +43,7 @@ void Route::getStopsForRoute(Database& db, int routeId) {
                 std::cout << "Stop Name: " << row[0].as<std::string>() << ", Address: " << row[1].as<std::string>() << std::endl;
             }
         } else {
-            std::cout << "No stops found for the specified route." << std::endl;
+            throw RouteStopsException();
         }
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
@@ -67,16 +65,24 @@ void Route::getRoutesForTransport(Database& db, int transportId, PublicTransport
                 "JOIN (SELECT route_id FROM TransportRoute WHERE transport_id = " +
                 std::to_string(transportId) +
                 " AND transport_type = '" + transportTypeName + "') tr ON r.route_id = tr.route_id");
-                /*
-                 * Таким образом, каждая строка в выводе будет содержать route_id и route_name для маршрутов, связанных с указанным транспортом.
-                 * Если для данного транспорта не найдено ни одного маршрута, то результат будет пустым.
-                 */
+
+        // Создаем MyVector для хранения объектов Route
+        MyVector<Route> routes;
+
         if (!result.empty()) {
             for (const auto& row : result) {
-                std::cout << "Route ID: " << row[0].as<int>() << ", Route Name: " << row[1].as<std::string>() << std::endl;
+                // Создаем объект Route для каждой строки в результате
+                Route route;
+                route.setRouteId(row[0].as<int>());
+                route.setRouteName(row[1].as<std::string>());
+
+                // Добавляем объект Route в вектор
+                routes.push(route);
+
+                std::cout << "Route ID: " << route.getRouteId() << ", Route Name: " << route.getRouteName() << std::endl;
             }
         } else {
-            std::cout << "No routes found for the specified transport." << std::endl;
+            throw RouteNotFoundException();
         }
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
@@ -87,21 +93,55 @@ void Route::displayAllRoutes(Database& db) {
     try {
         pqxx::result result = db.executeQuery("SELECT * FROM Route");
 
+        MyVector<Route> routes;
+
         if (!result.empty()) {
             std::cout << "All Routes:" << std::endl;
             for (const auto& row : result) {
-                int routeId = row[0].as<int>();
-                std::string routeName = row[1].as<std::string>();
+                Route route;
+                route.setRouteId(row[0].as<int>());
+                route.setRouteName(row[1].as<std::string>());
 
-                std::cout << "Route ID: " << routeId << ", Route Name: " << routeName << std::endl;
+                routes.push(route);
 
-                std::cout << std::endl;
+                std::cout << "Route ID: " << route.getRouteId() << ", Route Name: " << route.getRouteName() << std::endl;
             }
         } else {
-            std::cout << "No routes found in the database." << std::endl;
+            throw RouteNotFoundException();
         }
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+    } catch (const RouteNotFoundException& e) {
+        std::cerr << "Error: " << e.getMsg() << std::endl;
     }
 }
 
+void Route::findRouteById(Database& db, int routeId) {
+    try {
+        pqxx::result result = db.executeQuery("SELECT * FROM Route WHERE route_id = " + std::to_string(routeId));
+
+        if (!result.empty()) {
+            for (const auto& row : result) {
+                std::cout << "Route ID: " << row[0].as<int>() << ", Route Name: " << row[1].as<std::string>() << std::endl;
+            }
+        } else {
+            throw RouteNotFoundException();
+        }
+    } catch (const RouteNotFoundException& e) {
+        std::cerr << "Error: " << e.getMsg() << std::endl;
+    }
+}
+
+void Route::findRouteByName(Database& db, const std::string& routeName) {
+    try {
+        pqxx::result result = db.executeQuery("SELECT * FROM Route WHERE route_name = '" + routeName + "'");
+
+        if (!result.empty()) {
+            for (const auto& row : result) {
+                std::cout << "Route ID: " << row[0].as<int>() << ", Route Name: " << row[1].as<std::string>() << std::endl;
+            }
+        } else {
+            throw RouteNotFoundException();
+        }
+    } catch (const RouteNotFoundException& e) {
+        std::cerr << "Error: " << e.getMsg() << std::endl;
+    }
+}

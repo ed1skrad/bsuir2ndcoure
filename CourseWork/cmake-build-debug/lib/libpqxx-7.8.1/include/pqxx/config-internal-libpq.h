@@ -42,7 +42,7 @@
 /* Define if <charconv> supports integer conversion. */
 #define PQXX_HAVE_CHARCONV_INT
 /* Define if compiler has C++20 std::cmp_greater etc. */
-/* #undef PQXX_HAVE_CMP */
+#define PQXX_HAVE_CMP
 /* Define if compiler supports Concepts and <ranges> header. */
 #define PQXX_HAVE_CONCEPTS
 /* Define if compiler supports __cxa_demangle */

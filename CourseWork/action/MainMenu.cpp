@@ -115,7 +115,7 @@ void handleBusSelect(Database& Db) {
     while (!exitMenu) {
         cout << "Choose an action:" << endl;
         cout << "1. View all buses" << endl;
-        cout << "2. View routes for transport with id || View all routes" << endl;
+        cout << "2. Route case" << endl;
         cout << "3. View schedule" << endl;
         cout << "4. Get ticket price for a route" << endl;
         cout << "5. Stop case" << endl;
@@ -134,12 +134,34 @@ void handleBusSelect(Database& Db) {
                 break;
             }
             case 2: {
-                int busId = InputUtils::getPositiveInput<int>("Enter bus ID to find linked routes: ");
+                int choice;
+                std::cout << "Choose an option:" << std::endl;
+                std::cout << "1. Find route by ID" << std::endl;
+                std::cout << "2. Find route by name" << std::endl;
+                std::cout << "3. Find routes for transport with ID" << std::endl;
+                choice = InputUtils::getPositiveInput<int>("Enter route choice: ");
+
                 Route route;
-                route.getRoutesForTransport(Db, busId, PublicTransport::BUS);
-                int choice = InputUtils::getPositiveInput<int>("Wanna see all routes? (1 - yes, 2 - no): ");
-                if (choice == 1) {
-                    route.displayAllRoutes(Db);
+                switch (choice) {
+                    case 1: {
+                        int routeId = InputUtils::getPositiveInput<int>("Enter route ID: ");
+                        route.findRouteById(Db, routeId);
+                        break;
+                    }
+                    case 2: {
+                        std::string routeName;
+                        std::cout << "Enter route name: ";
+                        std::getline(std::cin, routeName);
+                        route.findRouteByName(Db, routeName);
+                        break;
+                    }
+                    case 3: {
+                        int busId = InputUtils::getPositiveInput<int>("Enter bus ID to find linked routes: ");
+                        route.getRoutesForTransport(Db, busId, PublicTransport::BUS);
+                        break;
+                    }
+                    default:
+                        std::cout << "Invalid choice. Please try again." << std::endl;
                 }
                 break;
             }
@@ -181,7 +203,7 @@ void handleTrolleyBusSelect(Database& Db) {
     while (!exitMenu) {
         cout << "Choose an action:" << endl;
         cout << "1. View all trolleybuses" << endl;
-        cout << "2. View all routes" << endl;
+        cout << "2. Route case" << endl;
         cout << "3. View schedule" << endl;
         cout << "4. Get ticket price for a route" << endl;
         cout << "5. Select all stops" << endl;
@@ -201,12 +223,34 @@ void handleTrolleyBusSelect(Database& Db) {
                 break;
             }
             case 2: {
-                int trolleybusId = InputUtils::getPositiveInput<int>("Enter trolleybus ID to find linked routes: ");
+                int choice;
+                std::cout << "Choose an option:" << std::endl;
+                std::cout << "1. Find route by ID" << std::endl;
+                std::cout << "2. Find route by name" << std::endl;
+                std::cout << "3. Find routes for transport with ID" << std::endl;
+                choice = InputUtils::getPositiveInput<int>("Enter route choice: ");
+
                 Route route;
-                route.getRoutesForTransport(Db, trolleybusId, PublicTransport::TROLLEYBUS);
-                int choice = InputUtils::getPositiveInput<int>("Wanna see all routes? (1 - yes, 2 - no): ");
-                if (choice == 1) {
-                    route.displayAllRoutes(Db);
+                switch (choice) {
+                    case 1: {
+                        int routeId = InputUtils::getPositiveInput<int>("Enter route ID: ");
+                        route.findRouteById(Db, routeId);
+                        break;
+                    }
+                    case 2: {
+                        std::string routeName;
+                        std::cout << "Enter route name: ";
+                        std::getline(std::cin, routeName);
+                        route.findRouteByName(Db, routeName);
+                        break;
+                    }
+                    case 3: {
+                        int trolleyBusId = InputUtils::getPositiveInput<int>("Enter trolleybus ID to find linked routes: ");
+                        route.getRoutesForTransport(Db, trolleyBusId, PublicTransport::TROLLEYBUS);
+                        break;
+                    }
+                    default:
+                        std::cout << "Invalid choice. Please try again." << std::endl;
                 }
                 break;
             }
