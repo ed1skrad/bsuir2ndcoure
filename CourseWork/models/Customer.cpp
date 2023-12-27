@@ -1,5 +1,3 @@
-// customer.cpp
-
 #include "customer.h"
 
 Customer::Customer() {

@@ -23,7 +23,9 @@ public:
 
     ~Database() {
     }
-
+    /*
+     * Транзакция представляет собой набор операций, которые либо все успешно выполняются, либо не выполняются вовсе.
+     */
     pqxx::result executeQuery(const std::string& query) {
         pqxx::nontransaction N(C);
         return N.exec(query);

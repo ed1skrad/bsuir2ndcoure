@@ -1,6 +1,5 @@
 #include <string>
 #include <iostream>
-#include "pqxx/pqxx"
 #include "../database/Database.h"
 #include "../models/Taxi.h"
 #include "../models/Order.h"
@@ -25,44 +24,35 @@ void displayMenu() {
 }
 
 RentCarTypes parseEnumRentCarType(int rentCarTypeInput) {
-    RentCarTypes rentCarTypes;
-    switch (rentCarTypeInput) {
-        case 1:
-            rentCarTypes = ECONOMY;
-            break;
-        case 2:
-            rentCarTypes = COMFORT;
-            break;
-        case 3:
-            rentCarTypes = BUSINESS;
-            break;
-        default:
-            cout << "Invalid choice" << endl;
-            break;
-    }
-    return rentCarTypes;
+    do {
+        switch (rentCarTypeInput) {
+            case 1:
+                return ECONOMY;
+            case 2:
+                return COMFORT;
+            case 3:
+                return BUSINESS;
+            default:
+                rentCarTypeInput = InputUtils::getPositiveInput<int>("Invalid choice. Please enter 1 for Economy, 2 for Comfort, or 3 for Business: ");
+        }
+    } while (true);
 }
 
 EngineType parseEnumEngineType(int engineTypeInput) {
-    EngineType engineType;
-    switch (engineTypeInput) {
-        case 1:
-            engineType = DIESEL;
-            break;
-        case 2:
-            engineType = PETROL;
-            break;
-        case 3:
-            engineType = HYBRID;
-            break;
-        case 4:
-            engineType = ELECTRIC;
-            break;
-        default:
-            std::cerr << "Invalid engine type selected." << std::endl;
-            break;
-    }
-    return engineType;
+    do {
+        switch (engineTypeInput) {
+            case 1:
+                return DIESEL;
+            case 2:
+                return PETROL;
+            case 3:
+                return HYBRID;
+            case 4:
+                return ELECTRIC;
+            default:
+                engineTypeInput = InputUtils::getPositiveInput<int>("Invalid choice. Please enter 0 - petrol, 1 - diesel, 2 - electric, 3 - hybrid: ");
+        }
+    } while (true);
 }
 
 
@@ -103,17 +93,8 @@ void handleTaxiSelect(Database& Db) {
                 break;
             }
             case 5: {
-                cout << "Choose RentCarType:" << endl;
-                cout << "1. Economy" << endl;
-                cout << "2. Comfort" << endl;
-                cout << "3. Business" << endl;
-
-                int rentCarTypeChoice;
-                cin >> rentCarTypeChoice;
-                cin.ignore();
-
-                RentCarTypes rentCarType;
-
+                int rentCarTypeChoice = InputUtils::getPositiveInput<int>("Enter r.n.c 1 - Economy, 2 - Comfort, 3 - Business");
+                RentCarTypes rentCarType = parseEnumRentCarType(rentCarTypeChoice);
                 Taxi::displayTaxisByRentCarType(Db, rentCarType);
                 break;
             }
@@ -134,7 +115,7 @@ void handleBusSelect(Database& Db) {
     while (!exitMenu) {
         cout << "Choose an action:" << endl;
         cout << "1. View all buses" << endl;
-        cout << "2. View all routes" << endl;
+        cout << "2. View routes for transport with id || View all routes" << endl;
         cout << "3. View schedule" << endl;
         cout << "4. Get ticket price for a route" << endl;
         cout << "5. Stop case" << endl;
@@ -203,8 +184,9 @@ void handleTrolleyBusSelect(Database& Db) {
         cout << "2. View all routes" << endl;
         cout << "3. View schedule" << endl;
         cout << "4. Get ticket price for a route" << endl;
-        cout << "5. Stop case" << endl;
-        cout << "6. Book a ticket" << endl;
+        cout << "5. Select all stops" << endl;
+        cout << "6. Find stop by id" << endl;
+        cout << "7. Book a ticket" << endl;
         cout << "0. Back to main menu" << endl;
         cout << "Enter your choice (1/2/3/4/5/6/0): ";
 
@@ -242,11 +224,14 @@ void handleTrolleyBusSelect(Database& Db) {
             }
             case 5: {
                 Stop::findAllStops(Db);
+                break;
+            }
+            case 6:{
                 int stopId = InputUtils::getPositiveInput<int>("Enter stop ID: ");
                 Stop::findStopById(Db, stopId);
                 break;
             }
-            case 6: {
+            case 7: {
                 PublicTransport publicTransport;
                 publicTransport.bookTransport(Db, PublicTransport::TROLLEYBUS);
                 break;
@@ -276,7 +261,6 @@ void createAndAddBus(Database& Db, int isLogged) {
     engineType = parseEnumEngineType(engineTypeInput);
 
     capacity = InputUtils::getPositiveInput<int>("Enter bus capacity: ");
-
     int hasContactlessPaymentInput = InputUtils::getPositiveInput<int>("Does the bus have contactless payment? (1 for YES, 0 for NO): ");
     hasContactlessPayment = hasContactlessPaymentInput != 0;
 
@@ -294,7 +278,7 @@ void createAndAddTrolleyBus(Database& Db, int isLogged) {
     model = InputUtils::getStringInput("Enter trolleybus model: ");
     color = InputUtils::getStringInput("Enter trolleybus color: ");
 
-    int engineTypeInput = InputUtils::getPositiveInput<int>("Enter engine type (1 for DIESEL, 2 for PETROL, etc.): ");
+    int engineTypeInput = InputUtils::getPositiveInput<int>("Enter engine type (0 to petrol, 1 for diesel, 2 for electric, 3 for hybrid: ");
     engineType = parseEnumEngineType(engineTypeInput);
 
     capacity = InputUtils::getPositiveInput<int>("Enter trolleybus capacity: ");
@@ -430,6 +414,67 @@ void createAndLinkStopToRoute(Database& db, int isLogged) {
     admin.linkStopToRoute(db, routeId, stopId, isLogged);
 }
 
+void deleteBusHandle(Database &db, int isLogged){
+    Admin admin(db, "admin_username", "admin_password");
+    int busId = InputUtils::getPositiveInput<int>("Enter bus id which u want to delete");
+    Admin::deleteBus(db, busId, isLogged);
+}
+
+void deleteTrolleyBusHandle(Database &db, int isLogged){
+    Admin admin(db, "admin_username", "admin_password");
+    int trolleyBusId = InputUtils::getPositiveInput<int>("Enter trolleybus id which u want to delete");
+    Admin::deleteBus(db, trolleyBusId, isLogged);
+}
+
+void deleteStop(Database &db, int isLogged){
+    Admin admin(db, "admin_username", "admin_password");
+    int stopId = InputUtils::getPositiveInput<int>("Enter stop id which u want to delete");
+    Admin::deleteBus(db, stopId, isLogged);
+}
+
+void deleteRoute(Database &db, int isLogged){
+    Admin admin(db, "admin_username", "admin_password");
+    int routeId = InputUtils::getPositiveInput<int>("Enter route id which u want to delete");
+    Admin::deleteBus(db, routeId, isLogged);
+}
+
+void deleteTaxi(Database &db, int isLogged){
+    Admin admin(db, "admin_username", "admin_password");
+    int taxiId = InputUtils::getPositiveInput<int>("Enter taxi id which u want to delete");
+    Admin::deleteBus(db, taxiId, isLogged);
+}
+
+void unlinkStop(Database &db, int isLogged){
+    Admin admin(db, "admin_username", "admin_password");
+    int stopId = InputUtils::getPositiveInput<int>("Enter stop id which u want to unlink");
+    Admin::unlinkStop(db, stopId, isLogged);
+}
+
+void unlinkTransport(Database &db, int isLogged){
+    Admin admin(db, "admin_username", "admin_password");
+    int routeId;
+    PublicTransport::TransportType transportType;
+    int transportId;
+
+    routeId = InputUtils::getPositiveInput<int>("Enter route ID: ");
+
+    int transportTypeInput = InputUtils::getPositiveInput<int>("Enter transport type (1 for BUS, 2 for TROLLEYBUS): ");
+    switch (transportTypeInput) {
+        case 1:
+            transportType = PublicTransport::BUS;
+            break;
+        case 2:
+            transportType = PublicTransport::TROLLEYBUS;
+            break;
+        default:
+            std::cerr << "Invalid transport type selected." << std::endl;
+            return;
+    }
+
+    transportId = InputUtils::getPositiveInput<int>("Enter transport ID: ");
+
+    admin.unlinkTransport(db, routeId, static_cast<TransportType>(transportType), transportId, isLogged);
+}
 void handleAdminActions(Database& Db) {
     Admin admin(Db, "admin_username", "admin_password");
     std::cout << "1. Login\n2. Register\nChoose an option: ";
@@ -474,8 +519,15 @@ void handleAdminActions(Database& Db) {
                                                        "6. Set Schedule\n"
                                                        "7. Set Price\n"
                                                        "8. Set link transport to route\n"
-                                                       "9. createAndLinkStopToRoute\n"
+                                                       "9. Set stops to route\n"
                                                        "10. Get orders\n"
+                                                       "11. Delete bus\n"
+                                                       "12. Delete trolleybus\n"
+                                                       "13. Delete taxi\n"
+                                                       "14. Delete route\n"
+                                                       "15. Delete stop\n"
+                                                       "16. Unlink transport\n"
+                                                       "17. Unlink stop\n"
                                                        "0. Logout\n"
                                                        "Enter your choice: ");
 
@@ -510,6 +562,27 @@ void handleAdminActions(Database& Db) {
                 break;
             case 10:
                 Order::printAllOrders(Db, isLogged);
+                break;
+            case 11:
+                deleteBusHandle(Db, isLogged);
+                break;
+            case 12:
+                deleteTrolleyBusHandle(Db, isLogged);
+                break;
+            case 13:
+                deleteTaxi(Db, isLogged);
+                break;
+            case 14:
+                deleteRoute(Db, isLogged);
+                break;
+            case 15:
+                deleteStop(Db, isLogged);
+                break;
+            case 16:
+                unlinkTransport(Db, isLogged);
+                break;
+            case 17:
+                unlinkStop(Db, isLogged);
                 break;
             case 0:
                 isLogged = false;

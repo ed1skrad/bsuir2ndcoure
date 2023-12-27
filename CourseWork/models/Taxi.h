@@ -42,6 +42,7 @@ public:
     bool getHasChildSeat();
     void setHasChildSeat(bool hasChildSeat);
 
+    std::string rentCarTypeToString(RentCarTypes rentCarType);
     RentCarTypes getRentCarTypes();
     void setRentCarTypes(RentCarTypes rentCarTypes);
 

@@ -19,6 +19,7 @@ public:
 
             try {
                 size_t pos = 0;
+                //преобразованеи строки в число с плавающей точкой
                 value = std::stod(input, &pos);
 
                 if (pos == input.length() && value >= 0) {

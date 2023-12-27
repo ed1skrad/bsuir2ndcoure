@@ -25,6 +25,13 @@ void Bus::displayBusDetails(const pqxx::result::const_iterator& row) {
     EngineType engineType = Transport::stringToEngineType(row["engineType"].as<std::string>());
     bool hasContactlessPayment = row["has_contactless_payment"].as<bool>();
 
+
+    /*
+     * Динамический объект при помощи умного указателя.
+     * Управление осуществляется через указатель.
+     * Как только указатель bus выйдет из области видимости объект будет удален.
+     * Static cast преобразует число в enum.
+     */
     std::unique_ptr<Bus> bus = std::make_unique<Bus>(
             transportId, brand, model, color,
             static_cast<EngineType>(engineType),

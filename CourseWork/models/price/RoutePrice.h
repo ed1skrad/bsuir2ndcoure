@@ -1,5 +1,3 @@
-// routeprice.h
-
 #ifndef COURSEWORK_ROUTEPRICE_H
 #define COURSEWORK_ROUTEPRICE_H
 

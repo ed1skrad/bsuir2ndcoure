@@ -1,5 +1,3 @@
-// customer.h
-
 #ifndef COURSEWORK_CUSTOMER_H
 #define COURSEWORK_CUSTOMER_H
 

@@ -1,5 +1,3 @@
-// bus.h
-
 #ifndef COURSEWORK_BUS_H
 #define COURSEWORK_BUS_H
 

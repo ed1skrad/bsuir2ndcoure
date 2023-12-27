@@ -1,5 +1,3 @@
-// order.h
-
 #ifndef COURSEWORK_ORDER_H
 #define COURSEWORK_ORDER_H
 

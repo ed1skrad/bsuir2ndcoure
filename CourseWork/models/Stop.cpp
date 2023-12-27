@@ -1,5 +1,3 @@
-// Stop.cpp
-
 #include "Stop.h"
 
 Stop::Stop(int stopId, const std::string& stopName, const std::string& stopAddress)

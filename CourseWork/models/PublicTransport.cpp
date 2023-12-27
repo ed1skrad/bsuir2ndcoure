@@ -86,16 +86,6 @@ void PublicTransport::bookTransport(Database& Db, PublicTransport::TransportType
             return;
         }
 
-        int transportId = InputUtils::getPositiveInput<int>("Enter the " + transportTypeName + " ID: ");
-
-        std::string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTypeName + " WHERE " + transportTypeName + "_id = " + std::to_string(transportId) + ")";
-        pqxx::result transportExistsResult = Db.executeQuery(checkTransportQuery);
-        bool transportExists = transportExistsResult[0][0].as<bool>();
-        if (!transportExists) {
-            std::cout << "No " << transportTypeName << " with ID " << transportId << " found. Please enter a valid ID." << std::endl;
-            return;
-        }
-
         TransportTicket ticket;
         ticket.setTransportId(transportId);
         ticket.setCustomerId(customer.getCustomerId());

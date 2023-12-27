@@ -1,5 +1,3 @@
-// Schedule.cpp
-
 #include "Schedule.h"  // Include your own header file first
 #include <iostream>
 
@@ -58,6 +56,10 @@ void Schedule::setArrivalTime(std::string arrivalTime) {
     this->arrivalTime = arrivalTime;
 }
 
+
+/*
+ * Функция emplace_back - это член класса std::vector в C++. Она используется для добавления нового элемента в конец вектора
+ */
 std::vector<Schedule> Schedule::getScheduleForRoute(Database& db, int routeId) {
     pqxx::result R = db.executeQuery("SELECT * FROM Schedule WHERE route_id = " + std::to_string(routeId) + ";");
 
@@ -66,13 +68,26 @@ std::vector<Schedule> Schedule::getScheduleForRoute(Database& db, int routeId) {
         scheduleList.emplace_back(row["schedule_id"].as<int>(),
                                   row["route_id"].as<int>(),
                                   row["stop_id"].as<int>(),
-                                  static_cast<TransportType>(row["transport_type"].as<int>()), // Assuming transport_type is stored as an integer in the database
+                                  static_cast<TransportType>(row["transport_type"].as<int>()),
                                   row["transport_id"].as<int>(),
                                   row["arrival_time"].as<std::string>());
     }
     return scheduleList;
 }
 
+
+//INNER JOIN
+/*
+ * JOIN StopRoute sr ON s.stop_id = sr.stop_id:
+ * Этот JOIN объединяет таблицы Stop и StopRoute по столбцу stop_id.
+ * Это означает, что для каждой остановки в таблице Stop будут выбраны
+ * все соответствующие записи из таблицы StopRoute, где stop_id совпадает.
+
+JOIN Schedule sch ON sr.route_id = sch.route_id AND sr.stop_id = sch.stop_id:
+ Этот JOIN объединяет результат предыдущего JOIN с таблицей Schedule.
+ Записи объединяются, когда route_id и stop_id в таблице StopRoute совпадают
+ с route_id и stop_id в таблице Schedule.
+ */
 void Schedule::printStopsForRoute(Database& db, int routeId) {
     pqxx::result R = db.executeQuery("SELECT s.stop_id, s.stop_name, s.address, sch.arrival_time "
                                      "FROM Stop s "

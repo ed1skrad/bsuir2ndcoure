@@ -57,6 +57,19 @@ public:
 
     bool adminLogin(Database &db, const std::string &username, const std::string &password);
 
+    void deleteTaxi(Database &db, int taxiId, int isLogged);
+
+    static void deleteBus(Database &db, int busId, int isLogged);
+
+    void deleteTrolleybus(Database &db, int trolleybusId, int isLogged);
+
+    void deleteStop(Database &db, int stopId, int isLogged);
+
+    void deleteRoute(Database &db, int routeId, int isLogged);
+
+    static void unlinkStop(Database &db, int stopId, int isLogged);
+
+    void unlinkTransport(Database &Db, int routeId, TransportType transportType, int transportId, int isLogged);
 };
 
 #endif

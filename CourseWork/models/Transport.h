@@ -21,6 +21,7 @@ private:
     EngineType engineType;
 
 public:
+
     Transport();
     Transport(std::string brand, std::string model, std::string color, EngineType engineType);
     ~Transport();

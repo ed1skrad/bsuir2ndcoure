@@ -1,5 +1,3 @@
-// TrolleyBus.cpp
-
 #include "TrolleyBus.h"
 
 TrolleyBus::TrolleyBus() : PublicTransport(), hasSockets(false) {}

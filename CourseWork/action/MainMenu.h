@@ -1,5 +1,3 @@
-// TransportFunctions.h
-
 #pragma once
 
 #include "../database/Database.h"

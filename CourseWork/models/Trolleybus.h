@@ -1,5 +1,3 @@
-// TrolleyBus.h
-
 #ifndef COURSEWORK_TROLLEYBUS_H
 #define COURSEWORK_TROLLEYBUS_H
 

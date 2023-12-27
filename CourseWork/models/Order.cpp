@@ -1,5 +1,3 @@
-// order.cpp
-
 #include <vector>
 #include "order.h"
 #include "../database/Database.h"

@@ -1,5 +1,3 @@
-// routeprice.cpp
-
 #include "routeprice.h"
 
 RoutePrice::RoutePrice() : routeId(0), price(0.0) {}

@@ -52,17 +52,25 @@ void Route::getStopsForRoute(Database& db, int routeId) {
     }
 }
 
+//INNER JOIN
 void Route::getRoutesForTransport(Database& db, int transportId, PublicTransport::TransportType transportType) {
     std::string transportTypeName = (transportType == PublicTransport::TransportType::BUS) ? "BUS" : "TROLLEYBUS";
     std::cout << "Attempting to get routes for Transport: " << transportTypeName << " with ID: " << transportId << std::endl;
 
     try {
-        pqxx::result result = db.executeQuery("SELECT r.route_id, r.route_name "
-                                              "FROM Route r "
-                                              "JOIN (SELECT route_id FROM TransportRoute WHERE transport_id = " +
-                                              std::to_string(transportId) +
-                                              " AND transport_type = '" + transportTypeName + "') tr ON r.route_id = tr.route_id");
-
+        pqxx::result result = db.executeQuery(
+                // Выборка route_id и route_name из таблицы Route
+                "SELECT r.route_id, r.route_name "
+                "FROM Route r "
+                // Присоединение результатов подзапроса, который выбирает route_id из таблицы TransportRoute
+                // где transport_id и transport_type соответствуют переданным в функцию значениям
+                "JOIN (SELECT route_id FROM TransportRoute WHERE transport_id = " +
+                std::to_string(transportId) +
+                " AND transport_type = '" + transportTypeName + "') tr ON r.route_id = tr.route_id");
+                /*
+                 * Таким образом, каждая строка в выводе будет содержать route_id и route_name для маршрутов, связанных с указанным транспортом.
+                 * Если для данного транспорта не найдено ни одного маршрута, то результат будет пустым.
+                 */
         if (!result.empty()) {
             for (const auto& row : result) {
                 std::cout << "Route ID: " << row[0].as<int>() << ", Route Name: " << row[1].as<std::string>() << std::endl;

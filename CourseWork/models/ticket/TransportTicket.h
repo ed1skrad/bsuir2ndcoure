@@ -1,5 +1,3 @@
-// transportticket.h
-
 #ifndef COURSEWORK_TRANSPORTTICKET_H
 #define COURSEWORK_TRANSPORTTICKET_H
 

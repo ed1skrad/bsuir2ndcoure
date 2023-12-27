@@ -1,5 +1,3 @@
-// Taxi.cpp
-
 #include "Taxi.h"
 #include "Order.h"
 #include "../action/InputUtils.h"
@@ -60,6 +58,20 @@ void Taxi::setRentCarTypes(RentCarTypes rentCarTypes) {
 Taxi::~Taxi() {
 }
 
+std::string Taxi::rentCarTypeToString(RentCarTypes rentCarType) {
+    switch (rentCarType) {
+        case ECONOMY:
+            return "ECONOMY";
+        case COMFORT:
+            return "COMFORT";
+        case BUSINESS:
+            return "BUSINESS";
+        default:
+            return "UNKNOWN";
+    }
+}
+
+
 RentCarTypes Taxi::stringToRentCarTypes(const std::string& rentCarTypesStr) {
     if (rentCarTypesStr == "ECONOMY") {
         return RentCarTypes::ECONOMY;
@@ -104,7 +116,7 @@ void Taxi::displayTaxiDetails(const pqxx::result::const_iterator& row) {
         std::cout << "Has Driver: " << (hasDriver ? "Yes" : "No") << std::endl;
         std::cout << "Has WiFi: " << (hasWiFi ? "Yes" : "No") << std::endl;
         std::cout << "Has Child Seat: " << (hasChildSeat ? "Yes" : "No") << std::endl;
-        std::cout << "Rent Car Type: " << taxi->getRentCarTypes() << std::endl;
+        std::cout << "Rent Car Type: " << taxi->rentCarTypeToString(taxi->getRentCarTypes()) << std::endl;
         std::cout << std::endl;
     } catch (const std::exception &e) {
         std::cerr << "Error displaying taxi details: " << e.what() << std::endl;

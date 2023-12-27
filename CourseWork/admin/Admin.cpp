@@ -208,6 +208,12 @@ void Admin::addSchedule(Database& db, int routeId, TransportType transportType, 
     std::string getStopsQuery = "SELECT stop_id FROM StopRoute WHERE route_id = " + std::to_string(routeId) + ";";
     auto stops = db.executeQuery(getStopsQuery);
 
+    /*
+     * HH:MM:SS
+     * 20:23
+     * 0:59
+     * 0:59
+     */
     std::regex timeRegex(R"((2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9]))");
 
     for (const auto& stop : stops) {
@@ -245,7 +251,7 @@ void Admin::setRoutePrice(Database &Db, int routeId, double price, int isLogged)
         return;
     }
 
-    std::string checkQuery = "SELECT price FROM RoutePrice WHERE routeId = " + std::to_string(routeId);
+    std::string checkQuery = "SELECT price FROM RoutePrice WHERE route_id = " + std::to_string(routeId);
     auto checkResult = Db.executeQuery(checkQuery);
     if (!checkResult.empty()) {
         std::string updateQuery = "UPDATE RoutePrice SET price = " + std::to_string(price) + " WHERE routeId = " +
@@ -254,7 +260,7 @@ void Admin::setRoutePrice(Database &Db, int routeId, double price, int isLogged)
         std::cout << "Route price updated successfully." << std::endl;
     } else {
         std::string insertQuery =
-                "INSERT INTO RoutePrice (routeId, price) VALUES (" + std::to_string(routeId) + ", " +
+                "INSERT INTO RoutePrice (route_id, price) VALUES (" + std::to_string(routeId) + ", " +
                 std::to_string(price) + ")";
         Db.executeQuery(insertQuery);
         std::cout << "Route price set successfully." << std::endl;
@@ -337,3 +343,119 @@ void Admin::linkStopToRoute(Database &db, int routeId, int stopId, int isLogged)
     db.executeQuery(insertQuery);
     std::cout << "Stop linked to route successfully." << std::endl;
 }
+
+void Admin::deleteTaxi(Database &db, int taxiId, int isLogged) {
+    if (!checkAuthorization(isLogged)) {
+        return;
+    }
+
+    std::string query = "DELETE FROM taxi WHERE taxi_id = " + std::to_string(taxiId);
+    db.executeQuery(query);
+}
+
+void Admin::deleteBus(Database &db, int busId, int isLogged) {
+
+    std::string query = "SELECT EXISTS(SELECT 1 FROM TransportRoute WHERE transport_id = " + std::to_string(busId) + " AND transport_type = 'BUS');";
+    auto busExistsInRoute = db.executeQuery(query);
+    if (!busExistsInRoute.empty() && busExistsInRoute[0][0].as<bool>()) {
+        std::cerr << "Bus is linked to a route. Please unlink before deleting." << std::endl;
+        return;
+    }
+
+    query = "DELETE FROM bus WHERE bus_id = " + std::to_string(busId);
+    db.executeQuery(query);
+}
+
+void Admin::deleteTrolleybus(Database &db, int trolleybusId, int isLogged) {
+    if (!checkAuthorization(isLogged)) {
+        return;
+    }
+
+    std::string query = "SELECT EXISTS(SELECT 1 FROM TransportRoute WHERE transport_id = " + std::to_string(trolleybusId) + " AND transport_type = 'TROLLEYBUS');";
+    auto trolleybusExistsInRoute = db.executeQuery(query);
+    if (!trolleybusExistsInRoute.empty() && trolleybusExistsInRoute[0][0].as<bool>()) {
+        std::cerr << "Trolleybus is linked to a route. Please unlink before deleting." << std::endl;
+        return;
+    }
+
+    query = "DELETE FROM trolleybus WHERE trolleybus_id = " + std::to_string(trolleybusId);
+    db.executeQuery(query);
+}
+
+void Admin::deleteStop(Database &db, int stopId, int isLogged) {
+    if (!checkAuthorization(isLogged)) {
+        return;
+    }
+
+    std::string query = "SELECT EXISTS(SELECT 1 FROM StopRoute WHERE stop_id = " + std::to_string(stopId) + ");";
+    auto stopExistsInRoute = db.executeQuery(query);
+    if (!stopExistsInRoute.empty() && stopExistsInRoute[0][0].as<bool>()) {
+        std::cerr << "Stop is linked to a route. Please unlink before deleting." << std::endl;
+        return;
+    }
+
+    query = "DELETE FROM Stop WHERE stop_id = " + std::to_string(stopId);
+    db.executeQuery(query);
+}
+
+void Admin::deleteRoute(Database &db, int routeId, int isLogged) {
+    if (!checkAuthorization(isLogged)) {
+        return;
+    }
+
+    std::string query = "SELECT EXISTS(SELECT 1 FROM TransportRoute WHERE route_id = " + std::to_string(routeId) + ");";
+    auto routeExistsInTransport = db.executeQuery(query);
+    if (!routeExistsInTransport.empty() && routeExistsInTransport[0][0].as<bool>()) {
+        std::cerr << "Route is linked to a transport. Please unlink before deleting." << std::endl;
+        return;
+    }
+
+    query = "DELETE FROM Route WHERE route_id = " + std::to_string(routeId);
+    db.executeQuery(query);
+}
+
+void Admin::unlinkStop(Database &db, int stopId, int isLogged){
+    std::string query = "DELETE FROM StopRoute WHERE stop_id = " + std::to_string(stopId);
+    db.executeQuery(query);
+    std::cout << "Stop unlinked successfully." << std::endl;
+}
+
+
+void Admin::unlinkTransport(Database &Db, int routeId, TransportType transportType, int transportId, int isLogged){
+    if (!checkAuthorization(isLogged)) {
+        return;
+    }
+
+    std::string transportTypeStr = (transportType == BUS) ? "BUS" : "TROLLEYBUS";
+    std::string transportTable = (transportType == BUS) ? "bus" : "trolleybus";
+    std::string transportIdColumn = (transportType == BUS) ? "bus_id" : "trolleybus_id";
+    std::string checkTransportQuery = "SELECT EXISTS(SELECT 1 FROM " + transportTable +
+                                      " WHERE " + transportIdColumn + " = " + std::to_string(transportId) + ");";
+    auto transportExists = Db.executeQuery(checkTransportQuery);
+    if (transportExists.empty() || !transportExists[0][0].as<bool>()) {
+        std::cerr << "Transport ID does not exist in the database." << std::endl;
+        return;
+    }
+
+    std::string checkQuery = "SELECT 1 FROM TransportRoute WHERE route_id = " + std::to_string(routeId) +
+                             " AND transport_type = '" + transportTypeStr + "' AND transport_id = " +
+                             std::to_string(transportId);
+    auto checkResult = Db.executeQuery(checkQuery);
+    if (checkResult.empty()) {
+        std::cerr << "Transport isn't linked to route!" << std::endl;
+        return;
+    }
+
+    try {
+        std::string deleteQuery = "DELETE FROM TransportRoute WHERE transport_type = '" + transportTypeStr +
+                                  "' AND transport_id = " + std::to_string(transportId);
+        Db.executeQuery(deleteQuery);
+        std::cout << "Transport unlinked from route successfully." << std::endl;
+    } catch (const pqxx::unique_violation &e) {
+        std::cerr << "Error: Transport is not linked to this route." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+}
+

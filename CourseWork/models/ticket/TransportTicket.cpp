@@ -1,5 +1,3 @@
-// transportticket.cpp
-
 #include "TransportTicket.h"
 
 TransportTicket::TransportTicket()
