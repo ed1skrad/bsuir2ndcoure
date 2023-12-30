@@ -1,0 +1,155 @@
+#include <iostream>
+#include <stdexcept>
+#include <iterator>
+
+using namespace std;
+
+#ifndef STACK_H
+#define STACK_H
+
+template <bool isConst>
+class Iterator;
+
+template <class Data>
+class Node {
+public:
+    Data data;
+    Node* next;
+    Node(Data dat) : data(dat), next(nullptr) {}
+};
+
+template <class Data>
+class Stack {
+private:
+    Node<Data>* top;
+
+public:
+    template<bool isConst>
+    class Iterator: public std::iterator<std::input_iterator_tag, Data> {
+    private:
+        Node<Data>* currentNode;
+    public:
+
+        using value_type = Data;
+        using type = std::conditional_t<isConst, const Data, Data>;
+        using iterator_category = std::input_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using pointer = type*;
+        using reference = type&;
+
+        Iterator(Node<Data>* srcCurrentNode = nullptr) {
+            currentNode = srcCurrentNode;
+        }
+
+        Iterator(const Node<Data> srcCurrentNode = nullptr) {
+            currentNode = const_cast<typename Stack<Data>::Node*>(srcCurrentNode);
+        }
+
+        Iterator(const Iterator& it) : currentNode(it.currentNode) {}
+
+        typename Iterator& operator++() {
+            if (!currentNode)
+                throw std::out_of_range("Iterator operator++(): out of range");
+            currentNode = currentNode->next;
+            return *this;
+        }
+
+        typename Iterator operator++(int) {
+            if (!currentNode)
+                throw std::out_of_range("Iterator operator++(int): out of range");
+            Iterator temp = *this;
+            currentNode = currentNode->next;
+            return temp;
+        }
+
+        reference operator * ()
+        {
+            return currentNode->data;
+        }
+
+        const value_type& operator*() const
+        {
+            return currentNode->data;
+        }
+
+        const value_type* operator->() const
+        {
+            return &(this->operator*());
+        }
+
+        bool operator!=(const Iterator& srcIterator) const {
+            return currentNode != srcIterator.currentNode;
+        }
+
+        bool operator==(const Iterator& srcIterator) const {
+            return currentNode == srcIterator.currentNode;
+        }
+        
+        typename Iterator& operator=(const Iterator& srcIterator) {
+            if (this != &srcIterator)
+                currentNode = srcIterator.currentNode;
+            return *this;
+        }
+    };
+
+    using iterator = typename Iterator<false>;
+    using const_iterator = typename Iterator<true>;
+
+    Stack() : top(nullptr) {}
+    Stack(const Stack<Data>& _stack): top(nullptr) {
+        Node<Data>* srcNode = _stack.top;
+        while (srcNode != nullptr) {
+            push(srcNode->data);
+            srcNode = srcNode->next;
+        }
+    };
+
+    bool is_empty() {
+        return this->top == nullptr;
+    }
+
+    ~Stack() {
+        while (top != nullptr)
+            pop();
+    }
+
+    void push(Data data) {
+        Node<Data>* pv = new Node<Data>(data);
+        pv->next = top;
+        top = pv;
+    }
+
+    Data pop() {
+        if (is_empty())
+            throw underflow_error("Stack is empty. Cannot pop it. ");
+        Data temp = top->data;
+        Node<Data>* pv = top;
+        top = top->next;
+        delete pv;
+        return temp;
+    }
+
+    Data peek() {
+        if (is_empty())
+            throw underflow_error("Stack is empty. Cannot peek it. ");
+        return top->data;
+    }
+
+    void print() {
+        if (top == nullptr) {
+            cout << "Stack is empty" << endl;
+            return;
+        }
+        for (auto el = this->cbegin(); el != this->cend(); ++el) {
+            cout << *el << " ";
+        }
+        cout << endl;
+    }
+
+    iterator begin() const { return iterator(top); }
+    iterator end() const { return iterator(nullptr); }
+    const_iterator cbegin() const { return const_iterator(top); }
+    const_iterator cend() const { return const_iterator(nullptr); }
+};
+
+#endif
